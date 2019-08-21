@@ -58,6 +58,7 @@ public class DjController {
 		String menuGuids = null; // 当前角色下的菜单列表
 		String roleId = session.getAttribute("roleid").toString();
 		String sqlFindRole = "select guid from role where id = ?";
+		ps= null;
 		ps = conn.prepareStatement(sqlFindRole);
 		ps.setString(1, roleId);
 		rs = ps.executeQuery();
@@ -66,7 +67,8 @@ public class DjController {
 		}
 		String[] menuGuid = DjMenu.returnMenu(session, roleGuid, zhxxGuid);
 		String tn = Bmodel.findBmByGuId("73c2efa3c34f4904ae0eee4ab31dfa79");
-		String sql = "select id,guid,name,zhxx_menu,bmc,bm from " + tn + " where zhxx_menu = ? ";
+		String sql = "select guid,id,name,zhxx_menu,bmc,bm from " + tn + " where zhxx_menu = ? ";
+		
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, zhxxGuid);
 		rs = ps.executeQuery();
@@ -76,7 +78,7 @@ public class DjController {
 			if(menuGuid!=null){
 				for (int j = 0; j < menuGuid.length; j++) {
 					System.out.println(rs.getObject("guid")+"."+menuGuid[j]);
-					if (rs.getObject("guid").equals(menuGuid[j])) {
+					if (!rs.getObject("guid").equals(menuGuid[j])) {
 						
 					}else{
 						Map<String, Object> rowData = new HashMap<String, Object>();
@@ -90,6 +92,7 @@ public class DjController {
 			}
 			
 		}
+		System.out.println(desList);
 		return desList;
 	}
 
@@ -102,7 +105,7 @@ public class DjController {
 		conn = LinkSql.getConn();
 		List<Map<String, Object>> desList = new ArrayList<Map<String, Object>>();
 		String tn = Bmodel.findBmByGuId("73c2efa3c34f4904ae0eee4ab31dfa79");
-		String sql = "select id,guid,name,bmc,bm,zhxx_menu from " + tn + " where  parentMenu = ?";
+		String sql = "select guid,id,name,bmc,bm,zhxx_menu from " + tn + " where  parentMenu = ?";
 		ps = conn.prepareStatement(sql);
 		ps.setInt(1, parentMenu);
 		rs = ps.executeQuery();
@@ -112,7 +115,8 @@ public class DjController {
 		String[] menuGuid =DjMenu.returnMenu(session, roleGuid, zhxxGuid);
 		while (rs.next()) {
 			for (int j = 0; j < menuGuid.length; j++) {
-				if (rs.getObject("guid").equals(menuGuid[j])) {
+				System.out.println(rs.getObject("guid").equals(menuGuid[j]));
+				if (!rs.getObject("guid").equals(menuGuid[j])) {
 					
 				}else{
 					Map<String, Object> rowData = new HashMap<String, Object>();
@@ -124,6 +128,7 @@ public class DjController {
 				
 			}
 		}
+		System.out.println(desList+"--");
 		return desList;
 	}
 
