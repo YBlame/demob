@@ -97,46 +97,54 @@ public class IndexController {
 	@ResponseBody
 	public Integer userInsert(HttpServletRequest request, HttpServletResponse res) throws Exception{
 		Enumeration pNames = request.getParameterNames();
-		String bmodelName = null;
-		String guid= "00c99009ec2d4cb883acc9ae24f73b6e";
-		String[] v = new String[18];
-		String name =null;
-		Integer flag = 0;
-		conn = LinkSql.getConn();
-		conn.setAutoCommit(false);
-		bmodelName = Bmodel.findBmByGuId(guid);
-		guid = UUIDUtil.getUUID();
-		String sql = "INSERT INTO " + bmodelName + ""
-				+ "(sj,mm,NAME,ZW,SFZ,WXH,EMAIL,YJDZ,SFZSMJ,GSMC,CZ,BGDZ,FRXM,FRSJH,FRSFZ,FRZJ,YYZZ,FRSFZZ,guid,ZT,roleName,roleid,SHRQ)  "
-				+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,null)";
-		ps = conn.prepareStatement(sql);
-		for (int e = 1; e <= v.length; e++) {
-			while (pNames.hasMoreElements()) {
-				name = (String) pNames.nextElement();
-				if (name.equals("mm")) {
-					String mm = MD5.GetMd5(request.getParameter(name));
-					ps.setString(e, mm);
-				}else if (request.getParameter(name)==null) {
-					ps.setString(e, "");
-				}else{
-					ps.setString(e, request.getParameter(name));
+		HttpSession session = request.getSession();
+		String zcbh = session.getAttribute("ZCBH").toString().trim();
+		Integer flag =null;
+		if(zcbh!=null&&!zcbh.equals("")){
+			String bmodelName = null;
+			String guid= "00c99009ec2d4cb883acc9ae24f73b6e";
+			String[] v = new String[18];
+			String name =null;
+			conn = LinkSql.getConn();
+			conn.setAutoCommit(false);
+			bmodelName = Bmodel.findBmByGuId(guid);
+			guid = UUIDUtil.getUUID();
+			String sql = "INSERT INTO " + bmodelName + ""
+					+ "(sj,mm,NAME,ZW,SFZ,WXH,EMAIL,YJDZ,SFZSMJ,GSMC,CZ,BGDZ,FRXM,FRSJH,FRSFZ,FRZJ,YYZZ,FRSFZZ,guid,ZT,roleName,roleid,SHRQ,RQ,GS)  "
+					+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,null,NOW(),'"+zcbh+"')";
+			ps = conn.prepareStatement(sql);
+			for (int e = 1; e <= v.length; e++) {
+				while (pNames.hasMoreElements()) {
+					name = (String) pNames.nextElement();
+					if (name.equals("mm")) {
+						String mm = MD5.GetMd5(request.getParameter(name));
+						ps.setString(e, mm);
+					}else if (request.getParameter(name)==null) {
+						ps.setString(e, "");
+					}else{
+						ps.setString(e, request.getParameter(name));
+					}
+					
+					break;
 				}
-				
-				break;
 			}
+			ps.setString(19,guid );
+			ps.setString(20, "未审核");
+			ps.setString(21, "搭建商");
+			ps.setString(22, "1");
+			try {
+				flag = ps.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+				conn.rollback();
+				flag=-404;
+			}
+		}else{
+			flag =-500;
+			return flag;
 		}
-		ps.setString(19,guid );
-		ps.setString(20, "未审核");
-		ps.setString(21, "搭建商");
-		ps.setString(22, "1");
-		try {
-			flag = ps.executeUpdate();
-			conn.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			conn.rollback();
-			flag=-404;
-		}
+		
 		return flag ;
 	}
 	

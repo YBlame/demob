@@ -75,7 +75,7 @@
 	        form = layui.form,
 	        laytpl = layui.laytpl;
 	    	reloadExpo = function(){
-	    	 $.post("zhxx/findAllZhxx", 
+	    	 $.post("zhxx/findYbgzryZhxx", 
     		    function(data) {
 	    		 if (data.length==0) {
 	                 layer.alert('请先添加一个展会');

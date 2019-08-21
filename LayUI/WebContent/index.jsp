@@ -53,6 +53,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			            <dd>
 							<a href="javascript:findZhxx();" data-url="">展会管理</a>
 						</dd>
+						<dd>
+							<a href="javascript:findZcglry();" data-url="">主场管理人员</a>
+						</dd>
 					</dl>
 		        </li>
 			</ul>

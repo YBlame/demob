@@ -127,14 +127,7 @@ $(document).ready(function() {
 															hide : true
 								                        }
 								                    cols.push(id);
-								                    var bar={
-															title : '操作',
-															width:200,
-															fixed: 'right',
-															align:'center',
-															toolbar : '#barDemo'
-								                        }
-								                    cols.push(bar);
+								                  
 								                    // 然后开始渲染表格
 								                    table.render({
 								                    	elem : '#demo',
@@ -175,13 +168,26 @@ $(document).ready(function() {
 															}else{
 																window.location.href = "doc/toAddDataJsp?guid="+guidBmodel+"&bmc=展会";
 															}
-															
 															break;
 														case 'delete':
 															window.history.back(-1);
 															break;
+														case 'edit':
+															if(data.length === 0){
+														          layer.msg('请选择一行');
+														        } else if(data.length > 1){
+														          layer.msg('只能同时编辑一个');
+														        } else {
+														        	var guid = data[0]['guid'];//拿到一行数据中的guid
+																	var guidBmodel =$("#guid").val();//拿到模型表中的guid
+																	//方便显示表单
+																	window.location.href = "doc/toUpdateDoc?guid="+guid+"&guidBmodel="+guidBmodel;
+														        }
+															
+															break;
 														}
-														;
+															
+														
 													});
 
 									//监听行工具事件
@@ -209,10 +215,7 @@ $(document).ready(function() {
 												});
 											});
 										} else if (layEvent === 'edit') {
-											var guid = data['guid'];//拿到一行数据中的guid
-											var guidBmodel =$("#guid").val();//拿到模型表中的guid
-											//方便显示表单
-											window.location.href = "doc/toUpdateDoc?guid="+guid+"&guidBmodel="+guidBmodel;
+											
 										}
 									});
 									// 打开查看按钮

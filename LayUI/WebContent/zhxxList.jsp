@@ -29,19 +29,18 @@
 			<form class='layui-form' id="vform" onsubmit="return false" >
 				<div id="demoTable" style='position:relative;'>
 					<div id='button'  style="display: none" >
-							&nbsp;&nbsp;&nbsp;<button type='button' id='reload_btn' class='layui-btn layui-inline' data-type='reload'>搜索</button>
+					
+							&nbsp;&nbsp;&nbsp;<button type='button' id='reload_btn' class='layui-btn layui-inline' data-type='reload'>查询</button>
 							&nbsp;<button type="button" id='reset' class="layui-btn layui-btn-primary">重置</button>
 					</div>
 				</div>
 			</form>
 			<table class="layui-hide" style="" id="demo" lay-filter="test"></table>
-			<script type="text/html" id="barDemo">
-  					<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-  					<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-			</script>
 			<script type="text/html" id="toolbarDemo">
   				<div class="layui-btn-container">
-    				<button type="button" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="add">添加</button>
+    				<button type="button" class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+    				<button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="edit">编辑</button>
+    				<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">删除</button>
 				</div>
 			</script>
 			<script src="statics/layui/layui.js"></script>

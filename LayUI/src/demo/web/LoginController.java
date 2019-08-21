@@ -48,8 +48,24 @@ public class LoginController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/login")
-	public String toLogin(HttpServletRequest request, HttpServletResponse res) throws Exception {
+	public String toLogin(HttpServletRequest request, HttpServletResponse res,String guid) throws Exception {
+		System.out.println(guid);
+		HttpSession session = request.getSession();
+		session.setAttribute("ZCBH", guid);
 		return "logins";
+	}
+
+	/**
+	 * 去login页面
+	 * 
+	 * @param request
+	 * @param res
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/admin")
+	public String srylogin(HttpServletRequest request, HttpServletResponse res) throws Exception {
+		return "loginsSyr";
 	}
 
 	/**
@@ -73,7 +89,8 @@ public class LoginController {
 		String tn = Bmodel.findBmByGuId("00c99009ec2d4cb883acc9ae24f73b6e");// 根据模型表中guid判断当前表名
 		String pwd = MD5.GetMd5(mm);// MD5加密进行数据库判断
 		String sqlWhere = " and sj=? and mm=? ";
-		String sql = "select id, guid, NAME, SJ, EMAIL, MM, roleName, roleid, GSMC, BGDZ, ZT, ZW, WXH, YJDZ, SFZSMJ, CZ, FRXM, FRSJH, FRSFZ, FRZJ, YYZZ, FRSFZZ, SFZ  from " + tn + " where 1=1  " + sqlWhere;
+		String sql = "select id, guid, NAME, SJ, EMAIL, MM, roleName, roleid, GSMC, BGDZ, ZT, ZW, WXH, YJDZ, SFZSMJ, CZ, FRXM, FRSJH, FRSFZ, FRZJ, YYZZ, FRSFZZ, SFZ  from "
+				+ tn + " where 1=1  " + sqlWhere;
 		try {
 			ps = LinkSql.Execute(conn, sql, role, tn);
 			ps.setString(1, sj);
@@ -101,7 +118,7 @@ public class LoginController {
 				if (!ZT.equals("通过")) {
 					if (roleid.equals("1")) {
 						returnVal = "loginStop";
-					}else{
+					} else {
 						for (int i = 1; i <= columnCount; i++) {
 							rowData.put(md.getColumnName(i), rs.getObject(i));
 							session.setAttribute(md.getColumnName(i), rs.getObject(i));
@@ -109,8 +126,8 @@ public class LoginController {
 						list.add(rowData);
 						returnVal = "loginfinish";
 					}
-					
-				}else{
+
+				} else {
 					for (int i = 1; i <= columnCount; i++) {
 						rowData.put(md.getColumnName(i), rs.getObject(i));
 						session.setAttribute(md.getColumnName(i), rs.getObject(i));
@@ -123,11 +140,68 @@ public class LoginController {
 		return returnVal;
 	}
 
+	/**
+	 * 用户登录方法， 以手机号和密码登录 判断其当前角色进入不同页面
+	 * 
+	 * @param request
+	 * @param res
+	 * @param phone
+	 * @param password
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "syrloginIn")
+	@ResponseBody
+	public String syrloginIn(HttpServletRequest request, HttpServletResponse res, String sj, String mm)
+			throws Exception {
+		ResultSetMetaData md = null;
+		String returnVal = null;
+		int columnCount = 0;
+		conn = LinkSql.getConn();
+		String role = "system";// 当前角色为开发者
+		String tn = "sryzc";// 根据模型表中guid判断当前表名
+		String pwd = MD5.GetMd5(mm);// MD5加密进行数据库判断
+		String sqlWhere = " and sj=? and mm=? ";
+		String sql = "select id, guid, NAME, SJ, EMAIL, MM, roleName, roleid, GSMC,GS  from " + tn + " where 1=1  "
+				+ sqlWhere;
+		try {
+			ps = LinkSql.Execute(conn, sql, role, tn);
+			ps.setString(1, sj);
+			ps.setString(2, pwd);
+			rs = ps.executeQuery();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rs.last();
+		int row = rs.getRow();
+		if (row == 0) {
+			returnVal = "loginLose";// 当登录失败
+		} else {
+			rs.previous();
+			md = rs.getMetaData(); // 获得结果集结构信息,元数据
+			columnCount = md.getColumnCount(); // 获得列数
+			HttpSession session = request.getSession();
+			while (rs.next()) {
+				for (int i = 1; i <= columnCount; i++) {
+					session.setAttribute(md.getColumnName(i), rs.getObject(i));
+				}
+				returnVal = "loginfinish";
+			}
+		}
+		return returnVal;
+	}
+
 	@RequestMapping(value = "userOut")
 	public String userOut(HttpServletRequest request, HttpServletResponse res) throws Exception {
 		HttpSession session = request.getSession();
+		String role = session.getAttribute("roleid").toString();
 		session.invalidate();
-		return "redirect:login";
+		if(role.toString().trim().equals("1")){
+			return "redirect:login";
+		}else{
+			return "redirect:admin";
+		}
+		
 	}
 
 	// 搭建商注册

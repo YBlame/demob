@@ -6,7 +6,7 @@ var zhxxGuid  = null;
 	        form = layui.form,
 	        laytpl = layui.laytpl;
 	    	reloadExpo = function(){
-	    	 $.post("zhxx/findAllZhxx", 
+	    	 $.post("zhxx/findZcZhxx", 
     		    function(data) {
 	    		 if (data.length==0) {
 	    			 cj.removeCookie('selected_expo_id');
