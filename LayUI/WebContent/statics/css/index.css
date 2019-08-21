@@ -1,0 +1,20 @@
+span{cursor: pointer;}
+.layui-timeline-item:first-child:before {
+	display: none;
+	height: 350px;
+}
+
+.layui-timeline-content {
+	padding-left: 0px;
+}
+
+.layui-text ul li {
+	margin-top: 5px;
+	list-style-type: none;
+}
+
+.layui-upload-img {
+	width: 92px;
+	height: 92px;
+	margin: 0 10px 10px 0;
+}
