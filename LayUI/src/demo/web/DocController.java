@@ -132,6 +132,7 @@ public class DocController {
 			String postData, Integer num, Integer limit) throws Exception {
 		HttpSession session = request.getSession();
 		final String role = (String) session.getAttribute("role");
+		String userGuid = (String) session.getAttribute("guid");
 		String roleid = (String) session.getAttribute("roleid");
 		String zhxxDj = (String) session.getAttribute("zhxxDj");
 		String bmDj = (String) session.getAttribute("bmDj");
@@ -201,6 +202,9 @@ public class DocController {
 					}
 				}
 			}
+			if (tn.trim().toLowerCase().equals("zhxx")) {
+				sqlWhereZc += " AND GSBH = '" + userGuid + "' ";
+			}
 			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc;
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
 			rs = ps.executeQuery();
@@ -220,7 +224,7 @@ public class DocController {
 			}
 
 			// 得到总数
-			String sqlCount = "select count(*) from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc+" ";
+			String sqlCount = "select count(*) from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc + " ";
 			ps = conn.prepareStatement(sqlCount);
 			rs = ps.executeQuery();
 			md = rs.getMetaData();
@@ -316,7 +320,6 @@ public class DocController {
 			String bmc, Integer id, String thisName, String zhxxDj, String bmcDj, String bmDj, String typeDj,
 			String jbxx) throws Exception {
 		HttpSession session = request.getSession();
-
 		if (id != null || thisName != null) {
 			request.setAttribute("guid", "73c2efa3c34f4904ae0eee4ab31dfa79");
 			request.setAttribute("id", id);
@@ -659,24 +662,27 @@ public class DocController {
 		if (row != 0) {
 			rs.beforeFirst();
 			while (rs.next()) {
-				for (int i = 0; i < row; i++) {
-					String types = rs.getString("types");
-					String zdm = rs.getString("zdm");
-					valueXs += "," + zdm;
-					switch (types) {
-					case "datetime":
-						sqlZdmcXs += ",NOW()";
-						break;
-					case "varchar":
+				String types = rs.getString("types");
+				String zdm = rs.getString("zdm");
+				valueXs += "," + zdm;
+				switch (types) {
+				case "datetime":
+					sqlZdmcXs += ",NOW()";
+					break;
+				case "varchar":
+					if (zdm.equals("GSBH")) {
+						String bh = session.getAttribute("guid").toString();
+						sqlZdmcXs += ",'" + bh + "'";
+					} else {
 						sqlZdmcXs += ",null";
-						break;
-					case "int":
-						sqlZdmcXs += ",1";
-						break;
-					case "data":
-						sqlZdmcXs += ",CURDATE()";
-						break;
 					}
+					break;
+				case "int":
+					sqlZdmcXs += ",1";
+					break;
+				case "data":
+					sqlZdmcXs += ",CURDATE()";
+					break;
 				}
 			}
 			value += sqlZdmcXs;// 包含添加或修改中的不显示的字段
@@ -755,12 +761,16 @@ public class DocController {
 				flag = "addFinish";
 				typeDj = (String) session.getAttribute("typeDj");
 				if (typeDj.equals("false")) {
-					request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname).forward(request,
-							response);
+					if (dataName.trim().toLowerCase().equals("zhxx")) {
+						request.getRequestDispatcher("/findZhxx").forward(request, response);
+					} else {
+						request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname)
+								.forward(request, response);
+					}
 				} else {
-						request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname + "&bm=" + bmDj
-								+ "&zhxx=" + zhxxDj + "&typeDj=" + typeDj).forward(request, response);
-					
+					request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname + "&bm=" + bmDj
+							+ "&zhxx=" + zhxxDj + "&typeDj=" + typeDj).forward(request, response);
+
 				}
 
 			}
@@ -804,15 +814,14 @@ public class DocController {
 
 		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
-		String sql = "DELETE FROM " + bmodelName + " WHERE guid= \'" + guid + "\'";
-		try {
+
+		String[] parts = guid.split(",");
+		for (int i = 0; i < parts.length; i++) {
+			String sql = "DELETE FROM " + bmodelName + " WHERE guid= \'" + parts[i] + "\'";
 			ps = LinkSql.Execute(conn, sql, role, bmodelName);
 			ps.executeUpdate();
 			conn.commit();
 			flag = "delFinish";
-		} catch (Exception e) {
-			conn.rollback();
-			flag = "delError";
 		}
 		return flag;
 	}
@@ -915,6 +924,7 @@ public class DocController {
 			}
 			map.put("parentName", parentName);
 		}
+		System.out.println(map);
 		rs.close();
 		ps.close();
 		conn.close();
@@ -965,11 +975,11 @@ public class DocController {
 			Map<String, Object> rowData = new HashMap<String, Object>();
 			for (int i = 1; i <= columnCount; i++) {
 				rowData.put(md.getColumnName(i), rs.getObject(i).toString());
-				if (rs.getObject("jsdm").equals(".")) {
-					rowData.put("jsdmFlag", "0");
-				} else {
-					rowData.put("jsdmFlag", "1");
-				}
+			}
+			if (rs.getObject("jsdm").equals(".")) {
+				rowData.put("jsdmFlag", "0");
+			} else {
+				rowData.put("jsdmFlag", "1");
 			}
 			list.add(rowData);
 		}

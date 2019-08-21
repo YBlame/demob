@@ -171,9 +171,9 @@ $(document).ready(function() {
 															var guidBmodel = $("#guidBmodel").val();
 															if (guidBmodel==null||guidBmodel=="null"||guidBmodel==undefined||guidBmodel=="") {
 																var guid = $("#guid").val();
-																window.location.href = "doc/toAddDataJsp?guid="+guid;
+																window.location.href = "doc/toAddDataJsp?guid="+guid+"&bmc=展会";
 															}else{
-																window.location.href = "doc/toAddDataJsp?guid="+guidBmodel;
+																window.location.href = "doc/toAddDataJsp?guid="+guidBmodel+"&bmc=展会";
 															}
 															
 															break;

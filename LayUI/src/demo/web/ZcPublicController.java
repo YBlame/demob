@@ -122,6 +122,7 @@ public class ZcPublicController {
 	public Object findDocTable(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid,
 			String postData, Integer num, Integer limit, String zhxxGuid) throws Exception {
 		HttpSession session = request.getSession();
+		String uguid = session.getAttribute("guid").toString();
 		final String role = (String) session.getAttribute("role");
 		list = new ArrayList<Map<String, Object>>();
 		String tn = null;
@@ -152,16 +153,22 @@ public class ZcPublicController {
 			if(tn.equals("FYBZ")){
 				sqlWhere = "  ";
 			}else if (tn.equals("user")) {
-				sqlWhere = " AND roleid!=4 AND roleid!=3 AND roleid!=1 ";
+				sqlWhere = " AND roleid!=4 AND roleid!=3 AND roleid!=1 AND GS='"+uguid+"' ";
 			} else {
 				sqlWhere = " AND ZHGUID = ? ";
 			}
 
+		}else{
+			if (tn.equals("user")) {
+				sqlWhere = " AND roleid!=4 AND roleid!=3 AND roleid!=1 AND GS='"+uguid+"' ";
+			} else {
+				sqlWhere = " AND 1>2 ";
+			}
 		}
 		sqlZdmc = sqlZdmc.substring(0, sqlZdmc.length() - 1);
 		if (sqlZdmc.length() != 0) {
 			String sqlData = null;
-			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1" + sqlWhere +" order by id desc " ;
+			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere +" order by id desc " ;
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
 			if (!zhxxGuid.equals("")) {
 				if(!tn.equals("FYBZ")) {

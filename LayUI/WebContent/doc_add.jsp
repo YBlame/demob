@@ -164,8 +164,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 								+ "<div class=\"layui-input-block\">"
 								+ ""
 								+ input
-								+ "</div>"
-								+ "<div class='layui-form-mid layui-word-aux'></div></div>";
+								+ "</div></div>";
 						break;
 					case "select"://下拉框类型
 						var selectDisabled = "";
@@ -191,8 +190,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 								+ ""
 								+ option
 								+ ""
-								+ "</select></div>"
-								+ "<div class='layui-form-mid layui-word-aux'></div></div>";
+								+ "</select></div></div>";
 						break;
 					case "textarea"://文本域
 						fromInput += "<div class='layui-form-item layui-form-text'><label class='layui-form-label' style='width:150px;'>"
@@ -208,7 +206,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 						break;
 					case "datetime"://时间
 						if (result[i].isedit == 1) {
-							fromInput += "<div class='layui-form-item'><label class='layui-form-label'>"
+							fromInput += "<div class='layui-form-item'><label class='layui-form-label' style='width:150px;' >"
 								+ isform
 									+ result[i].zdmc
 									+ "</label><div class='layui-input-inline'><input type='text' class='layui-input datetime' name='"+result[i].zdm+"' id='"+result[i].zdm+"' style='width:"+result[i].width+"px;' readonly placeholder='yyyy-MM-dd HH:mm:ss'></div></div>";
@@ -296,7 +294,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 
 	fromInput += "<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">   <button class='layui-btn' >立即提交</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>"
 											} else {
-												fromInput += "<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' onclick='toSubmitMenu()' >立即提交</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>"
+												fromInput += "<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' >立即提交</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>"
 											}
 											var formtypes = document
 													.getElementById("layui-form");

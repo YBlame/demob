@@ -627,7 +627,7 @@ public class DjPublicController {
 			if(bmDj.equals("SGRYBX")){
 				String type = "当前操作已保存";
 				request.getRequestDispatcher(
-						"/DJ/public/public_edit.jsp?guid=" + guid + "&bmc=" + bmcDj+"&zt="+"true"+"&flag="+type)
+						"/DJ/public/public_edit.jsp?guid=" + guid + "&bmc=" + bmcDj+"&zt=true&bm=SGRYBX"+"&flag="+type)
 						.forward(request, response);
 			}else{
 				request.getRequestDispatcher("/DJ/public/public_Index.jsp?flag=" + flag + "&bmc=" + dataTname + "&bm="

@@ -152,27 +152,8 @@ layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel', 'upload',
 												+ num+"&zhxxGuid="+zhxxGuid// 数据接口
 										,
 										title : '记录表',
-										defaultToolbar: ['filter', 'exports'],
-										page : {
-											layout : [
-													'prev',
-													'page',
-													'next',
-													'skip',
-													'count' ] // 自定义分页布局
-											,
-											first : false // 不显示首页
-											,
-											last : false
-										// 不显示尾页
-										}, // 开启分页
-										limit : 7,
-										limits : [
-												3,
-												5,
-												10,
-												20,
-												50 ],
+										defaultToolbar: ['exports'],
+										page : true,
 										done : function(
 												res,
 												curr,
