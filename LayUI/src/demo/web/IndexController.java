@@ -147,6 +147,22 @@ public class IndexController {
 		
 		return flag ;
 	}
+	/**
+	 * 查询个主场信息
+	 * @param request
+	 * @param res
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "findZcglry")
+	@ResponseBody
+	public Integer findZcglry(HttpServletRequest request, HttpServletResponse res) throws Exception{
+		
+		
+		return null;
+		
+	}
+		
 	
 	
 	

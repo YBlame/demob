@@ -14,6 +14,9 @@ function toIndexAdmin(){//去系统中栏目列表
 function findZhxx(){//添加展会
 	$("#demoAdmin").attr("src", "findZhxx")
 }
+function findZcglry(){//开发人员管理
+	$("#demoAdmin").attr("src", "findZcglry")
+}
 
 function userOut(){//退出
 	layer.confirm('确定退出吗？', function(

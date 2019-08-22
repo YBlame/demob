@@ -203,7 +203,12 @@ public class DocController {
 				}
 			}
 			if (tn.trim().toLowerCase().equals("zhxx")) {
-				sqlWhereZc += " AND GSBH = '" + userGuid + "' ";
+				if(roleid.equals("3")){//开发人员能看到全部展会信息
+					sqlWhereZc += "  ";
+				}else{
+					sqlWhereZc += " AND GSBH = '" + userGuid + "' ";
+				}
+				
 			}
 			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc +"   order by id desc";
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
@@ -216,7 +221,7 @@ public class DocController {
 					if (rs.getObject(i) == null) {
 						rowData.put(md.getColumnName(i), rs.getObject(i));
 					} else {
-						rowData.put(md.getColumnName(i), rs.getObject(i));
+						rowData.put(md.getColumnName(i), rs.getString(i));
 					}
 
 				}
