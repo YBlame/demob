@@ -585,14 +585,23 @@ cursor:pointer;
 							data: formList,
 							success: function (data) {
 								if (data.success) {
-									layer.alert(data.msg);
-									history.go(0)
+								var msgs=layer.alert(data.msg,function(){
+									
+		                                  layer.close(msgs);
+		                                  window.location.href = "DJ/FYHZ.jsp";
+										/*  var index =layer.open({
+								               
+								                type: 2, content: 'DJ/FYHZ.jsp', title: '费用汇总',
+								            });
+								         layer.full(index); */
+									});
+								/* 	history.go(0) */
 								} else {
 									layer.alert(data.msg);
 								}
 							},
 							error: function (jqXHR) {
-								aler("发生错误：" + jqXHR.status);
+								alert("发生错误：" + jqXHR.status);
 							}
 						});
 
