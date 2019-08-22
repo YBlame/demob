@@ -510,8 +510,8 @@ public class GzryController {
 		int columnCount = 0;
 		String destn = null;
 		if (typeDj.equals("true")) {
-			tn = bmDj;
-			destn = bmDj + "_des";
+			tn = "RYBDB";
+			destn = "RYBDB" + "_des";
 		} else {
 			tn = Bmodel.findBmByGuId(guid);// 描述表
 			destn = tn + "_des";
@@ -1448,13 +1448,12 @@ public class GzryController {
 										
 				}else if(audit.equals("NoPass")){
 					//修改报馆信息状态
-					String tn = "bgxx_" + zhxxguid;
-					String desTn = "bgxx_des_" + zhxxguid;
-					String shmczt="_ZT";
-					String sqlAudit = "UPDATE "+tn+" SET "+shmczt+"='未通过'  WHERE GUID=?";
-													
+					String tn = "sgryxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "sgryxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE RYBDB SET BDZT='未通过',RYZT='未通过'  WHERE ZHBH=?";					
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sqlAudit);				
+					ps = conn.prepareStatement(sql);				
 					ps.setString(1, zhxxguid);
 					try {
 						flag = ps.executeUpdate();
@@ -1464,12 +1463,9 @@ public class GzryController {
 						conn.rollback();
 					}
 					
-					//只要有一个状态是不通过,就把大的状态修改成拒绝
-					String sqlAudits = "UPDATE "+tn+" SET ZT='拒绝'  WHERE GUID=?";
-					
+					String sql1 = "UPDATE "+tn+" SET  ZT='未通过'";					
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sqlAudits);				
-					ps.setString(1, zhxxguid);
+					ps = conn.prepareStatement(sql1);				
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -1478,34 +1474,32 @@ public class GzryController {
 						conn.rollback();
 					}
 					
-					
-					//查找更新数据
-					String sqlSelect = "SELECT ZGH,ZWH FROM "+tn+" WHERE GUID=?";					
+					tn = "sgrybx_" + zhxxguid;
+					String sql2 = "UPDATE "+tn+" SET ZT='未通过'";													
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sqlSelect);				
-					ps.setString(1, zhxxguid);
-					rs = ps.executeQuery();
-					rs.first();
-					String gh =  rs.getString("ZGH").trim();
-					String zwh = rs.getString("ZWH").trim();
+					ps = conn.prepareStatement(sql2);								
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}					
 					
 					//向审核记录表中插入数据
 					// SHYJ, SHRY, SHRYBH, SHDXBH, SHSJ, SHXM,ZHBH, GH, ZWH
 					String shry=(String)session.getAttribute("NAME");
 				    String shrybh=(String)session.getAttribute("guid");
 				    String guid=UUIDUtil.getUUID();
-				    String sql = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHDXBH,SHSJ,SHXM,ZHBH,GH,ZWH) VALUES(?,?,?,?,?,now(),?,?,?,?)";					
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH) VALUES(?,?,?,?,now(),?,?)";					
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sql);				
+					ps = conn.prepareStatement(sqlinsert);				
 					ps.setString(1, guid);
 					ps.setString(2, suggest);
 					ps.setString(3, shry);
-					ps.setString(4, shrybh);
-					ps.setString(5, zhxxguid);			
+					ps.setString(4, shrybh);		
+					ps.setString(5, "SGRYXX");
 					ps.setString(6, zhxxguid);
-					ps.setString(7, zhxxguid);
-					ps.setString(8, gh);
-					ps.setString(9, zwh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -1513,8 +1507,7 @@ public class GzryController {
 						// TODO 自动生成的 catch 块
 						e.printStackTrace();
 						conn.rollback();
-					}
-				   					
+					}				   					
 					
 				}else{
 					return flag;

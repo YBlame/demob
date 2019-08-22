@@ -164,7 +164,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									    	fromInput +="<div class='layui-form-item'>"
 												+ "<label class='layui-form-label'>"+result[i].zdmc+isform+"</label>"
 												+ "<div class='layui-input-inline' style='width:"+result[i].width+"px;' >"
-												+ "<select name='"+result[i].zdmc+"' "+selectDisabled+" id='"+result[i].zdmc+"' >"
+												+ "<select name='"+result[i].zdmc+"' "+selectDisabled+" id='"+result[i].zdmc+"'  >"
 														+ ""+option+""
 														+ "</select></div>"
 														+ "<div class='layui-form-mid layui-word-aux'></div></div>";

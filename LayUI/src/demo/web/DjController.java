@@ -77,7 +77,6 @@ public class DjController {
 		while (rs.next()) {
 			if(menuGuid!=null){
 				for (int j = 0; j < menuGuid.length; j++) {
-					System.out.println(rs.getObject("guid")+"."+menuGuid[j]);
 					if (!rs.getObject("guid").equals(menuGuid[j])) {
 						
 					}else{
@@ -92,7 +91,6 @@ public class DjController {
 			}
 			
 		}
-		System.out.println(desList);
 		return desList;
 	}
 
@@ -115,7 +113,6 @@ public class DjController {
 		String[] menuGuid =DjMenu.returnMenu(session, roleGuid, zhxxGuid);
 		while (rs.next()) {
 			for (int j = 0; j < menuGuid.length; j++) {
-				System.out.println(rs.getObject("guid").equals(menuGuid[j]));
 				if (!rs.getObject("guid").equals(menuGuid[j])) {
 					
 				}else{
@@ -128,7 +125,6 @@ public class DjController {
 				
 			}
 		}
-		System.out.println(desList+"--");
 		return desList;
 	}
 
@@ -379,7 +375,6 @@ public class DjController {
 		while (rs.next()) {
 			Map<String, Object> rowData = new HashMap<String, Object>();
 			for (int i = 1; i <= columnCount; i++) {
-				System.out.println(md.getColumnName(i));
 				if (md.getColumnName(i).equals("RQ")) {
 					rowData.put(md.getColumnName(i), rs.getDate(i).toString());
 				} else {

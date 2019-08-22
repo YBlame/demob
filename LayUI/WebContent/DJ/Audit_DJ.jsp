@@ -57,9 +57,9 @@ a {
 				cellspacing="0" bgcolor="#FAFAFA"
 				style="border-left: 1px #000 solid; border-right: 1px #000 solid; border-bottom: 1px #000 solid; text-align: center; margin-top: 10px">
 				<tr>
-					<td width="861" height="55" align="center" bgcolor="#2553A0"
+					<td width="861" height="55" align="center" bgcolor="#009688"
 						style="font-size: 24px; color: #fff;">填报人信息</td>
-					<td width="39" align="center" bgcolor="#2553A0"
+					<td width="39" align="center" bgcolor="#009688"
 						style="font-size: 44px; color: #fff;"></td>
 				</tr>
 				<tr>
@@ -184,7 +184,7 @@ a {
 			</div>
 			<div class="layui-row" style="text-align: center">
 				<div class="layui-btn-group">
-					<button class="layui-btn layui-btn-normal" lay-submit
+					<button class="layui-btn" lay-submit
 						data-type="pass">合 格</button>
 
 					<button class="layui-btn layui-btn-danger" data-type="NoPass">不合格</button>

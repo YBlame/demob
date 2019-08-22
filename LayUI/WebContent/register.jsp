@@ -601,6 +601,8 @@ html body { -
 			       if(data=="1"){
 			         alert("注册成功，联系或等待管理员审核");
 			         window.location = "logins.jsp";
+			        }else if(data=="-500"){
+			        	alert("链接有误，请联系主场管理人员!");
 			        }else{
 			         //失败执行的代码
 			        alert("注册失败，请重试");

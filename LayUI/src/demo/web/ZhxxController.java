@@ -43,15 +43,69 @@ public class ZhxxController {
 	public void findMenu(HttpServletRequest request, HttpServletResponse res,String guid) throws Exception{
 		request.getRequestDispatcher("zhxx/menu_Index.jsp?zhxxGuid="+ guid).forward(request, res);
 	}
-	@RequestMapping(value = "findAllZhxx")
+	
+	@RequestMapping(value = "findDjsZhxx")
 	@ResponseBody
-	public List<Map<String, Object>> findAllZhxx(HttpServletRequest request, HttpServletResponse res,String guid) throws Exception{
+	public List<Map<String, Object>> findDjsZhxx(HttpServletRequest request, HttpServletResponse res,String guid) throws Exception{
 		list = new ArrayList<Map<String, Object>>();
+		HttpSession session  = request.getSession();
+		String zcbh = (String) session.getAttribute("ZCBH").toString().trim();
 		ResultSetMetaData md = null;
 		int columnCount = 0;
 		String tn  = Bmodel.findBmByGuId("a65611e7bc194941a7050bb14000967d");
 		conn = LinkSql.getConn();
-		String sql="select guid,ZHMC from "+tn+" where 1=1 ";
+		String sql="select guid,ZHMC from "+tn+" where 1=1 AND GSBH = '"+zcbh+"'";
+		ps = conn.prepareStatement(sql);
+		rs = ps.executeQuery();
+		md = rs.getMetaData(); // 获得结果集结构信息,元数据
+		columnCount = md.getColumnCount(); // 获得列数
+		while (rs.next()) {
+			Map<String, Object> rowData = new HashMap<String, Object>();
+			for (int i = 1; i <= columnCount; i++) {
+				rowData.put(md.getColumnName(i), rs.getObject(i));
+			}
+			list.add(rowData);
+		}
+		return list;
+	}
+	
+	@RequestMapping(value = "findYbgzryZhxx")
+	@ResponseBody
+	public List<Map<String, Object>> findYbgzryZhxx(HttpServletRequest request, HttpServletResponse res,String guid) throws Exception{
+		list = new ArrayList<Map<String, Object>>();
+		HttpSession session  = request.getSession();
+		String gs = (String) session.getAttribute("GS").toString().trim();
+		ResultSetMetaData md = null;
+		int columnCount = 0;
+		String tn  = Bmodel.findBmByGuId("a65611e7bc194941a7050bb14000967d");
+		conn = LinkSql.getConn();
+		String sql="select guid,ZHMC from "+tn+" where 1=1 AND GSBH = '"+gs+"'";
+		ps = conn.prepareStatement(sql);
+		rs = ps.executeQuery();
+		md = rs.getMetaData(); // 获得结果集结构信息,元数据
+		columnCount = md.getColumnCount(); // 获得列数
+		while (rs.next()) {
+			Map<String, Object> rowData = new HashMap<String, Object>();
+			for (int i = 1; i <= columnCount; i++) {
+				rowData.put(md.getColumnName(i), rs.getObject(i));
+			}
+			list.add(rowData);
+		}
+		return list;
+	}
+	@RequestMapping(value = "findZcZhxx")
+	@ResponseBody
+	public List<Map<String, Object>> findZcZhxx(HttpServletRequest request, HttpServletResponse res,String guid) throws Exception{
+		list = new ArrayList<Map<String, Object>>();
+		HttpSession session  = request.getSession();
+		
+		String userGuid = (String)session.getAttribute("guid");//主场，一般，搭建商
+		
+		ResultSetMetaData md = null;
+		int columnCount = 0;
+		String tn  = Bmodel.findBmByGuId("a65611e7bc194941a7050bb14000967d");
+		conn = LinkSql.getConn();
+		String sql="select guid,ZHMC from "+tn+" where 1=1 AND GSBH = '"+userGuid+"'";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 		md = rs.getMetaData(); // 获得结果集结构信息,元数据

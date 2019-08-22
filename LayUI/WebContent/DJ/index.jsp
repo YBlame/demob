@@ -307,7 +307,6 @@
 														};
 		
 													}
-													console.log(t);
 													cols.push(t);
 												}
 											}

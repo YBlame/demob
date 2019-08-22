@@ -113,7 +113,7 @@ $(document).ready(function(){
 										    	fromInput +="<div class='layui-form-item'>"
 													+ "<label class='layui-form-label' style='width:150px;'>"+result[i].zdmc+isform+"</label>"
 													+ "<div class='layui-input-inline'  style='width:"+result[i].width+"px;' >"
-													+ "<select name='"+result[i].zdmc+"' id='"+result[i].zdmc+"'   "+selectDisabled+"  >"
+													+ "<select name='"+result[i].zdmc+"' id='"+result[i].zdmc+"'   "+selectDisabled+"   >"
 															+ ""+option+""
 															+ "</select></div>"
 															+ "<div class='layui-form-mid layui-word-aux'></div></div>";

@@ -41,12 +41,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</div>
 			<script type="text/html" id="barDemo">
   					<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-  					<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 			</script>
 			<script type="text/html" id="toolbarDemo">
   				<div class="layui-btn-container">
-    				<button type="button" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="add">添加</button>
-					<button type="button" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="tijiao">提交审核</button>
+    				<button type="button" class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+					<button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="update">编辑</button>
+					<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">删除</button>
+					<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="tijiao">提交审核</button>
 				</div>
 			</script>
 		<script src="statics/layui/layui.js"></script>

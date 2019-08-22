@@ -118,14 +118,15 @@ layui.use(['form', 'layer', 'table'], function () {
         cache: false,
         dataType: "json",
         success: function (data) {
-            if (data != null) {           	                     	
-      			var sfzsmj = data.tp.split(',');
-              	if (sfzsmj.length >= 1) {
-  					for (var i = 0; i < sfzsmj.length; i++) {
-  						$("#mc").after('<div class="layui-input-inline" style="width: 170px; height: 100px;margin-right: 10px;"><div style="display:inline-block;"><a	 href="'+sfzsmj[i]+'"	target="_blank"> <img  width="170px" height="100px" src="'+sfzsmj[i]+'" name="sfzsmj_upload" alt="" style="position: relative;" class="">  </a></div></div>');
-  					}
-  				}            			            			
-            	          		           		                    	             	                 	
+            if (data) {  
+            	if(data.tp){
+            		var sfzsmj = data.tp.split(',');
+                  	if (sfzsmj.length >= 1) {
+      					for (var i = 0; i < sfzsmj.length; i++) {
+      						$("#mc").after('<div class="layui-input-inline" style="width: 170px; height: 100px;margin-right: 10px;"><div style="display:inline-block;"><a	 href="'+sfzsmj[i]+'"	target="_blank"> <img  width="170px" height="100px" src="'+sfzsmj[i]+'" name="sfzsmj_upload" alt="" style="position: relative;" class="">  </a></div></div>');
+      					}
+      				}            		
+            	}     		           			            			            	          		           		                    	             	                 	
             }
         }
     });
@@ -187,7 +188,7 @@ layui.use(['form', 'layer', 'table'], function () {
 					page:true,
 					done:function (res, curr, count) {
 						this.where={};
-	                    layer.close(index) //加载完数据
+	                   // layer.close(index) //加载完数据
 	                }
 					,
 					cols : [cols]
@@ -237,8 +238,10 @@ layui.use(['form', 'layer', 'table'], function () {
                         if (data === 1) {
                             layer.alert("审核成功", function () {
                                 var index = parent.layer.getFrameIndex(window.name);//关闭iframe页面
-                                parent.layer.close(index);
+                                
                                 parent.layui.table.reload('demo');
+                                parent.layer.close(index);
+                               
                             });
 
                         } else {

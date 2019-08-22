@@ -120,7 +120,7 @@ $(document).ready(function(){
 										    	fromInput +="<div class='layui-form-item'>"
 													+ "<label class='layui-form-label' style='width:150px;'>"+result[i].zdmc+isform+"</label>"
 													+ "<div class='layui-input-inline'  style='width:"+result[i].width+"px;' >"
-													+ "<select name='"+result[i].zdm+"' id='"+result[i].zdm+"'   "+selectDisabled+"  >"
+													+ "<select name='"+result[i].zdm+"' id='"+result[i].zdm+"'   "+selectDisabled+" lay-search=""  >"
 															+ ""+option+""
 															+ "</select></div>"
 															+ "<div class='layui-form-mid layui-word-aux'></div></div>";
@@ -201,6 +201,7 @@ $(document).ready(function(){
 										    	fromInput +=" <div class='layui-form-item'><label class='layui-form-label' style='width:150px;'>"+result[i].zdmc+isform+"</label><div class='layui-input-block'>"+optionR+"</div></div>";
 										    	break;
 										   case "pic":
+											   alert(data.SFZSMJ)
 										    	var imgData = data[result[i].zdm];
 										    	imgData = imgData.substring(0,imgData.length-1);
 										    	var picture = imgData.split(',');
@@ -231,10 +232,10 @@ $(document).ready(function(){
 									 var zt = $("#zt").val();
 									 if(name=="SGRYBX"){
 										 if (zt=="true") {
-											fromInput+="<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' lay-submit='' lay-filter='component-form-demo1'>保存</button><button type='button' id='tj' class='layui-btn'>提交</button></div> </div></div></div>";
+											fromInput+="<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' lay-submit='' lay-filter='component-form-demo1'>保存</button><button type='button' id='tj' class='layui-btn'>提交审核</button></div> </div></div></div>";
 										 }
 									}else{
-										 fromInput+="<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn'  lay-submit='' lay-filter='component-form-demo1'>立即提交</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>";
+										 fromInput+="<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn'  lay-submit='' lay-filter='component-form-demo1'>保存</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>";
 									 }
 									 $("#layui-form").append(fromInput)
 								     layui.use(['form', 'laydate', 'layer', 'upload'], function () {  

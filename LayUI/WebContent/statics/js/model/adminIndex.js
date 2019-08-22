@@ -1,14 +1,15 @@
 var reloadExpo;
+var zhxxGuid  = null;
 	layui.use(['element', 'layer', 'form', 'laytpl'], function () {
 	    var element = layui.element,
 	        layer = layui.layer,
 	        form = layui.form,
 	        laytpl = layui.laytpl;
 	    	reloadExpo = function(){
-	    	 $.post("zhxx/findAllZhxx", 
+	    	 $.post("zhxx/findZcZhxx", 
     		    function(data) {
-	    		 debugger
 	    		 if (data.length==0) {
+	    			 cj.removeCookie('selected_expo_id');
 	                 layer.alert('请先添加一个展会');
 	                 html = '<a href="javascript:toAddZhxx();">添加展会</a>';
 	                 $('#top_expo_nav li').html(html);
@@ -31,9 +32,10 @@ var reloadExpo;
 	                        }
 
 	                        if (data.length > 1) html += other;
-
 	                        $('#top_expo_nav li').html(html);
 	                        element.render('nav', 'top_expo_nav');
+	                        cj.setCookie('selected_expo_id', selected, 365);
+	                        zhxxGuid = cj.getCookie("selected_expo_id")
 
 	                    } else {
 	                        html = '<a href="javascript:;" id="g_expo" data-id="' + data[0].guid + '">' + data[0].ZHMC + '</a>';
@@ -47,6 +49,7 @@ var reloadExpo;
 	                        }
 	                        $('#top_expo_nav li').html(html);
 	                        cj.setCookie('selected_expo_id', data[0].guid, 365);
+	                        zhxxGuid  = cj.getCookie('selected_expo_id');
 	                        element.render('nav', 'top_expo_nav');
 	                    }
 	                }  else { // 无展会，提示添加测试
@@ -71,12 +74,13 @@ var reloadExpo;
 	            btn: ['切换', '不切换']
 	        }, function () {
 	        	cj.setCookie('selected_expo_id', elemId, 365);
+	        	
 	            location.reload();
 	            $("#demoAdmin").attr("src", "findZhxx");
 	        });
 	    });
 	});
-var zhxxGuid  = cj.getCookie('selected_expo_id');
+
 function toSystem(){//系统管理
 	$("#demoAdmin").attr("src", "menu/toMenu")
 }
@@ -99,6 +103,8 @@ function findFybz(){
 }
 
 function toZggl(){//对展馆管理
+	
+	alert(zhxxGuid)
 	var guid="f77fa37759f44b1f8f49cd6b5c7c100f";
 	var bmc="展馆管理";
 	$("#demoAdmin").attr("src", "zhxx/public/public_Index.jsp?guid="+guid+"&bmc="+bmc+"&zhxxGuid="+zhxxGuid);
@@ -117,6 +123,7 @@ function toZhgg(){//消息通知
 function userOut(){//退出
 	layer.confirm('确定退出吗？', function(
 			index) {
+			cj.removeCookie('selected_expo_id');
 			top.location.href = "userOut";
 			layer.close(index);
 	});

@@ -176,9 +176,57 @@ $(document).ready(function() {
 															}
 															
 															break;
-														case 'delete':
-															window.location.href = "bmodel_Index.jsp";
-															break;
+														 case 'delete':
+														        if(data.length === 0){
+														          layer.msg('请选择一行');
+														        } else {
+														        	layer.confirm('确认删除？', function(index) {
+														        		layer.msg('正在删除...', {icon: 16,shade: 0.3,time:1000});
+														        		var guid ="";
+														        		for (var i = 0; i < data.length; i++) {
+																			guid +=data[i]["guid"]+","
+																		}
+														        		guid = guid.substring(0,guid.length-1)
+																		var guidBmodel = $("#guid").val();
+																		layer.close(index);
+																		$.post("doc/deleteDoc", {
+																			guid : guid,
+																			guidBmodel :guidBmodel
+																		}, function(result) {
+																			if (result=="delFinish") {
+																				layer.msg('已删除!', {
+											                                        icon: 1, time: 800, end: function () {
+											                                            window.location.reload();
+											                                        }
+											                                    });
+																			}else{
+																				layer.msg('删除失败', {
+											                                        icon: 1, time: 1000, end: function () {
+											                                           
+											                                        }
+											                                    });
+																			}
+																		});
+																	});
+														        }
+														      break;
+														case 'update':
+													        if(data.length === 0){
+													          layer.msg('请选择一行');
+													        } else if(data.length > 1){
+													          layer.msg('只能同时编辑一个');
+													        } else {
+													        	var guid = data.id;//拿到一行数据中的guid
+																var guidBmodel = $("#guidBmodel").val();
+																if (guidBmodel==null||guidBmodel=="null"||guidBmodel==undefined||guidBmodel=="") {
+																	var guidB =$("#guid").val();//拿到模型表中的guid
+																	var bmc = $("#bmc").val();
+																	window.location.href = "djpublic/toUpdateDoc?guid="+guid+"&guidBmodel="+guidB+"&bmc="+bmc;
+																}else{
+																	window.location.href = "djpublic/toUpdateDoc?guid="+guid+"&guidBmodel="+guidBmodel+"&bmc="+bmc;
+																}
+													        }
+													        break;
 														case 'tijiao':
 
 												               layer.open({
@@ -212,52 +260,7 @@ $(document).ready(function() {
 														;
 													});
 
-									//监听行工具事件
-									table.on('tool(test)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
-										var data = obj.data //获得当前行数据
-										, layEvent = obj.event; //获得 lay-event 对应的值
-										if (layEvent === 'detail') {
-											var guid = data['guid'];
-											openDetail(guid);
-										} else if (layEvent === 'del') {
-											layer.confirm('真的删除该行么', function(index) {
-												var guid = data['guid'];
-												var guidBmodel = $("#guid").val();
-												layer.close(index);
-												$.post("doc/deleteDoc", {
-													guid : guid,
-													guidBmodel :guidBmodel
-												}, function(result) {
-													if (result=="delFinish") {
-														layer.msg("删除成功...");
-														obj.del();
-													}else{
-														layer.msg("删除成功...");
-													}
-												});
-											});
-										} else if (layEvent === 'edit') {
-											var guid = data['guid'];//拿到一行数据中的guid
-											var guidBmodel = $("#guidBmodel").val();
-											if (guidBmodel==null||guidBmodel=="null"||guidBmodel==undefined||guidBmodel=="") {
-												var guidB =$("#guid").val();//拿到模型表中的guid
-												var bmc = $("#bmc").val();
-												window.location.href = "djpublic/toUpdateDoc?guid="+guid+"&guidBmodel="+guidB+"&bmc="+bmc;
-											}else{
-												window.location.href = "djpublic/toUpdateDoc?guid="+guid+"&guidBmodel="+guidBmodel+"&bmc="+bmc;
-											}
-											//方便显示表单
-										}else if (layEvent === 'audit') {
-										       var guid = data['guid'];
-
-										       layer.open({
-										        type : 2,
-										        area : [ '1000px', '90%' ],
-										        content : 'DJ/Audit_DJ.jsp?guid=' + guid,
-										        title : '人员信息审核',
-										       });
-										      }
-									});
+									
 									// 打开查看按钮
 									function openDetail(guid) {
 										window.location = "bzdk_Index.jsp?guid="

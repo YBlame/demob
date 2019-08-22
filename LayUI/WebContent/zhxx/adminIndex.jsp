@@ -53,6 +53,8 @@
 			            <dd><a href="javascript:toZggl();" data-url="toMenu">展馆管理</a></dd>
 			            <dd><a href="javascript:toZwgl();" data-url="">展位管理</a></dd>
 			             <dd><a href="javascript:toZhgg();" data-url="">消息通知</a></dd>
+			              <dd><a href="javascript:findFybz();" data-url="">费用标准</a></dd>
+			              <dd><a href="javascript:findRddjs();" data-url="">入围搭建商</a></dd>
 			          </dl>
 		        </li>
 				 <li class="layui-nav-item layui-nav-itemed">
@@ -61,7 +63,6 @@
 			            <dd><a href="javascript:toSystem();" data-url="toMenu">菜单管理</a></dd>
 			            <dd><a href="javascript:toRule();" data-url="">权限管理</a></dd>
 			             <dd><a href="javascript:toSyrgl();" data-url="">人员管理</a></dd>
-			              <dd><a href="javascript:findFybz();" data-url="">费用标准</a></dd>
 			          </dl>
 		        </li>
 			</ul>

@@ -289,7 +289,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 				if (guid == "73c2efa3c34f4904ae0eee4ab31dfa79") {//此处是用于菜单的新增
 					fromInput += "<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">   <button class='layui-btn' >立即提交</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>"
 				} else {
-					fromInput += "<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' onclick='toSubmitMenu()' >立即提交</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>"
+					fromInput += "<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' onclick='toSubmitMenu()' >保存</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>"
 				}
 				var formtypes = document.getElementById("layui-form");
 				formtypes.innerHTML = fromInput;
