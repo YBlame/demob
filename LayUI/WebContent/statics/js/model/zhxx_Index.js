@@ -135,13 +135,8 @@ $(document).ready(function() {
 														url : 'doc/findDocTable?guid='+guid+"&num="+num//数据接口
 														,
 														title : '记录表',
-														page : {
-															layout: ['prev', 'page', 'next', 'skip', 'count'] //自定义分页布局
-															,first: false //不显示首页
-												            ,last: false //不显示尾页
-														}, //开启分页
-														limit: 7,
-														limits: [3,5,10,20,50],
+														page :true,
+														defaultToolbar: ['exports'],
 														done:function (res, curr, count) {
 															this.where={};
 										                    layer.close(index) //加载完数据
@@ -156,39 +151,68 @@ $(document).ready(function() {
 									})
 									//监听头工具栏事件
 									table.on('toolbar(test)',
-													function(obj) {
-														var checkStatus = table
-																.checkStatus(obj.config.id), data = checkStatus.data; //获取选中的数据
-														switch (obj.event) {
-														case 'add':
-															var guidBmodel = $("#guidBmodel").val();
-															if (guidBmodel==null||guidBmodel=="null"||guidBmodel==undefined||guidBmodel=="") {
-																var guid = $("#guid").val();
-																window.location.href = "doc/toAddDataJsp?guid="+guid+"&bmc=展会";
-															}else{
-																window.location.href = "doc/toAddDataJsp?guid="+guidBmodel+"&bmc=展会";
+										function(obj) {
+											var checkStatus = table
+													.checkStatus(obj.config.id), data = checkStatus.data; //获取选中的数据
+											switch (obj.event) {
+											case 'add':
+												var guidBmodel = $("#guidBmodel").val();
+												if (guidBmodel==null||guidBmodel=="null"||guidBmodel==undefined||guidBmodel=="") {
+													var guid = $("#guid").val();
+													window.location.href = "doc/toAddDataJsp?guid="+guid+"&bmc=展会";
+												}else{
+													window.location.href = "doc/toAddDataJsp?guid="+guidBmodel+"&bmc=展会";
+												}
+												break;
+											case 'delete':
+												if(data.length === 0){
+											          layer.msg('请选择一行');
+											        } else {
+											        	layer.confirm('确认删除？', function(index) {
+											        		layer.msg('正在删除...', {icon: 16,shade: 0.3,time:1000});
+											        		var guid ="";
+											        		for (var i = 0; i < data.length; i++) {
+																guid +=data[i]["guid"]+","
 															}
-															break;
-														case 'delete':
-															window.history.back(-1);
-															break;
-														case 'edit':
-															if(data.length === 0){
-														          layer.msg('请选择一行');
-														        } else if(data.length > 1){
-														          layer.msg('只能同时编辑一个');
-														        } else {
-														        	var guid = data[0]['guid'];//拿到一行数据中的guid
-																	var guidBmodel =$("#guid").val();//拿到模型表中的guid
-																	//方便显示表单
-																	window.location.href = "doc/toUpdateDoc?guid="+guid+"&guidBmodel="+guidBmodel;
-														        }
-															
-															break;
-														}
-															
-														
-													});
+															var guidBmodel = $("#guid").val();
+															layer.close(index);
+															$.post("doc/deleteDoc", {
+																guid : guid,
+																guidBmodel :guidBmodel
+															}, function(result) {
+																if (result=="delFinish") {
+																	layer.msg('已删除!', {
+								                                        icon: 1, time: 800, end: function () {
+								                                            window.location.reload();
+								                                        }
+								                                    });
+																}else{
+																	layer.msg('删除失败', {
+								                                        icon: 1, time: 1000, end: function () {
+								                                           
+								                                        }
+								                                    });
+																}
+															});
+														});
+											        }
+											      break;
+											case 'edit':
+												if(data.length === 0){
+											          layer.msg('请选择一行');
+											        } else if(data.length > 1){
+											          layer.msg('只能同时编辑一个');
+											        } else {
+											        	var guid = data[0]['guid'];//拿到一行数据中的guid
+														var guidBmodel =$("#guid").val();//拿到模型表中的guid
+														//方便显示表单
+														window.location.href = "doc/toUpdateDoc?guid="+guid+"&guidBmodel="+guidBmodel+"&bmc=展会";
+											        }
+												break;
+											}
+												
+											
+										});
 
 									//监听行工具事件
 									table.on('tool(test)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"

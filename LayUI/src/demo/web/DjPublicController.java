@@ -780,8 +780,7 @@ public class DjPublicController {
 	@RequestMapping("toUpdateDoc")
 	public void toUpdate(HttpServletRequest request, HttpServletResponse res, String guid, String guidBmodel,
 			String bmc) throws Exception {
-		request.getRequestDispatcher(
-				"/DJ/public/public_edit.jsp?guid=" + guid + "&guidBmodel=" + guidBmodel + "&bmc=" + bmc)
+		request.getRequestDispatcher("/DJ/public/public_edit.jsp?guid=" + guid + "&guidBmodel=" + guidBmodel + "&bmc=" + bmc)
 				.forward(request, res);
 	}
 	/**

@@ -22,8 +22,7 @@ public class PublicMethod {
 	 */
 	public static ResultSet findBmodelField(String tn,String guid)throws Exception{
 		conn = LinkSql.getConn();
-		String sqlSelect = "SELECT zdm,zdmc,isform,isedit,xs,width,tips,formtypes,initval,jsdm,api,guid FROM "+tn+"_des WHERE guid = \'" + guid
-				+ "\' and xs = 1  ORDER BY lisnum asc , id asc";
+		String sqlSelect = "SELECT zdm,zdmc,isform,isedit,xs,width,tips,formtypes,initval,jsdm,api,guid FROM "+tn+"_des WHERE  xs = 1  ORDER BY lisnum asc , id asc";
 		ps = conn.prepareStatement(sqlSelect);
 		rs = ps.executeQuery();
 		return rs;

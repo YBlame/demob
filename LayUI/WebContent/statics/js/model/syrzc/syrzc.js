@@ -181,12 +181,60 @@ layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel', 'upload',
 												.checkStatus(obj.config.id), data = checkStatus.data; // 获取选中的数据
 										switch (obj.event) {
 										case 'add':
-											var guid = $("#guid").val();
-											window.location.href = "zhxx/public/public_add.jsp?guid="+guid;
+											var guidBmodel = $("#guidBmodel").val();
+											if (guidBmodel==null||guidBmodel=="null"||guidBmodel==undefined||guidBmodel=="") {
+												var guid = $("#guid").val();
+												window.location.href = "doc/toAddDataJsp?guid="+guid+"&bmc=使用人";
+											}else{
+												window.location.href = "doc/toAddDataJsp?guid="+guidBmodel+"&bmc=使用人";
+											}
 											break;
 										case 'delete':
-											window.location.href = "bmodel_Index.jsp";
+											if(data.length === 0){
+										          layer.msg('请选择一行');
+										        } else {
+										        	layer.confirm('确认删除？', function(index) {
+										        		layer.msg('正在删除...', {icon: 16,shade: 0.3,time:1000});
+										        		var guid ="";
+										        		for (var i = 0; i < data.length; i++) {
+															guid +=data[i]["guid"]+","
+														}
+														var guidBmodel = $("#guid").val();
+														layer.close(index);
+														$.post("doc/deleteDoc", {
+															guid : guid,
+															guidBmodel :guidBmodel
+														}, function(result) {
+															if (result=="delFinish") {
+																layer.msg('已删除!', {
+							                                        icon: 1, time: 800, end: function () {
+							                                        	table.reload('demo',{page:{curr:1}});
+							                                            parent.reloadExpo();
+							                                        }
+							                                    });
+															}else{
+																layer.msg('删除失败', {
+							                                        icon: 1, time: 1000, end: function () {
+							                                           
+							                                        }
+							                                    });
+															}
+														});
+													});
+										        }
 											break;
+										case 'update':
+									        if(data.length === 0){
+									          layer.msg('请选择一行');
+									        } else if(data.length > 1){
+									          layer.msg('只能同时编辑一个');
+									        } else {
+									        	var guid = data[0]['guid'];//拿到一行数据中的guid
+												var guidBmodel =$("#guid").val();//拿到模型表中的guid
+												//方便显示表单
+												window.location.href = "doc/toUpdateDoc?guid="+guid+"&guidBmodel="+guidBmodel+"&bmc=使用人";
+									        }
+									        break;
 										}
 										;
 									});
@@ -196,28 +244,12 @@ layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel', 'upload',
 						var data = obj.data // 获得当前行数据
 						, layEvent = obj.event; // 获得 lay-event 对应的值
 						if (layEvent === 'detail') {
-						} else if (layEvent === 'del') {
-							layer.confirm('真的删除该行么', function(index) {
-								var guid = data['guid'];
-								var guidBmodel = $("#guid").val();
-								layer.close(index);
-								$.post("doc/deleteDoc", {
-									guid : guid,
-									guidBmodel : guidBmodel
-								}, function(result) {
-									if (result == "delFinish") {
-										layer.msg("删除成功...");
-										obj.del();
-									} else {
-										layer.msg("删除成功...");
-									}
-								});
-							});
-						} else if (layEvent === 'edit') {
+							var guid= data['guid'];
+							linkCopy(guid);
+						}else if (layEvent === 'edit') {
 							var guid = data['guid'];// 拿到一行数据中的guid
-								var guidB = $("#guid").val();// 拿到模型表中的guid
-								window.location.href = "zhxx/public/public_edit.jsp?guid="+guid+"&guidBmodel="+guidB;
-							// 方便显示表单
+							var guidB = $("#guid").val();// 拿到模型表中的guid
+							window.location.href = "zhxx/public/public_edit.jsp?guid="+guid+"&guidBmodel="+guidB;
 						}
 					});
 					//表格重载

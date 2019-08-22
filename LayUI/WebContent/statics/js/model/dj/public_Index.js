@@ -146,6 +146,7 @@ $(document).ready(function() {
 														url : 'djpublic/findDocTable?guid='+guid+"&num="+num//数据接口
 														,
 														title : '记录表',
+														defaultToolbar: ['exports'],
 														page:true,
 														done:function (res, curr, count) {
 															this.where={};
@@ -186,7 +187,6 @@ $(document).ready(function() {
 														        		for (var i = 0; i < data.length; i++) {
 																			guid +=data[i]["guid"]+","
 																		}
-														        		guid = guid.substring(0,guid.length-1)
 																		var guidBmodel = $("#guid").val();
 																		layer.close(index);
 																		$.post("doc/deleteDoc", {

@@ -60,6 +60,7 @@ public class ZcPublicController {
 			HttpSession session = request.getSession();
 			final String user = (String) session.getAttribute("user");
 			final String role = (String) session.getAttribute("role");
+			String roleid=session.getAttribute("roleid").toString();
 			list = new ArrayList<Map<String, Object>>();
 			String tn = null;
 			ResultSetMetaData md = null;
@@ -69,15 +70,20 @@ public class ZcPublicController {
 			tn = Bmodel.findBmByGuId(guid);// 描述表
 			destn = tn + "_des";
 			String sqlDes = null;
-			if (tn.equals("user")) {
-				// **在主场管理员中人员管理，不需要显示的值用iskeep来替换显示，默认为0**
-				sqlDes = "select zdm,zdmc,width,formtypes from " + destn + " where 1=1 ";
-				sqlDes = sqlDes + " and iskeep = 0  ";
+			if(tn.equals("SYRZC")){
+				if(roleid.equals("3")){
+					// **在主场管理员中人员管理，不需要显示的值用iskeep来替换显示，默认为0**
+					sqlDes = "select zdm,zdmc,width,formtypes from " + destn + " where 1=1 ";
+					sqlDes = sqlDes + " and beizhu = 1  ";
+				}else{
+					sqlDes = "select zdm,zdmc,width,formtypes from " + destn + " where 1=1 ";
+					sqlDes = sqlDes + " and iskeep = 0   ";
+				}
+				
 			} else {
 				sqlDes = "select zdm,zdmc,width,formtypes from " + destn + " where 1=1 ";
 				sqlDes = sqlDes + " and isshow = 1  ";
 			}
-
 			if (user != null && role != null) {
 				sqlRale = "";
 				sqlDes = sqlDes + sqlRale;
@@ -124,6 +130,7 @@ public class ZcPublicController {
 		HttpSession session = request.getSession();
 		String uguid = session.getAttribute("guid").toString();
 		final String role = (String) session.getAttribute("role");
+		String roleid = session.getAttribute("roleid").toString().trim();
 		list = new ArrayList<Map<String, Object>>();
 		String tn = null;
 		ResultSetMetaData md = null;
@@ -138,7 +145,15 @@ public class ZcPublicController {
 		list = new ArrayList<Map<String, Object>>();
 		String sqlZdmc = " ";
 		conn = LinkSql.getConn();
-		String sqlzdm = "select zdm from " + destn;
+		String desWhere = "";
+		 if (tn.equals("SYRZC")) {//如果进入
+				if(roleid.equals("3")){
+					desWhere = " AND beizhu =1 ";
+				}else{
+					desWhere = " AND xs =1 ";
+				}
+			}
+		String sqlzdm = "select zdm from " + destn +" where 1=1 "+desWhere;
 		ps = LinkSql.Execute(conn, sqlzdm, role, destn);
 		rs = ps.executeQuery();
 		md = rs.getMetaData(); // 获得结果集结构信息,元数据
@@ -150,33 +165,47 @@ public class ZcPublicController {
 		}
 		String sqlWhere = "";
 		if (!zhxxGuid.equals("")) {
-			if(tn.equals("FYBZ")){
+			if (tn.equals("FYBZ")) {
 				sqlWhere = "  ";
-			}else if (tn.equals("user")) {
-				sqlWhere = " AND roleid!=4 AND roleid!=3 AND roleid!=1 AND GS='"+uguid+"' ";
+			}else if (tn.equals("SYRZC")) {//如果进入
+				if(roleid.equals("3")){
+					sqlWhere = " AND roleid =4 ";
+				}else{
+					sqlWhere = " AND roleid =5 ";
+				}
+				
 			} else {
 				sqlWhere = " AND ZHGUID = ? ";
 			}
 
-		}else{
-			if (tn.equals("user")) {
-				sqlWhere = " AND roleid!=4 AND roleid!=3 AND roleid!=1 AND GS='"+uguid+"' ";
-			} else {
+		} else {
+			if (tn.equals("SYRZC")) {//如果进入
+				if(roleid.equals("3")){
+					sqlWhere = " AND roleid =4 ";
+				}else{
+					sqlWhere = " AND roleid =5 ";
+				}
+				
+			}  else {
 				sqlWhere = " AND 1>2 ";
 			}
 		}
 		sqlZdmc = sqlZdmc.substring(0, sqlZdmc.length() - 1);
 		if (sqlZdmc.length() != 0) {
 			String sqlData = null;
-			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere +" order by id desc " ;
+			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + " order by id desc ";
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
 			if (!zhxxGuid.equals("")) {
-				if(!tn.equals("FYBZ")) {
-					if (!tn.equals("user")) {
-						ps.setString(1, zhxxGuid);
+				if (tn.equals("SYRZC")) {
+				} else {
+					if (!tn.equals("FYBZ")) {
+						if (!tn.equals("user")) {
+							ps.setString(1, zhxxGuid);
+						}
+
 					}
-					
 				}
+
 			}
 			rs = ps.executeQuery();
 			md = rs.getMetaData();
@@ -198,11 +227,14 @@ public class ZcPublicController {
 			String sqlCount = "select count(*) from " + tn + " where 1=1" + sqlWhere;
 			ps = conn.prepareStatement(sqlCount);
 			if (!zhxxGuid.equals("")) {
-				if(!tn.equals("FYBZ")) {
-					if (!tn.equals("user")) {
-						ps.setString(1, zhxxGuid);
+				if (tn.equals("SYRZC")) {
+				} else {
+					if (!tn.equals("FYBZ")) {
+						if (!tn.equals("user")) {
+							ps.setString(1, zhxxGuid);
+						}
+
 					}
-					
 				}
 			}
 			rs = ps.executeQuery();
@@ -238,7 +270,7 @@ public class ZcPublicController {
 	public Object toAddData(Model model, HttpServletRequest request, HttpServletResponse res, String guid,
 			String guidBmodel) throws Exception {
 		HttpSession session = request.getSession();
-
+		String roleid= session.getAttribute("roleid").toString();
 		// 拿到guid,查询模型表表名
 		list = new ArrayList<Map<String, Object>>();
 		ResultSetMetaData md = null;
@@ -253,7 +285,15 @@ public class ZcPublicController {
 		}
 		tn = Bmodel.findBmByGuId(guidBmodel);// 描述表
 		// 获取描述表字段
-		rs = PublicMethod.findBmodelField(tn, guidBmodel);
+		if(tn.equals("SYRZC")){
+			if(roleid.equals("3")){
+				
+			}
+			rs = PublicMethod.findBmodelField(tn, guidBmodel);
+		}else{
+			rs = PublicMethod.findBmodelField(tn, guidBmodel);
+		}
+		
 		md = rs.getMetaData(); // 获得结果集结构信息,元数据
 		columnCount = md.getColumnCount(); // 获得列数
 		while (rs.next()) {
@@ -324,7 +364,7 @@ public class ZcPublicController {
 			}
 			value = value.substring(0, value.length() - 1);// 数据表字段对应值
 			sqlZdmc = sqlZdmc.substring(0, sqlZdmc.length() - 1);// 数据表字段
-		} finally{
+		} finally {
 			rs.close();
 			ps.close();
 		}
@@ -332,10 +372,10 @@ public class ZcPublicController {
 		 * 当添加或修改时的隐藏字段，赋予默认值
 		 */
 		conn = LinkSql.getConn();
-		String sqlXs =null;
+		String sqlXs = null;
 		if (destn.equals("user_des")) {
 			sqlXs = "select zdm,types from " + destn + " where iskeep =1";
-		}else{
+		} else {
 			sqlXs = "select zdm,types from " + destn + " where xs =0";
 		}
 		ps = conn.prepareStatement(sqlXs);
@@ -346,38 +386,38 @@ public class ZcPublicController {
 		columnCount = 0;
 		if (rs.next()) {
 			rs.beforeFirst();
-				while (rs.next()) {
-					String types = rs.getString("types");
-					String zdm = rs.getString("zdm");
-					
-					valueXs += "," + zdm;
-					System.out.println(zdm);
-					System.out.println(types);
-					switch (types) {
-					case "datetime":
-						sqlZdmcXs += ",NOW()";
-						break;
-					case "varchar":
-						if (zdm.equals("MM")) {
-							sqlZdmcXs += ",'E10ADC3949BA59ABBE56E057F20F883E'";
-						}else if(zdm.equals("ZT")){
-							sqlZdmcXs +=",'通过'";
-						}else{
-							sqlZdmcXs += ",null";
-						}
-						
-						break;
-					case "int":
-						sqlZdmcXs += ",1";
-						break;
-					case "date":
-						sqlZdmcXs += ",CURDATE()";
-						break;
-					case "text":
-						sqlZdmcXs +=",null";
-						break;
+			while (rs.next()) {
+				String types = rs.getString("types");
+				String zdm = rs.getString("zdm");
+
+				valueXs += "," + zdm;
+				System.out.println(zdm);
+				System.out.println(types);
+				switch (types) {
+				case "datetime":
+					sqlZdmcXs += ",NOW()";
+					break;
+				case "varchar":
+					if (zdm.equals("MM")) {
+						sqlZdmcXs += ",'E10ADC3949BA59ABBE56E057F20F883E'";
+					} else if (zdm.equals("ZT")) {
+						sqlZdmcXs += ",'通过'";
+					} else {
+						sqlZdmcXs += ",null";
 					}
-					
+
+					break;
+				case "int":
+					sqlZdmcXs += ",1";
+					break;
+				case "date":
+					sqlZdmcXs += ",CURDATE()";
+					break;
+				case "text":
+					sqlZdmcXs += ",null";
+					break;
+				}
+
 			}
 			value += sqlZdmcXs;// 包含添加或修改中的不显示的字段
 			sqlZdmc += valueXs;// 包含添加或修改中的不显示的字段
@@ -430,6 +470,21 @@ public class ZcPublicController {
 		}
 	}
 
+	/**
+	 * 去修改页面
+	 * 
+	 * @param request
+	 * @param res
+	 * @param guid
+	 * @param guidBmodel
+	 * @throws Exception
+	 */
+	@RequestMapping("toUpdateDoc")
+	public void toUpdate(HttpServletRequest request, HttpServletResponse res, String guid, String guidBmodel,
+			String bmc) throws Exception {
+		request.getRequestDispatcher("/zhxx/public/public_edit.jsp?guid=" + guid + "&guidBmodel=" + guidBmodel + "&bmc=" + bmc)
+				.forward(request, res);
+	}
 	/**
 	 * 做修改操作
 	 * 
@@ -532,12 +587,10 @@ public class ZcPublicController {
 		}
 		String flag = null;
 		try {
-
 			ps.executeUpdate();
 			conn.commit();
 			request.getRequestDispatcher("/zhxx/public/public_Index.jsp?flag=" + flag + "&bmc=" + dataTname
 					+ "&guidBmodel=" + guid + " &guid=" + guidBmodel).forward(request, response);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			conn.rollback();

@@ -177,8 +177,38 @@ $(document).ready(function() {
 															
 															break;
 														case 'delete':
-															window.location.href = "bmodel_Index.jsp";
-															break;
+															if(data.length === 0){
+														          layer.msg('请选择一行');
+														        } else {
+														        	layer.confirm('确认删除？', function(index) {
+														        		layer.msg('正在删除...', {icon: 16,shade: 0.3,time:1000});
+														        		var guid ="";
+														        		for (var i = 0; i < data.length; i++) {
+																			guid +=data[i]["guid"]+","
+																		}
+																		var guidBmodel = $("#guid").val();
+																		layer.close(index);
+																		$.post("doc/deleteDoc", {
+																			guid : guid,
+																			guidBmodel :guidBmodel
+																		}, function(result) {
+																			if (result=="delFinish") {
+																				layer.msg('已删除!', {
+											                                        icon: 1, time: 800, end: function () {
+											                                            window.location.reload();
+											                                        }
+											                                    });
+																			}else{
+																				layer.msg('删除失败', {
+											                                        icon: 1, time: 1000, end: function () {
+											                                           
+											                                        }
+											                                    });
+																			}
+																		});
+																	});
+														        }
+														      break;
 														}
 														;
 													});

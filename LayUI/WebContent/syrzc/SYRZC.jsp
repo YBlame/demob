@@ -36,13 +36,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<table class="layui-hide"  id="demo" lay-filter="test" style="height: 100%" ></table>
 				</div>
 			<script type="text/html" id="barDemo">
-  					<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-  					<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+  					<textarea id="copyhref" cols="40" rows="5" style="height: 0.1px; width: 0.1px; opacity: .01;"></textarea><a class="layui-btn  layui-btn-normal layui-btn-xs" id="share-link-skip" lay-event="detail">复制链接</a>
 			</script>
 			<script type="text/html" id="toolbarDemo">
   				<div class="layui-btn-container">
     				<button type="button" class="layui-btn layui-btn-sm" lay-event="add">添加</button>
-    				<button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="edit">修改</button>
+    				<button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="update">编辑</button>
     				<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">删除</button>
 				</div>
 			</script>
@@ -50,5 +49,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<script src="statics/layui/layui.js"></script>
 		<script src="statics/js/concisejs.js"></script>
 		<script type="text/javascript" src="statics/js/jquery-1.8.0.js"></script>
-		<script src="statics/js/model/public/public_Index.js"></script>
+		<script src="statics/js/linkCopy.js"></script>
+		<script src="statics/js/model/syrzc/syrzc.js"></script>
 </html>

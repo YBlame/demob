@@ -92,7 +92,7 @@ function findZhxx(){//添加展会
 	$("#demoAdmin").attr("src", "findZhxx")
 }
 function toSyrgl(){//对一般工作人员管理
-	var guid="00c99009ec2d4cb883acc9ae24f73b6e";
+	var guid="1199221444f345a7bc770f8dc2ba9ed5";
 	var bmc="人员管理";
 	$("#demoAdmin").attr("src", "zhxx/public/public_Index.jsp?guid="+guid+"&bmc="+bmc+"&zhxxGuid="+zhxxGuid);
 }
@@ -103,8 +103,6 @@ function findFybz(){
 }
 
 function toZggl(){//对展馆管理
-	
-	alert(zhxxGuid)
 	var guid="f77fa37759f44b1f8f49cd6b5c7c100f";
 	var bmc="展馆管理";
 	$("#demoAdmin").attr("src", "zhxx/public/public_Index.jsp?guid="+guid+"&bmc="+bmc+"&zhxxGuid="+zhxxGuid);

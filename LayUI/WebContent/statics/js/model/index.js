@@ -15,7 +15,9 @@ function findZhxx(){//添加展会
 	$("#demoAdmin").attr("src", "findZhxx")
 }
 function findZcglry(){//开发人员管理
-	$("#demoAdmin").attr("src", "findZcglry")
+	var guid="1199221444f345a7bc770f8dc2ba9ed5";
+	var bmc="使用人";
+	$("#demoAdmin").attr("src", "syrzc/SYRZC.jsp?guid="+guid+"&bmc="+bmc);
 }
 
 function userOut(){//退出

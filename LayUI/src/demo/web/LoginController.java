@@ -158,7 +158,7 @@ public class LoginController {
 		int columnCount = 0;
 		conn = LinkSql.getConn();
 		String role = "system";// 当前角色为开发者
-		String tn = "sryzc";// 根据模型表中guid判断当前表名
+		String tn = "syrzc";// 根据模型表中guid判断当前表名
 		String pwd = MD5.GetMd5(mm);// MD5加密进行数据库判断
 		String sqlWhere = " and sj=? and mm=? ";
 		String sql = "select id, guid, NAME, SJ, EMAIL, MM, roleName, roleid, GSMC,GS  from " + tn + " where 1=1  "

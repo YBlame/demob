@@ -155,7 +155,6 @@ public class IndexController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "findZcglry")
-	@ResponseBody
 	public Integer findZcglry(HttpServletRequest request, HttpServletResponse res) throws Exception{
 		
 		
@@ -163,7 +162,9 @@ public class IndexController {
 		
 	}
 		
-	
+	public static void main(String[] args) {
+		System.out.println(UUIDUtil.getUUID());
+	}
 	
 	
 }

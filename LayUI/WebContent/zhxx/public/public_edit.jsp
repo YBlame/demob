@@ -39,7 +39,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						value="<%=request.getParameter("guidBmodel")%>" >
 				<input id="flag"  style="display: none"
 						value="<%=request.getParameter("flag")%>">
-				<form id="layui-form" class="layui-form" action="public/doc_doEdit" onsubmit="return fomrSubmit(this);" method="post" >
+				<form id="layui-form" class="layui-form layui-form-pane" action="public/doc_doEdit" onsubmit="return fomrSubmit(this);" method="post" >
 				</form>
 			</div>
 		<script src="statics/layui/laydate/laydate.js"></script>

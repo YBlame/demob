@@ -203,14 +203,15 @@ public class DocController {
 				}
 			}
 			if (tn.trim().toLowerCase().equals("zhxx")) {
-				if(roleid.equals("3")){//开发人员能看到全部展会信息
+				if (roleid.equals("3")) {// 开发人员能看到全部展会信息
 					sqlWhereZc += "  ";
-				}else{
+				} else {
 					sqlWhereZc += " AND GSBH = '" + userGuid + "' ";
 				}
-				
+
 			}
-			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc +"   order by id desc";
+			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc
+					+ "   order by id desc";
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
 			rs = ps.executeQuery();
 			md = rs.getMetaData();
@@ -678,6 +679,8 @@ public class DocController {
 					if (zdm.equals("GSBH")) {
 						String bh = session.getAttribute("guid").toString();
 						sqlZdmcXs += ",'" + bh + "'";
+					}else if(zdm.equals("MM")){
+						sqlZdmcXs +=",'E10ADC3949BA59ABBE56E057F20F883E'";
 					} else {
 						sqlZdmcXs += ",null";
 					}
@@ -687,6 +690,9 @@ public class DocController {
 					break;
 				case "data":
 					sqlZdmcXs += ",CURDATE()";
+					break;
+				case "text":
+					sqlZdmcXs += ",null";
 					break;
 				}
 			}
@@ -768,7 +774,9 @@ public class DocController {
 				if (typeDj.equals("false")) {
 					if (dataName.trim().toLowerCase().equals("zhxx")) {
 						request.getRequestDispatcher("/findZhxx").forward(request, response);
-					} else {
+					}else if(dataName.trim().toLowerCase().equals("syrzc")){
+						request.getRequestDispatcher("/syrzc/SYRZC.jsp?guid=1199221444f345a7bc770f8dc2ba9ed5&bmc=使用人").forward(request, response);
+					}  else {
 						request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname)
 								.forward(request, response);
 					}
@@ -819,10 +827,10 @@ public class DocController {
 
 		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
-
+		guid = guid.substring(0, guid.length() - 1);
 		String[] parts = guid.split(",");
 		for (int i = 0; i < parts.length; i++) {
-			String sql = "DELETE FROM " + bmodelName + " WHERE guid= \'" + parts[i] + "\'";
+			String sql = "DELETE FROM " + bmodelName + " WHERE guid= \'" + parts[i].trim() + "\'";
 			ps = LinkSql.Execute(conn, sql, role, bmodelName);
 			ps.executeUpdate();
 			conn.commit();
@@ -1118,8 +1126,14 @@ public class DocController {
 				flag = "editFinish";
 				typeDj = (String) session.getAttribute("typeDj");
 				if (typeDj.equals("false")) {
-					request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname + "&guidBmodel="
-							+ guid + " &guid=" + guidBmodel).forward(request, response);
+					if (dataName.trim().toLowerCase().equals("zhxx")) {
+						request.getRequestDispatcher("/findZhxx").forward(request, response);
+					}else if(dataName.trim().toLowerCase().equals("syrzc")){
+						request.getRequestDispatcher("/syrzc/SYRZC.jsp?guid=1199221444f345a7bc770f8dc2ba9ed5&bmc=使用人").forward(request, response);
+					} else {
+						request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname
+								+ "&guidBmodel=" + guid + " &guid=" + guidBmodel).forward(request, response);
+					}
 				} else {
 					request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname + "&guidBmodel="
 							+ guid + " &guid=" + guidBmodel + "&bm=" + bmDj + "&zhxx=" + zhxxDj + "&typeDj=" + typeDj)
