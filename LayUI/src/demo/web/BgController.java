@@ -476,15 +476,18 @@ public class BgController {
 			}
 		}
 		sqlSet = sqlSet.substring(0, sqlSet.length()-1);
-		djsshdx = djsshdx.substring(0,djsshdx.length()-1);
-		String[] shdx =null;
-		shdx =djsshdx.split(",");
-		Integer len = shdx.length;
 		String sql = "";
-		for (int i = 0; i < shdx.length; i++) {
-			sql +=" ,"+shdx[i]+"_ZT=? ";
+		Integer len = 0;
+		if (!djsshdx.equals("")) {
+			djsshdx = djsshdx.substring(0,djsshdx.length()-1);
+			String[] shdx =null;
+			shdx =djsshdx.split(",");
+			len = shdx.length;
+			for (int i = 0; i < shdx.length; i++) {
+				sql +=" ,"+shdx[i]+"_ZT=? ";
+			}
+			sql.substring(0, sql.length()-1);
 		}
-		sql.substring(0, sql.length()-1);
 		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
 		String tn = "bgxx_" + zhxxGuid;
@@ -498,7 +501,7 @@ public class BgController {
 			ps.executeUpdate();
 			conn.commit();
 			json.put("msg", "报馆重提交成功，等待工作人员审核");
-			json.put("success", false);
+			json.put("success", true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			conn.rollback();
