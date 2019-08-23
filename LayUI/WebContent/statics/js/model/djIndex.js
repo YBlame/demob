@@ -6,56 +6,9 @@ var reloadExpo;
 	        layer = layui.layer,
 	        form = layui.form,
 	        laytpl = layui.laytpl;
-		    readyLeft = function(){
-				var html="";
-				var zhxxGuid  = cj.getCookie('selected_expo_id');
-		    		$.post("dj/findParentMenu",{
-		    				zhxxGuid : zhxxGuid
-		    			},function(data) {
-		    				for (var i = 0; i < data.length; i++) {
-		    					var guid =  data[i].guid;
-		    					if (guid!= undefined ) {
-		    						html+="<li class='layui-nav-item layui-nav-itemed'>";
-									var bmc = data[i].bmc;
-									var bm = data[i].bm;
-									if (bmc!= undefined) {
-										if (bm=="JBXX") {
-											html+="";
-										}else if(bm=="BGXX"){
-											var guid="efb2383bbeda41aba50bd1fdea49a418";
-											html+="";
-										}else if(bm=="SGRYBX"){
-											html+="<a href='javascript:toSgrybx(\""+zhxxGuid+"\",\""+data[i].bmc+"\",\""+data[i].bm+"\");' data-url=''>"+data[i].name+"</a>";
-										}else{
-											html+="<a href='javascript:toList(\""+zhxxGuid+"\",\""+data[i].bmc+"\",\""+data[i].bm+"\");' data-url=''>"+data[i].name+"</a>";
-										}
-									}else{
-										html+="<a class='' href='javascript:;'>"+data[i].name+"</a>";
-									}
-									var parentMenu = data[i].id;
-									$.ajax({
-										    url:"dj/findSonMenu",//请求的url地址
-										    dataType:"json",   //返回格式为json
-										 	async : false,//请求是否异步，默认为异步，这也是ajax重要特性
-										    data:{parentMenu : parentMenu,zhxxGuid:zhxxGuid},    //参数值
-										    type:"POST",   //请求方式
-										    success:function(con){
-												if (con.length!=0) {
-													html+="<dl class='layui-nav-child' id='model'>";
-													for (var a = 0; a < con.length; a++) {//展会编号,表名称，表名
-														html+="<dd><a href='javascript:toList(\""+zhxxGuid+"\",\""+con[a].bmc+"\",\""+con[a].bm+"\");' data-url=''>"+con[a].name+"</a></dd>";
-													}
-													html+="</dl>"
-												}
-											}
-									});
-									html+="</li>"
-								}
-							}
-		    				$("#leftMenu").append(html);
-		    				 element.init();
-		    	    	 });	
-		    }
+	    	table = layui.table, //表格
+	    	carousel = layui.carousel,
+	    	device = layui.device();
 	    	reloadExpo = function(){
 	    	 $.post("zhxx/findDjsZhxx", 
     		    function(data) {
@@ -75,7 +28,6 @@ var reloadExpo;
 		                    for (var j = 0; j < data.length; j++) {
 		                        ids.push(data[j].guid);
 		                    }
-
 		                    var html;
 		                    var other;
 		                    var loadExpo=function(){
@@ -86,7 +38,7 @@ var reloadExpo;
 				                	 $("[name=expoList]").html(str);
 				    	    		 form.render('select');
 				               }; 
-		                    /*var winloadExpo=function(){ layer.open({
+		                    var winloadExpo=function(){ layer.open({
 		    	                 title: '选择展会',
 		    	                 content:expoSelect ,
 		    	                 closeBtn: 0, //不显示关闭按钮
@@ -104,10 +56,11 @@ var reloadExpo;
 		    		                        }
 
 		    		                        if (data.length > 1) html += other;
+
 		    		                        $('#top_expo_nav li').html(html);
-		    		                        cj.setCookie('selected_expo_id', selected, 365);
 		    		                        element.render('nav', 'top_expo_nav');
-		    		                        readyLeft()//对左侧栏进行渲染
+		    		                        readyLeft();//对左侧栏进行渲染
+		    		                        xxtz();//消息
 		    		                        layer.close(index);
 		    	                    	}
 		    	                    else
@@ -124,7 +77,7 @@ var reloadExpo;
 		                    	{
 		                    	winloadExpo();
 		                    	loadExpo();
-	                	}*/
+	                	}
 	                    if (selected !== '' && $.inArray(selected, ids) !== -1) {
 	                        other = '<dl class="layui-nav-child">';
 	                        for (var k = 0; k < data.length; k++) {
@@ -138,7 +91,7 @@ var reloadExpo;
 	                        element.render('nav', 'top_expo_nav');
 
 	                    } 
-	                else {
+	                /*    else {
 	                        html = '<a href="javascript:;" id="g_expo" data-id="' + data[0].guid + '">' + data[0].ZHMC + '</a>';
 	                        if (data.length > 1) {
 	                            other = '<dl class="layui-nav-child">';
@@ -151,7 +104,7 @@ var reloadExpo;
 	                        $('#top_expo_nav li').html(html);
 	                        cj.setCookie('selected_expo_id', data[0].guid, 365);
 	                        element.render('nav', 'top_expo_nav');
-	                    }
+	                    }*/
 	                }  else { // 无展会，提示添加测试
 	                    cj.removeCookie('selected_expo_id');
 	                    html = '<a href="javascript:toAddZhxx();">添加展会</a>';
@@ -160,7 +113,56 @@ var reloadExpo;
 	                }
 	    	 });	
 	    }
-		
+		readyLeft = function(){
+			var html="";
+			var zhxxGuid  = cj.getCookie('selected_expo_id');
+	    		$.post("dj/findParentMenu",{
+	    				zhxxGuid : zhxxGuid
+	    			},function(data) {
+	    				for (var i = 0; i < data.length; i++) {
+	    					var guid =  data[i].guid;
+	    					if (guid!= undefined ) {
+	    						html+="<li class='layui-nav-item layui-nav-itemed'>";
+								var bmc = data[i].bmc;
+								var bm = data[i].bm;
+								if (bmc!= undefined) {
+									if (bm=="JBXX") {
+										html+="";
+									}else if(bm=="BGXX"){
+										var guid="efb2383bbeda41aba50bd1fdea49a418";
+										html+="";
+									}else if(bm=="SGRYBX"){
+										html+="<a href='javascript:toSgrybx(\""+zhxxGuid+"\",\""+data[i].bmc+"\",\""+data[i].bm+"\");' data-url=''>"+data[i].name+"</a>";
+									}else{
+										html+="<a href='javascript:toList(\""+zhxxGuid+"\",\""+data[i].bmc+"\",\""+data[i].bm+"\");' data-url=''>"+data[i].name+"</a>";
+									}
+								}else{
+									html+="<a class='' href='javascript:;'>"+data[i].name+"</a>";
+								}
+								var parentMenu = data[i].id;
+								$.ajax({
+									    url:"dj/findSonMenu",//请求的url地址
+									    dataType:"json",   //返回格式为json
+									 	async : false,//请求是否异步，默认为异步，这也是ajax重要特性
+									    data:{parentMenu : parentMenu,zhxxGuid:zhxxGuid},    //参数值
+									    type:"POST",   //请求方式
+									    success:function(con){
+											if (con.length!=0) {
+												html+="<dl class='layui-nav-child' id='model'>";
+												for (var a = 0; a < con.length; a++) {//展会编号,表名称，表名
+													html+="<dd><a href='javascript:toList(\""+zhxxGuid+"\",\""+con[a].bmc+"\",\""+con[a].bm+"\");' data-url=''>"+con[a].name+"</a></dd>";
+												}
+												html+="</dl>"
+											}
+										}
+								});
+								html+="</li>"
+							}
+						}
+	    				$("#leftMenu").append(html);
+	    				 element.init();
+	    	    	 });	
+	    }
 	    reloadExpo()
 	    
 		// 展会切换监听

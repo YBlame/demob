@@ -356,7 +356,7 @@ span{cursor: pointer;}
 									</div>
 								</div>
 								<p class="details-component-line-margin"
-									style="margin-bottom: 0px;">注意：单个图片不超过1M，支持JPG格式。</p>
+									style="margin-bottom: 0px;">注意：单个图片不超过1M</p>
 							</div>
 							<div class="details-component-notedraggerinfo ">
 								<p></p>
