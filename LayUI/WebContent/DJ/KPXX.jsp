@@ -207,7 +207,7 @@
                 <div class="layui-form-item layui-layout-admin">
                     <div class="layui-input-block">
                         <div class="layui-footer" style="left: 0;">
-                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">下一步</button>
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">保存</button>
                         </div>
                     </div>
                 </div>

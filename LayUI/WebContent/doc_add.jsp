@@ -64,7 +64,16 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 			layer.msg('数据添加异常..请重试..');
 		})
 	}
-	
+	//隐藏选择层
+    $("body").bind("click", function (evt) {
+        var src = evt ? evt.target : event.srcElement;
+        if (src.type == "checkbox") {
+            $('.rightdiv').show();
+        } else {
+            $('.rightdiv').hide();
+        }
+
+    });
 	
 	upload.render();
     var selectImg = function(d){
@@ -525,6 +534,9 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 			                    "display": "none",
 			                    "top": e.pageY,
 			                    "left": e.pageX + 120,
+			                    "width": "100px",
+				    	    	"line-height": "30px",
+				    	    	"text-align": "center",
 			                });
 			                $(".rightdiv").show();
 			                if (data.value != "" && data.value != undefined) {

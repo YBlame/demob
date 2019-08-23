@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,11 +215,6 @@ public class DjController {
 		}
 	}
 
-	/*
-	 * public static void main(String[] args) throws Exception { String
-	 * smsContent = String.format("您的验证码为 %s，请在五分钟之内使用，该验证码不可重复使用。", "00422");
-	 * System.out.println(smsContent); }
-	 */
 
 	private Boolean SendSmsCaptcha(String phoneNumber, String CaptchaType) throws Exception {
 		String smsCaptcha = RandomCode();
@@ -271,6 +269,63 @@ public class DjController {
 
 	}
 
+	//判断验证码是不是正确
+		@RequestMapping(value = "ForRegister")
+		@ResponseBody
+		public Object ForRegister(String phoneNumber,String phoneyzm) throws Exception {
+			String flag="false";
+			String sql = "SELECT sj FROM YZMK WHERE PHONE=?";
+			conn = LinkSql.getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, phoneNumber);
+			rs = ps.executeQuery();
+			JSONObject json = new JSONObject();
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			if (rs.next()) {					
+				String sj = rs.getObject("sj").toString();			
+		        //获取String类型的时间
+		        String createdate = sdf.format(date);
+				Date datanow = df.parse(createdate);  
+				Date time = df.parse(sj);  
+			    long diff = datanow.getTime() - time.getTime();
+			    long days = diff / (1000 * 60 * 60 * 24); 
+			    long hours = (diff-days*(1000 * 60 * 60 * 24))/(1000* 60 * 60);
+				long minutes = (diff-days*(1000 * 60 * 60 * 24)-hours*(1000* 60 * 60))/(1000* 60); 
+				System.out.println(diff);
+				System.out.println(days);
+				System.out.println(hours);
+				System.out.println(minutes);
+				if(minutes>10){
+					json.put("msg", "验证码已超时，请重新发送!");
+					json.put("success", false);
+					return json;				
+				}else{
+					sql = "SELECT ID FROM YZMK WHERE PHONE=? AND YZM=?";
+					conn = LinkSql.getConn();
+					ps = conn.prepareStatement(sql);
+					ps.setString(1, phoneNumber);
+					ps.setString(2, phoneyzm);
+					rs = ps.executeQuery();
+					json = new JSONObject();
+					if (rs.next()) {
+						json.put("success", true);			
+						return json;
+					} else {						
+						json.put("msg", "手机验证码不正确");
+						json.put("success", false);
+						return json;
+					}
+				}
+				
+			} else {						
+				json.put("msg", "手机验证码不正确");
+				json.put("success", false);
+				return json;
+			}					
+		}
+	
 	public String RandomCode() {
 		String code = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
 		return code;

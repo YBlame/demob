@@ -130,15 +130,7 @@ $(document).ready(function() {
 															hide : true
 								                        }
 								                    cols.push(id);
-								                    var bar={
-															title : '操作',
-															width:180,
-															fixed: 'right',
-															align:'center',
-															sort: true,
-															toolbar : '#barDemo'
-								                        }
-								                    cols.push(bar);
+								                    
 								                    // 然后开始渲染表格
 								                    table.render({
 								                    	elem : '#demo',
@@ -171,11 +163,16 @@ $(document).ready(function() {
 															if (guidBmodel==null||guidBmodel=="null"||guidBmodel==undefined||guidBmodel=="") {
 																var guid = $("#guid").val();
 																var bmc = $("#bmc").val();
-																window.location.href = "djpublic/toAddDataJsp?guid="+guid+"&bmc="+bmc;
-															}else{
-																window.location.href = "djpublic/toAddDataJsp?guid="+guidBmodel+"&bmc="+bmc;
+																var bm  =$("#bm").val();
+																if(bm=="KFPXX"){
+																	window.location.href = "DJ/KPXX.jsp";
+																}else{
+																	window.location.href = "djpublic/toAddDataJsp?guid="+guid+"&bmc="+bmc;
+																}																
+																
+															}else{																
+																	window.location.href = "djpublic/toAddDataJsp?guid="+guidBmodel+"&bmc="+bmc;																																														
 															}
-															
 															break;
 														 case 'delete':
 														        if(data.length === 0){
@@ -242,8 +239,9 @@ $(document).ready(function() {
 												                         data:{zhxxguid : $("#zhxx").val()},    //参数值
 												                         type:"POST",   //请求方式
 												                         success:function(con){
-												                       layer.close(index);
-												                     }
+												                    	 	$("#toolbarDemo").remove();
+												                    	 	layer.close(index);
+												                     	}
 												                    });
 												                       
 												                   },

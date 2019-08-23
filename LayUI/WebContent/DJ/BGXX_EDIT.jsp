@@ -586,7 +586,6 @@ cursor:pointer;
 							success: function (data) {
 								if (data.success) {
 									
-                                 layer.close(msgs);
                                  window.location.href = "DJ/FYHZ.jsp";
 							/*  var index =layer.open({
 					               

@@ -238,7 +238,7 @@ span{cursor: pointer;}
 									</div>
 								</div>
 								<p class="details-component-line-margin"
-									style="margin-bottom: 0px;">注意：请上传加盖公章的个人身份证的正反面扫描件，单个图片不超过1M，支持JPG和PDF格式。</p>
+									style="margin-bottom: 0px;">注意：请上传加盖公章的个人身份证的正反面扫描件，单个图片不超过1M。</p>
 							</div>
 							<div
 								class="details-component-divider ant-divider ant-divider-horizontal"></div>

@@ -274,7 +274,7 @@ public class ZhxxController {
 			ps.setString(1, guidMenu);
 			ps.setString(2, examName);
 			ps.setString(3, "");
-			ps.setString(4, "varchar");
+			ps.setString(4, "text");
 			ps.setString(5, ztbmc);
 			ps.setInt(6, 1);
 			ps.setString(7, "text");
@@ -331,7 +331,7 @@ public class ZhxxController {
 			typesStr ="text";
 			break;
 		default:
-			typesStr ="varchar";
+			typesStr ="text";
 			break;
 		}
 		String isformStr = null;

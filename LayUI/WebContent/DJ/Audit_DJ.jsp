@@ -86,9 +86,9 @@ a {
 								<td height="40" colspan="3"><span id="ZW"></span></td>
 								<td height="40" align="right">邮寄地址&nbsp;</td>
 								<td height="40"><span id="YJDZ"></span></td>
-								<td height="40" align="right">税务登记证&nbsp;</td>
+								<td height="40" align="right">&nbsp;</td>
 								<td height="40" align="center"><a href="javascript:;"
-									onclick="djst('SWDJZ')">查看</a>
+									onclick="djst('SWDJZ')"></a>
 									<input
 									type="hidden" id="SWDJZ" value=""></input>
 									</td>
@@ -99,9 +99,9 @@ a {
 								<td height="40" colspan="3"><span id="SJ"></span></td>
 								<td height="40" align="right">办公地址&nbsp;</td>
 								<td height="40"><span id="BGDZ"></span></td>
-								<td height="40" align="right">组织机构代码&nbsp;</td>
+								<td height="40" align="right">&nbsp;</td>
 								<td height="40" align="center"><a href="javascript:;"
-									onclick="djst('ZZJGDM')">查看</a>
+									onclick="djst('ZZJGDM')"></a>
 									<input
 									type="hidden" id="ZZJGDM" value=""></input>
 									</td>
@@ -111,9 +111,9 @@ a {
 								<td height="40" colspan="3"><span id="WXH"></span></td>
 								<td height="40" align="right">传真&nbsp;</td>
 								<td height="40"><span id="CZ"></span></td>
-								<td height="40" align="right">其他相关资质&nbsp;</td>
+								<td height="40" align="right">&nbsp;</td>
 								<td height="40" align="center"><a href="javascript:;"
-									onclick="djst('XGZZ')">查看</a>
+									onclick="djst('XGZZ')"></a>
 										<input
 									type="hidden" id="XGZZ" value=""></input>
 									</td>
@@ -131,7 +131,7 @@ a {
 								<td height="40" colspan="3"><span id="SFZH"></span>&nbsp;&nbsp;&nbsp;<a
 									href="javascript:;" onclick="djst('SFZSMJ')">查看</a>
 									<input
-									type="hidden" id="SFZSM" value=""></input>
+									type="hidden" id="SFZSMJ" value=""></input>
 									</td>
 								<td height="40" align="right"></td>
 								<td height="40">&nbsp;</td>
@@ -276,9 +276,7 @@ a {
 				}
 			},
 			NoPass : function() {
-				if ($("#ZT").val() === '通过') {
-					layer.alert('该人员已通过审核');
-				} else {
+			
 					if ($('#SHYJ').val() != '') {
 						//修改guid的状态未通过、审核意见
 						audit("NoPass")
@@ -287,7 +285,6 @@ a {
 								"lay-verify", "required");
 						layer.alert('审核意见不能为空');
 					}
-				}
 			},
 		}
 

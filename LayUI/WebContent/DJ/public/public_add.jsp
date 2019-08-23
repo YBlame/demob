@@ -131,7 +131,6 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 						if (result[i].zdm == "ZHBH") {
 							display += "display:none;";
 							var selected = cj.getCookie('selected_expo_id');
-							alert(selected)
 							input += "<input type='text' id='"+result[i].zdm+"' value='"+selected+"'  name='"+ result[i].zdm+"' "+jsdm+" style='"+display+"' "+isedit+"   placeholder='请输入"+ result[i].zdmc+"' autocomplete='off' class='layui-input'>";
 						} else {
 							display = "";
@@ -177,7 +176,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 							option += "<option value='"+ strs[a].replace("|$|",",")+ "'>"+ strs[a].replace("|$|",",")+ "</option> ";
 						}
 						fromInput += "<div class='layui-form-item'>"
-								+ "<label class='layui-form-label'>"
+								+ "<label class='layui-form-label'  style='width:150px;'>"
 								+ isform
 								+ result[i].zdmc
 								+ "</label>"
@@ -190,26 +189,26 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 								+ "<div class='layui-form-mid layui-word-aux'></div></div>";
 						break;
 					case "textarea"://文本域
-						fromInput += "<div class='layui-form-item layui-form-text'><label class='layui-form-label'>"
+						fromInput += "<div class='layui-form-item layui-form-text'><label class='layui-form-label'  style='width:150px;'>"
 								+ isform
 								+ result[i].zdmc
 								+ "</label><div class='layui-input-block'><textarea id='"+result[i].zdm+"'  name='"+result[i].zdm+"' placeholder='请输入"+result[i].zdmc+"' "+isedit+"  style='width:"+result[i].width+"px;height:"+result[i].height+"' class='layui-textarea'></textarea></div></div>";
 						break;
 					case "number"://数字
-						fromInput += " <div class='layui-form-item'><label class='layui-form-label'>"
+						fromInput += " <div class='layui-form-item'><label class='layui-form-label'  style='width:150px;'>"
 								+ isform
 								+ result[i].zdmc
 								+ "</label><div class='layui-input-inline'><input type='number' id='"+result[i].zdm+"'  name='"+result[i].zdm+"' "+jsdm+"  "+isedit+" style='width:"+result[i].width+"px;' placeholder='仅限输入数字' lay-verify='required|number'  min='0'  autocomplete='off' class='layui-input'></div><div class='layui-form-mid layui-word-aux'></div></div>"
 						break;
 					case "datetime"://时间
 						if (result[i].isedit == 1) {
-							fromInput += "<div class='layui-form-item'><label class='layui-form-label'>"
+							fromInput += "<div class='layui-form-item'><label class='layui-form-label' style='width:150px;'>"
 								+ isform
 									+ result[i].zdmc
 									+ "</label><div class='layui-input-inline'><input type='text' class='layui-input datetime' name='"+result[i].zdm+"' id='"+result[i].zdm+"' style='width:"+result[i].width+"px;' readonly placeholder='yyyy-MM-dd HH:mm:ss'></div></div>";
 
 						} else {
-							fromInput += "<div class='layui-form-item'><label class='layui-form-label'>"
+							fromInput += "<div class='layui-form-item'><label class='layui-form-label'  style='width:150px;'>"
 								+ isform
 									+ result[i].zdmc
 									+ "</label><div class='layui-input-inline'><input type='text' class='layui-input datetime' name='"+result[i].zdm+"' id='"+result[i].zdm+"'  readonly style='width:"+result[i].width+"px;' placeholder='yyyy-MM-dd HH:mm:ss'></div></div>";
@@ -217,12 +216,12 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 						break;
 					case "date":
 						if (result[i].isedit == 1) {
-							fromInput += "<div class='layui-form-item'><label class='layui-form-label'>"
+							fromInput += "<div class='layui-form-item'><label class='layui-form-label' style='width:150px;'>"
 								+ isform
 									+ result[i].zdmc
-									+ "</label> <div class='layui-input-inline'> <input type='text' class='layui-input date' id='"+result[i].zdm+"'  name='"+result[i].zdm+"' style='width:"+result[i].width+"px;'  readonly placeholder='yyyy-MM-dd'> </div></div>";
+									+ "</label> <div class='layui-input-inline' > <input type='text' class='layui-input date' id='"+result[i].zdm+"'  name='"+result[i].zdm+"' style='width:"+result[i].width+"px;'  readonly placeholder='yyyy-MM-dd'> </div></div>";
 						} else {
-							fromInput += "<div class='layui-form-item'><label class='layui-form-label'>"
+							fromInput += "<div class='layui-form-item'><label class='layui-form-label' style='width:150px;'>"
 								+ isform
 									+ result[i].zdmc
 									+ "</label> <div class='layui-input-inline'> <input type='text' class='layui-input date' id='"+result[i].zdm+"'  name='"+result[i].zdm+"' style='width:"+result[i].width+"px;'   placeholder='yyyy-MM-dd'> </div></div>";
@@ -243,7 +242,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 							}
 						}
 						optionC += "<input id='"+result[i].zdm+"' name='"+result[i].zdm+"' style='display: none'  >"
-						fromInput += " <div class='layui-form-item'> <label class='layui-form-label'>"
+						fromInput += " <div class='layui-form-item'> <label class='layui-form-label' style='width:150px;'>"
 							+ isform
 								+ result[i].zdmc
 								+ "</label><div class='layui-input-block'>"
@@ -264,7 +263,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 								optionR += "<input type='radio' name='"+result[i].zdm+"' disabled value='"+strsR[e]+"' title='"+strsR[e]+"' checked>";
 							}
 						}
-						fromInput += " <div class='layui-form-item'><label class='layui-form-label'>"
+						fromInput += " <div class='layui-form-item'><label class='layui-form-label' style='width:150px;'>"
 							+ isform
 								+ result[i].zdmc
 								+ "</label><div class='layui-input-block'>"

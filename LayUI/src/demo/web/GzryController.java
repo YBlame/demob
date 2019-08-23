@@ -1595,5 +1595,81 @@ public class GzryController {
 			return flag;
 		}
 	}
+	@RequestMapping("updtijiaobxStateByGuid")
+	@ResponseBody
+	public int updtijiaobxStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;		
+			String gsmc = session.getAttribute("GSMC").toString();
+			String names = session.getAttribute("NAME").toString();
+			String sjDJ = session.getAttribute("SJ").toString();
+			String guiddwbh = session.getAttribute("guid").toString();			
+			try {				
+					//修改报馆信息状态
+					String tn = "sgrybx_" + zhxxguid;
+					String desTn = "sgrybx_des_" + zhxxguid;
+					String sqlAudit = "UPDATE "+tn+" SET ZT='已提交'";
+													
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sqlAudit);								
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}				
+					
+					
+					//根据展会编号查找展会名称
+					String str = "select id from rybdb where zhbh='"+zhxxguid+"' and dwbh='"+guiddwbh+"'";
+					ps = conn.prepareStatement(str);
+					rs = ps.executeQuery();
+					String flagcz="false";
+					while (rs.next()) {
+						flagcz="true";
+					}
+					
+					if(flagcz.equals("true")){//存在
+						//只要有一个状态是不通过,就把大的状态修改成拒绝
+						String sql = "UPDATE rybdb SET BDZT='已提交'  WHERE ZHBH=?";
+						
+						conn.setAutoCommit(false);
+						ps = conn.prepareStatement(sql);				
+						ps.setString(1, zhxxguid);
+						try {
+							flag = ps.executeUpdate();
+							conn.commit();
+						} catch (Exception e) {
+							// TODO 自动生成的 catch 块
+							conn.rollback();
+						}													
+						
+					}else{
+						//根据展会编号查找展会名称
+						String sqlzhbh = "select zhmc from zhxx where guid='"+zhxxguid+"'";
+						ps = conn.prepareStatement(sqlzhbh);
+						rs = ps.executeQuery();
+						String zhmc="";
+						while (rs.next()) {
+							zhmc = rs.getString("zhmc");
+						}			
+									
+						//同时向施工人员过程表添加一条数据RYBDB   ZHBH,DWMC,LXR,SJ,RYZT(已填报),BDZT(未填报)  guid = UUIDUtil.getUUID();
+						String sqlinsert = "INSERT INTO RYBDB (ZHBH,DWMC,LXR,SJ,RYZT,BDZT,guid,DWBH,ZHMC) VALUES (\'" + zhxxguid + "\',\'" + gsmc + "\',\'" + names + "\',\'" + sjDJ + "\','未提交','已提交',\'" + UUIDUtil.getUUID() + "\',\'" + guiddwbh + "\',\'" +zhmc+ "\')";
+						ps = conn.prepareStatement(sqlinsert);
+						ps.executeUpdate();
+						conn.commit();						
+					}
+																				
+
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
 	
 }

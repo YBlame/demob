@@ -250,9 +250,25 @@ function LoginOne() {
     var mm = $.trim($('[name=mm]').val());
     if (!Validate()) return;
     cj.setCookie('user_phone', phone, 365);
-    cj.setCookie('user_mm', mm, 365);
-    $("#nextRegister").attr("href","register.jsp");
-}
+    cj.setCookie('user_mm', mm, 365); 
+   
+    //手机验证码校验 判断验证码是否正确
+    $.ajax({
+        type: 'POST',
+        url: 'dj/ForRegister?tick=' + new Date().getTime(),
+        cache: false,
+        data: {'phoneNumber': phone,'phoneyzm': $.trim($('[name=yzm]').val()) },
+        dataType: 'JSON',
+        success: function (data) {           
+            if (data.success) { 
+            	 window.location.href = "register.jsp"
+            }else{
+            	 alert(data.msg);
+            	           	
+            }
+        }
+    }); 
+}                                                                                                                                                                                                                              
 
 function Validate() {
     var success = true;

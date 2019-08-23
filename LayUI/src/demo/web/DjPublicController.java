@@ -605,33 +605,33 @@ public class DjPublicController {
 			}
 			ps.executeUpdate();
 			conn.commit();
-
-			// 根据展会编号查找展会名称
-			String sqlzhbh = "select zhmc from zhxx where guid='" + zhxxDj + "'";
-			ps = conn.prepareStatement(sqlzhbh);
-			rs = ps.executeQuery();
-			String zhmc = "";
-			while (rs.next()) {
-				zhmc = rs.getString("zhmc");
-			}
-
-			// 同时向施工人员过程表添加一条数据RYBDB ZHBH,DWMC,LXR,SJ,RYZT(未提交),BDZT(未填报) guid =
-			// UUIDUtil.getUUID();
-			String sqlinsert = "INSERT INTO RYBDB (ZHBH,DWMC,LXR,SJ,RYZT,BDZT,guid,DWBH,ZHMC) VALUES (\'" + zhxxDj
-					+ "\',\'" + gsmc + "\',\'" + names + "\',\'" + sjDJ + "\','未提交','未提交',\'" + UUIDUtil.getUUID()
-					+ "\',\'" + guiddwbh + "\',\'" + zhmc + "\')";
-			ps = conn.prepareStatement(sqlinsert);
-			ps.executeUpdate();
-			conn.commit();
 			flag = "addFinish";
 			if(bmDj.equals("SGRYBX")){
+				// 根据展会编号查找展会名称
+				String sqlzhbh = "select zhmc from zhxx where guid='" + zhxxDj + "'";
+				ps = conn.prepareStatement(sqlzhbh);
+				rs = ps.executeQuery();
+				String zhmc = "";
+				while (rs.next()) {
+					zhmc = rs.getString("zhmc");
+				}
+
+				// 同时向施工人员过程表添加一条数据RYBDB ZHBH,DWMC,LXR,SJ,RYZT(未提交),BDZT(未填报) guid =
+				// UUIDUtil.getUUID();
+				String sqlinsert = "INSERT INTO RYBDB (ZHBH,DWMC,LXR,SJ,RYZT,BDZT,guid,DWBH,ZHMC) VALUES (\'" + zhxxDj
+						+ "\',\'" + gsmc + "\',\'" + names + "\',\'" + sjDJ + "\','未提交','未提交',\'" + UUIDUtil.getUUID()
+						+ "\',\'" + guiddwbh + "\',\'" + zhmc + "\')";
+				ps = conn.prepareStatement(sqlinsert);
+				ps.executeUpdate();
+				conn.commit();
+				
 				String type = "当前操作已保存";
 				request.getRequestDispatcher(
-						"/DJ/public/public_edit.jsp?guid=" + guid + "&bmc=" + bmcDj+"&zt=true&bm=SGRYBX"+"&flag="+type)
+						"/DJ/public/public_edit.jsp?guid=" + guid + "&bmc=" + bmcDj+"&zt=true&bm="+bmDj+""+"&flag="+type)
 						.forward(request, response);
 			}else{
 				request.getRequestDispatcher(
-						"/DJ/public/public_edit.jsp?guid=" + guid + "&bmc=" + bmcDj+"&zt=true&bm=SGRYBX"+"&flag=")
+						"/DJ/public/public_Index.jsp?zhxx="+ zhxxDj+"&bmc="+bmcDj+"&bm="+bmDj+"&typeDj=true")
 						.forward(request, response);
 			}
 		

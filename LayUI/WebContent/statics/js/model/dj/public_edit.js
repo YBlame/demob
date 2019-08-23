@@ -327,7 +327,10 @@ $(document).ready(function(){
 									                         data:{zhxxguid : $("#ZHBH").val()},    //参数值
 									                         type:"POST",   //请求方式
 									                         success:function(con){
-									                       layer.close(index);
+									                    	 $(".layui-upload-list button").remove();
+															$("div").removeClass("file-iteme");
+															$(".layui-layout-admin").remove();
+									                    	 layer.close(index);
 									                     }
 									                    });
 									                       
