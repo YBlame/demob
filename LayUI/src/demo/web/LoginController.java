@@ -199,13 +199,14 @@ public class LoginController {
 	public String userOut(HttpServletRequest request, HttpServletResponse res) throws Exception {
 		HttpSession session = request.getSession();
 		Object role = session.getAttribute("roleid");
+		String zcbh = (String) session.getAttribute("ZCBH");
 		if (role == null) {
 			return "redirect:login";
 		}
 		session.invalidate();
 		System.out.println(role);
 		if (role.toString().trim().equals("1")) {
-			return "redirect:login";
+			return "redirect:login?guid="+zcbh;
 		} else {
 			return "redirect:admin";
 		}

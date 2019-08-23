@@ -48,7 +48,7 @@ var reloadExpo;
 		    	                  selected=$('[name=expoList]').val();
 		    	                    if(selected!="")
 		    	                    	{
-		    	                    	cj.setCookie('selected_expo_id',selected);
+		    	                    	 cj.setCookie('selected_expo_id',selected);
 		    	                    	 other = '<dl class="layui-nav-child">';
 		    		                        for (var k = 0; k < data.length; k++) {
 		    		                            if (data[k].guid === selected) html = '<a href="javascript:;" id="g_expo" data-id="' + data[k].guid + '">' + data[k].ZHMC + '</a>';
@@ -59,9 +59,15 @@ var reloadExpo;
 
 		    		                        $('#top_expo_nav li').html(html);
 		    		                        element.render('nav', 'top_expo_nav');
-		    		                        readyLeft();//对左侧栏进行渲染
-		    		                        xxtz();//消息
+		    		                        
+	    		                        
+		    		                        //$("#demoAdmin").attr("src","DJ/index.jsp");
+		    		                        /*setTimeout(function(){
+		    		                        	 xxtz();//消息
+				    		                     bgxxList();
+		    		                         } ,5000);*/
 		    		                        layer.close(index);
+		    		                        window.location.reload();
 		    	                    	}
 		    	                    else
 		    	                    	{
@@ -164,7 +170,7 @@ var reloadExpo;
 	    	    	 });	
 	    }
 	    reloadExpo()
-	    
+	    readyLeft();//对左侧栏进行渲染
 		// 展会切换监听
 	    element.on('nav(top_expo_nav)', function (elem) {
 	    	if (elem.data('action') === 'add') {
@@ -206,6 +212,7 @@ var reloadExpo;
 	function userOut(){//退出
 		layer.confirm('确定退出吗？', function(
 				index) {
+				cj.removeCookie('selected_expo_id');
 				top.location.href = "userOut";
 				layer.close(index);
 		});

@@ -238,7 +238,7 @@ span{cursor: pointer;}
 									</div>
 								</div>
 								<p class="details-component-line-margin"
-									style="margin-bottom: 0px;">注意：请上传加盖公章的个人身份证的正反面扫描件，单个图片不超过1M</p>
+									style="margin-bottom: 0px;">注意：请上传加盖公章的个人身份证的正反面扫描件，单个图片不超过1M，支持JPG和PDF格式。</p>
 							</div>
 							<div
 								class="details-component-divider ant-divider ant-divider-horizontal"></div>
@@ -340,6 +340,9 @@ span{cursor: pointer;}
 										react-empty: 293
 									</div>
 								</div> -->
+								
+								<p class="details-component-line-margin"
+									style="margin-bottom: 0px;font-size: 12px;">注意：请上传营业执照，单个图片不超过1M。</p>
 								<div id='sndc'>
 									<div class="layui-form-item">
 										<div class="layui-upload">
@@ -354,9 +357,7 @@ span{cursor: pointer;}
 											</blockquote>
 										</div>
 									</div>
-								</div>
-								<p class="details-component-line-margin"
-									style="margin-bottom: 0px;">注意：单个图片不超过1M</p>
+								</div>								
 							</div>
 							<div class="details-component-notedraggerinfo ">
 								<p></p>
@@ -379,7 +380,11 @@ span{cursor: pointer;}
 											</div></span>
 										react-empty: 304
 									</div> -->
+								
+								<p class="details-component-line-margin"
+								style="margin-bottom: 0px;font-size: 12px;">注意：请上传法人身份证扫描件，单个图片不超过1M。
 	
+							</p>
 								<div id='sndc'>
 									<div class="layui-form-item">
 										<div class="layui-upload">
@@ -396,10 +401,7 @@ span{cursor: pointer;}
 									</div>
 								</div>
 							</div>
-							<p class="details-component-line-margin"
-								style="margin-bottom: 0px;">注意：请上传法人身份证扫描件，单个图片不超过1M，支持JPG格式。
-	
-							</p>
+							
 						</div>
 					</div>
 					<div class="details-component-tools ">
@@ -580,10 +582,10 @@ html body { -
 			$("#yyzzDiv").focus();
 			return false;
 		}
-		var frsf = $("#frsfz").val(); 
+		var frsf = $("#frsfzz").val(); 
 		if(!frsf){
 			alert("请上传法人身份证照");
-			$("#frsf").focus();
+			$("#frsfzDiv").focus();
 			return false;
 		}
 		
@@ -601,8 +603,6 @@ html body { -
 			       if(data=="1"){
 			         alert("注册成功，联系或等待管理员审核");
 			         window.location = "logins.jsp";
-			        }else if(data=="-500"){
-			        	alert("链接有误，请联系主场管理人员!");
 			        }else{
 			         //失败执行的代码
 			        alert("注册失败，请重试");

@@ -131,6 +131,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 						if (result[i].zdm == "ZHBH") {
 							display += "display:none;";
 							var selected = cj.getCookie('selected_expo_id');
+							alert(selected)
 							input += "<input type='text' id='"+result[i].zdm+"' value='"+selected+"'  name='"+ result[i].zdm+"' "+jsdm+" style='"+display+"' "+isedit+"   placeholder='请输入"+ result[i].zdmc+"' autocomplete='off' class='layui-input'>";
 						} else {
 							display = "";

@@ -166,6 +166,9 @@
                 </div>
                 <div id='sndc'>
                     <div class="layui-form-item">
+                    <p class="details-component-line-margin"
+								style="margin-bottom: 0px;font-size: 12px;">注意：请上传展位图纸，单个图片不超过1M。
+						</p>
                         <div class="layui-upload">
                             <blockquote class="layui-elem-quote layui-quote-nm"
                                         style="margin-top: 10px;">
@@ -178,13 +181,14 @@
                                 </div>
                             </blockquote>
                         </div>
-                         <p class="details-component-line-margin"
-								style="margin-bottom: 0px;">注意：请上传展位图纸，单个图片不超过1M，支持JPG格式。
-						</p>
+                         
                     </div>
                 </div>
                 <div id='snsc' style="display: none">
                     <div class="layui-form-item">
+                    <p class="details-component-line-margin"
+								style="margin-bottom: 0px;font-size: 12px;">注意：请上传展位结构图及审核报告，单个图片不超过1M，支持JPG格式。
+						</p>
                         <div class="layui-upload">
                             <blockquote class="layui-elem-quote layui-quote-nm"
                                         style="margin-top: 10px;">
@@ -197,9 +201,7 @@
                                 </div>
                             </blockquote>
                         </div>
-                         <p class="details-component-line-margin"
-								style="margin-bottom: 0px;">注意：请上传展位结构图及审核报告，单个图片不超过1M，支持JPG格式。
-						</p>
+                         
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-inline">
@@ -234,6 +236,9 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                     <p class="details-component-line-margin"
+								style="margin-bottom: 0px;font-size: 12px;">注意：请上传工程师资质证书，单个图片不超过1M。
+						</p>
                         <div class="layui-upload">
                             <blockquote class="layui-elem-quote layui-quote-nm"
                                         style="margin-top: 10px;">
@@ -246,9 +251,7 @@
                                 </div>
                             </blockquote>
                         </div>
-                        <p class="details-component-line-margin"
-								style="margin-bottom: 0px;">注意：请上传工程师资质证书，单个图片不超过1M，支持JPG格式。
-						</p>
+                       
                     </div>
                 </div>
 
@@ -316,27 +319,12 @@
                 for (var i = 0; i < result.length; i++) {
                	 var fromInput = "";
                     switch (result[i].formtypes) {
-                        /* case "text"://文本类型
-                            fromInput += "<div class=\"layui-form-item\"> <label class=\"layui-form-label\">" + result[i].zdmc + "</label> <div class=\"layui-input-block\"> <input type=\"text\" name=\"" + result[i].zdm + "\" lay-verify=\"required\" placeholder=\"请输入" + result[i].zdmc + "\" autocomplete=\"off\" class=\"layui-input\"> </div></div>";
-                            break;
-                        case "number"://文本类型
-                            fromInput += "<div class=\"layui-form-item\"> <label class=\"layui-form-label\">" + result[i].zdmc + "</label> <div class=\"layui-input-block\"> <input type=\"number\" name=\"" + result[i].zdm + "\" lay-verify=\"required\" placeholder=\"请输入" + result[i].zdmc + "\" autocomplete=\"off\" class=\"layui-input\"> </div></div>";
-                            break;
-                        case "textarea"://文本域
-                            fromInput += "<div class=\"layui-form-item layui-form-text\"> <label class=\"layui-form-label\">" + result[i].zdmc + "</label> <div class=\"layui-input-block\"> <textarea name=\"text\"  name=\"" + result[i].zdm + "\"  placeholder=\"请输入" + result[i].zdmc + "\" class=\"layui-textarea\"></textarea> </div> </div>"
-                            break; */
-                       /*  case "date":
-                            fromInput += "< div class=\"layui-inline\"> <label class=\"layui-form-label\">" + result[i].zdmc + "</label> <div class=\"layui-input-inline\"> <input type=\"text\" name=\"" + result[i].zdm + "\" id=\"date\" lay-verify=\"date\" placeholder=\"yyyy-MM-dd\" autocomplete=\"off\" class=\"layui-input date\"> </div> </div>";
-                            break;
-                        case "datetime":
-                            fromInput += "<div class=\"layui-inline\"> <label class=\"layui-form-label\">" + result[i].zdmc + "</label> <div class=\"layui-input-inline\"> <input type=\"text\" name=\"" + result[i].zdm + "\" id=\"date\" lay-verify=\"date\" placeholder=\"yyyy-MM-dd\" autocomplete=\"off\" class=\"layui-input date\"> </div> </div>";
-                            break; */
                     case "pic":
                     	var isform = '';
                     	if(result[i].isform=='1'){
                     		isform = "lay-verify=\"required\"  lay-reqtext=\""+ result[i].zdmc +"不能为空\"";
                     	}
-                        fromInput += "<div class=\"layui-form-item\"> <div class=\"layui-upload\"> <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\"><font color=red>*</font>" + result[i].zdmc + "： <div class=\"layui-upload-list\" id=\"div\"><input id='"+ result[i].zdm +"' name='"+ result[i].zdm +"' style='display: none' "+isform+"  /><button type=\"button\" class=\"layui-btn append\" style=\"display:block;margin:0 auto\" lay-filter=\""+ result[i].zdm +"\" id=\"" + result[i].zdm + "Btn\"> " + result[i].zdmc + "</button></div> </blockquote> </div><p class=\"details-component-line-margin\" style=\"margin-bottom: 0px;\">注意："+result[i].beizhu+"</p> </div>";
+                        fromInput += "<div class=\"layui-form-item\"><p class=\"details-component-line-margin\" style=\"margin-bottom: 0px;font-size: 12px;\">注意："+result[i].beizhu+"</p> <div class=\"layui-upload\"> <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\"><font color=red>*</font>" + result[i].zdmc + "： <div class=\"layui-upload-list\" id=\"div\"><input id='"+ result[i].zdm +"' name='"+ result[i].zdm +"' style='display: none' "+isform+"  /><button type=\"button\" class=\"layui-btn append\" style=\"display:block;margin:0 auto\" lay-filter=\""+ result[i].zdm +"\" id=\"" + result[i].zdm + "Btn\"> " + result[i].zdmc + "</button></div> </blockquote> </div></div>";
                         break;
                     }
                     $(".layui-layout-admin").before(fromInput);

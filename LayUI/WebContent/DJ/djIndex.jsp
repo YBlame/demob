@@ -66,8 +66,9 @@
 </div>
 	<script src="statics/layui/layui.js"></script>
 	<script type="text/javascript" src="statics/js/jquery-1.8.0.js"></script>
-	<script src="statics/js/concisejs.js"></script>
-	<script src="statics/js/model/indexXxtz.js"></script>
+	<script src="statics/js/concisejs.js"></script><!-- 
+	<script src="statics/js/model/index/indexBgxx.js"></script>
+	<script src="statics/js/model/index/indexXxtz.js"></script> -->
 	<script src="statics/js/model/djIndex.js"></script>
 	
 </body>

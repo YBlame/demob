@@ -150,6 +150,8 @@
 									}else{
 										if(bm=="RYBDB"){
 											html+="<a href='javascript:toRybdb(\""+zhxxGuid+"\",\""+data[i].bmc+"\",\""+data[i].bm+"\");' data-url=''>"+data[i].name+"</a>";
+										}else if(bm=="KPTYJ"){
+											html+="<a href='javascript:toKptyj(\""+zhxxGuid+"\",\""+data[i].bmc+"\",\""+data[i].bm+"\");' data-url=''>"+data[i].name+"</a>";
 										}else{
 											html+="<a href='javascript:toList(\""+zhxxGuid+"\",\""+data[i].bmc+"\",\""+data[i].bm+"\");' data-url=''>"+data[i].name+"</a>";
 										}
@@ -215,6 +217,11 @@
 	function toRybdb(zhxx,bmc,bm){
 		var typeDj = "true";
 		$("#demoAdmin").attr("src", "zhxx/gzry/rybdb_Index.jsp?zhxx="+ zhxx+"&bmc="+bmc+"&bm="+bm+"&typeDj="+typeDj);
+	}
+	//
+	function toKptyj(zhxx,bmc,bm){
+		var typeDj = "true";
+		$("#demoAdmin").attr("src", "zhxx/gzry/kptyj_Index.jsp?zhxx="+ zhxx+"&bmc="+bmc+"&bm="+bm+"&typeDj="+typeDj);
 	}
 	
 	function toSyrgl(){

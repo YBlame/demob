@@ -120,7 +120,7 @@ $(document).ready(function(){
 										    	fromInput +="<div class='layui-form-item'>"
 													+ "<label class='layui-form-label' style='width:150px;'>"+result[i].zdmc+isform+"</label>"
 													+ "<div class='layui-input-inline'  style='width:"+result[i].width+"px;' >"
-													+ "<select name='"+result[i].zdm+"' id='"+result[i].zdm+"'   "+selectDisabled+" lay-search=""  >"
+													+ "<select name='"+result[i].zdm+"' id='"+result[i].zdm+"'   "+selectDisabled+"  >"
 															+ ""+option+""
 															+ "</select></div>"
 															+ "<div class='layui-form-mid layui-word-aux'></div></div>";
@@ -201,7 +201,6 @@ $(document).ready(function(){
 										    	fromInput +=" <div class='layui-form-item'><label class='layui-form-label' style='width:150px;'>"+result[i].zdmc+isform+"</label><div class='layui-input-block'>"+optionR+"</div></div>";
 										    	break;
 										   case "pic":
-											   alert(data.SFZSMJ)
 										    	var imgData = data[result[i].zdm];
 										    	imgData = imgData.substring(0,imgData.length-1);
 										    	var picture = imgData.split(',');
@@ -232,7 +231,7 @@ $(document).ready(function(){
 									 var zt = $("#zt").val();
 									 if(name=="SGRYBX"){
 										 if (zt=="true") {
-											fromInput+="<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' lay-submit='' lay-filter='component-form-demo1'>保存</button><button type='button' id='tj' class='layui-btn'>提交审核</button></div> </div></div></div>";
+											fromInput+="<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' lay-submit='' lay-filter='component-form-demo1'>保存</button><button type='button' lay-submit='' id='tj' lay-event='tijiao' class='layui-btn' lay-filter='component-form-demo2'>提交审核</button></div> </div></div></div>";
 										 }
 									}else{
 										 fromInput+="<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn'  lay-submit='' lay-filter='component-form-demo1'>保存</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>";
@@ -312,6 +311,35 @@ $(document).ready(function(){
 													           aler("发生错误："+ jqXHR.status);
 													        }
 													});
+											})
+											
+											 /* 监听提交审核 */
+											  form.on('submit(component-form-demo2)', function (data) {
+												  layer.open({
+									                   content: '确定要提交审核吗？系统将要提交全部数据，提交后将不能进行添加、修改、删除等操作！',
+									                   btn: ['确认', '取消'],
+									                
+									                   yes: function (index, layero) {
+									                    //提交之后修改状态 重新加载框架 
+									                    $.ajax({
+									                         url:"gzry/updtijiaobxStateByGuid",//请求的url地址
+									                         dataType:"json",   //返回格式为json                                      
+									                         data:{zhxxguid : $("#ZHBH").val()},    //参数值
+									                         type:"POST",   //请求方式
+									                         success:function(con){
+									                       layer.close(index);
+									                     }
+									                    });
+									                       
+									                   },
+									                   //btn2和cancel方法没有用到，可以不写
+									                   btn2: function (index, layero) {
+									                
+									                   },
+									                   cancel: function () {
+									                   //右上角关闭回调
+									                   }
+									               });
 											})
 											  
 										});

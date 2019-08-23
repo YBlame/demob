@@ -309,7 +309,7 @@ public class BgController {
 		int columnCount = 0;
 		conn = LinkSql.getConn();
 		String sqlSelect = "SELECT zdm,zdmc,isform,isedit,xs,width,tips,beizhu,formtypes,initval,jsdm,api,guid FROM " + bmDes
-				+ " WHERE  xs = 1 and id>23  AND  zdm NOT LIKE '%_ZT'  ORDER BY lisnum asc , id desc";
+				+ " WHERE  xs = 1 and id>23  AND  zdm NOT LIKE '%_ZT'  ORDER BY lisnum asc , id asc";
 		ps = conn.prepareStatement(sqlSelect);
 		rs = ps.executeQuery();
 		md = rs.getMetaData(); // 获得结果集结构信息,元数据

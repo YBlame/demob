@@ -630,8 +630,9 @@ public class DjPublicController {
 						"/DJ/public/public_edit.jsp?guid=" + guid + "&bmc=" + bmcDj+"&zt=true&bm=SGRYBX"+"&flag="+type)
 						.forward(request, response);
 			}else{
-				request.getRequestDispatcher("/DJ/public/public_Index.jsp?flag=" + flag + "&bmc=" + dataTname + "&bm="
-						+ bmDj + "&zhxx=" + zhxxDj + "&typeDj=" + typeDj).forward(request, response);
+				request.getRequestDispatcher(
+						"/DJ/public/public_edit.jsp?guid=" + guid + "&bmc=" + bmcDj+"&zt=true&bm=SGRYBX"+"&flag=")
+						.forward(request, response);
 			}
 		
 		} catch (Exception e) {
