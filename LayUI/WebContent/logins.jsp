@@ -134,6 +134,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				alert("账号或密码错误")
             }else if(result=="loginStop"){
             	alert("您的账号还未审核，请联系工作人员");
+            }else if(result=="isNot"){	
+            	alert("链接有误，请联系主场管理人员!");
             }else {
                 location.href = 'toIndex'; //后台主页
             } 

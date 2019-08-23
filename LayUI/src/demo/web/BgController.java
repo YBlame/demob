@@ -365,14 +365,13 @@ public class BgController {
 		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
 		String tn = "bgxx_" + zhxxGuid;
-		String sqlSelect = "INSERT INTO " + tn + " (guid, ZWTZ_ZT, ZWJGT_ZT, GCSZZZS_ZT, ZT, RQ," + sqlSet
-				+ ") values (?,?,?,?,?,now()," + sqlVal + ") ";
+		String sqlSelect = "INSERT INTO " + tn + " (guid, ZWTZ_ZT, ZT,QYZT,RQ," + sqlSet
+				+ ") values (?,?,?,?,now()," + sqlVal + ") ";
 		ps = conn.prepareStatement(sqlSelect);
 		ps.setString(1, UUIDUtil.getUUID());
 		ps.setString(2, "未审核");
-		ps.setString(3, "未审核");
-		ps.setString(4, "未审核");
-		ps.setString(5, "未提交");
+		ps.setString(3, "未提交");
+		ps.setString(4, "1");
 		try {
 			ps.executeUpdate();
 			conn.commit();

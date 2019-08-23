@@ -171,7 +171,7 @@ public class ZcPublicController {
 				if(roleid.equals("3")){
 					sqlWhere = " AND roleid =4 ";
 				}else{
-					sqlWhere = " AND roleid =5 ";
+					sqlWhere = " AND roleid =5 AND GS='"+uguid+"' ";
 				}
 				
 			} else {
@@ -183,17 +183,32 @@ public class ZcPublicController {
 				if(roleid.equals("3")){
 					sqlWhere = " AND roleid =4 ";
 				}else{
-					sqlWhere = " AND roleid =5 ";
+					sqlWhere = " AND roleid =5 AND GS='"+roleid+"' ";
 				}
 				
 			}  else {
 				sqlWhere = " AND 1>2 ";
 			}
 		}
+		if (postData != null) {
+			String tmp[] = postData.split("&");
+			for (int i = 0; i < tmp.length; i++) {
+				String s = postData.split("&")[i];
+				s = s + " ";
+				String name = s.split("=")[0];
+				String value = s.split("=")[1];
+				value = value.trim();
+				if (value.length() != 0) {
+					if (!value.equals("请选择")) {
+						sqlWhere += " and " + name + " like '%" + value + "%' ";
+					}
+				}
+			}
+		}
 		sqlZdmc = sqlZdmc.substring(0, sqlZdmc.length() - 1);
 		if (sqlZdmc.length() != 0) {
 			String sqlData = null;
-			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + " order by id desc ";
+			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + " order by id desc  limit "+page.getStart()+","+page.getRows()+"  ";
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
 			if (!zhxxGuid.equals("")) {
 				if (tn.equals("SYRZC")) {

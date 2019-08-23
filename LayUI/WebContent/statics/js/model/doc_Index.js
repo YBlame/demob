@@ -195,7 +195,8 @@ $(document).ready(function() {
 																			if (result=="delFinish") {
 																				layer.msg('已删除!', {
 											                                        icon: 1, time: 800, end: function () {
-											                                            window.location.reload();
+											                                        	table.reload('demo',{page:{curr:1}});
+											                                            parent.reloadExpo();
 											                                        }
 											                                    });
 																			}else{

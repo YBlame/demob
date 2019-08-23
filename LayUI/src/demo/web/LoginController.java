@@ -1,16 +1,15 @@
 package demo.web;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.dao.Bmodel;
 import demo.tool.LinkSql;
 import demo.tool.MD5;
-import demo.tool.PublicMethod;
 import demo.tool.UUIDUtil;
 
 /**
@@ -48,7 +46,7 @@ public class LoginController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/login")
-	public String toLogin(HttpServletRequest request, HttpServletResponse res,String guid) throws Exception {
+	public String toLogin(HttpServletRequest request, HttpServletResponse res, String guid) throws Exception {
 		System.out.println(guid);
 		HttpSession session = request.getSession();
 		session.setAttribute("ZCBH", guid);
@@ -81,43 +79,54 @@ public class LoginController {
 	@ResponseBody
 	public String loginIn(HttpServletRequest request, HttpServletResponse res, String sj, String mm) throws Exception {
 		ResultSetMetaData md = null;
+		HttpSession session =request.getSession();
+		Object zcbh = session .getAttribute("ZCBH");
 		list = new ArrayList<Map<String, Object>>();
 		String returnVal = null;
 		int columnCount = 0;
 		conn = LinkSql.getConn();
-		String role = "system";// 当前角色为开发者
-		String tn = Bmodel.findBmByGuId("00c99009ec2d4cb883acc9ae24f73b6e");// 根据模型表中guid判断当前表名
-		String pwd = MD5.GetMd5(mm);// MD5加密进行数据库判断
-		String sqlWhere = " and sj=? and mm=? ";
-		String sql = "select id, guid, NAME, SJ, EMAIL, MM, roleName, roleid, GSMC, BGDZ, ZT, ZW, WXH, YJDZ, SFZSMJ, CZ, FRXM, FRSJH, FRSFZ, FRZJ, YYZZ, FRSFZZ, SFZ  from "
-				+ tn + " where 1=1  " + sqlWhere;
-		try {
-			ps = LinkSql.Execute(conn, sql, role, tn);
-			ps.setString(1, sj);
-			ps.setString(2, pwd);
-			rs = ps.executeQuery();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		rs.last();
-		int row = rs.getRow();
-		if (row == 0) {
-			returnVal = "loginLose";// 当登录失败
-		} else {
-			rs.previous();
-			md = rs.getMetaData(); // 获得结果集结构信息,元数据
-			columnCount = md.getColumnCount(); // 获得列数
-			HttpSession session = request.getSession();
-			String ZT = null;
-			String roleid = null;
-			while (rs.next()) {
-				Map<String, Object> rowData = new HashMap<String, Object>();
-				ZT = rs.getObject("ZT").toString();
-				roleid = rs.getObject("roleid").toString();
-				if (!ZT.equals("通过")) {
-					if (roleid.equals("1")) {
-						returnVal = "loginStop";
+		if(zcbh!=null&&!zcbh.equals("")){
+			String role = "system";// 当前角色为开发者
+			String tn = Bmodel.findBmByGuId("00c99009ec2d4cb883acc9ae24f73b6e");// 根据模型表中guid判断当前表名
+			String pwd = MD5.GetMd5(mm);// MD5加密进行数据库判断
+			String sqlWhere = " and sj=? and mm=? ";
+			String sql = "select id, guid, NAME, SJ, EMAIL, MM, roleName, roleid, GSMC, BGDZ, ZT, ZW, WXH, YJDZ, SFZSMJ, CZ, FRXM, FRSJH, FRSFZ, FRZJ, YYZZ, FRSFZZ, SFZ  from "
+					+ tn + " where 1=1  " + sqlWhere;
+			try {
+				ps = LinkSql.Execute(conn, sql, role, tn);
+				ps.setString(1, sj);
+				ps.setString(2, pwd);
+				rs = ps.executeQuery();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			rs.last();
+			int row = rs.getRow();
+			if (row == 0) {
+				returnVal = "loginLose";// 当登录失败
+			} else {
+				rs.previous();
+				md = rs.getMetaData(); // 获得结果集结构信息,元数据
+				columnCount = md.getColumnCount(); // 获得列数
+				String ZT = null;
+				String roleid = null;
+				while (rs.next()) {
+					Map<String, Object> rowData = new HashMap<String, Object>();
+					ZT = rs.getObject("ZT").toString();
+					roleid = rs.getObject("roleid").toString();
+					if (!ZT.equals("通过")) {
+						if (roleid.equals("1")) {
+							returnVal = "loginStop";
+						} else {
+							for (int i = 1; i <= columnCount; i++) {
+								rowData.put(md.getColumnName(i), rs.getObject(i));
+								session.setAttribute(md.getColumnName(i), rs.getObject(i));
+							}
+							list.add(rowData);
+							returnVal = "loginfinish";
+						}
+
 					} else {
 						for (int i = 1; i <= columnCount; i++) {
 							rowData.put(md.getColumnName(i), rs.getObject(i));
@@ -126,17 +135,12 @@ public class LoginController {
 						list.add(rowData);
 						returnVal = "loginfinish";
 					}
-
-				} else {
-					for (int i = 1; i <= columnCount; i++) {
-						rowData.put(md.getColumnName(i), rs.getObject(i));
-						session.setAttribute(md.getColumnName(i), rs.getObject(i));
-					}
-					list.add(rowData);
-					returnVal = "loginfinish";
 				}
 			}
+		}else{
+			returnVal = "isNot";
 		}
+		
 		return returnVal;
 	}
 
@@ -194,14 +198,18 @@ public class LoginController {
 	@RequestMapping(value = "userOut")
 	public String userOut(HttpServletRequest request, HttpServletResponse res) throws Exception {
 		HttpSession session = request.getSession();
-		String role = session.getAttribute("roleid").toString();
-		session.invalidate();
-		if(role.toString().trim().equals("1")){
+		Object role = session.getAttribute("roleid");
+		if (role == null) {
 			return "redirect:login";
-		}else{
+		}
+		session.invalidate();
+		System.out.println(role);
+		if (role.toString().trim().equals("1")) {
+			return "redirect:login";
+		} else {
 			return "redirect:admin";
 		}
-		
+
 	}
 
 	// 搭建商注册

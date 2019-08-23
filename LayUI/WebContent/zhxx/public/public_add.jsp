@@ -491,7 +491,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					$.post("doc/findJSDM",{
 						api : api,
 						apiVal : apiVal,
-						zdmc : data.name,
+							zdmc : data.name,
 						guid : guid,
 						zhxxGuid : zhxxGuid
 						 },function(result){

@@ -38,6 +38,10 @@
 				<input id="guid" style="display: none" value="<%=request.getParameter("guid")%>"> <input id="guidBmodel" style="display: none" value="<%=request.getParameter("guidBmodel")%>"> <input id="flag" style="display: none" value="<%=request.getParameter("flag")%>">
 				<form id="layui-form" class="layui-form  layui-form-pane" action="doc/doc_doEdit" onsubmit="return fomrSubmit(this);" method="post"></form>
 			</div>
+			<div class="rightdiv" style="display: none; z-index: 999">
+		      <ul id='ulList_fzr'>
+		      </ul>
+		    </div>
 		</div>
 	</div>
 	<script src="statics/layui/laydate/laydate.js"></script>

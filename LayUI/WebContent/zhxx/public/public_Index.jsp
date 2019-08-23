@@ -42,11 +42,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<script type="text/html" id="toolbarDemo">
   				<div class="layui-btn-container">
     				<button type="button" class="layui-btn layui-btn-sm" lay-event="add">添加</button>
-    				<button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="edit">修改</button>
+    				<button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="update">修改</button>
     				<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">删除</button>
 				</div>
 			</script>
-			
 		<script src="statics/layui/layui.js"></script>
 		<script src="statics/js/concisejs.js"></script>
 		<script type="text/javascript" src="statics/js/jquery-1.8.0.js"></script>

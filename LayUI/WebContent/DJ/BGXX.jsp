@@ -417,6 +417,8 @@
                 case "室内单层":
                     $("#sndc").show();
                     $("#snsc").hide();
+                    $("#zwtz").attr("lay-verify","");
+                    $("#zwjgt").attr("lay-verify","");
                     break;
                 case "室内双层":
                 	  $("#zwtz").attr("lay-verify","required");
@@ -432,6 +434,8 @@
                 case "室外简易结构":
                     $("#sndc").show();
                     $("#snsc").hide();
+                    $("#zwtz").attr("lay-verify","");
+                    $("#zwjgt").attr("lay-verify","");
                     break;
             }
            form.render();

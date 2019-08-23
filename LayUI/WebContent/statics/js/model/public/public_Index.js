@@ -1,12 +1,13 @@
 $(document).ready(function() {
 				//对查询条件的加载
 		        var guid =$("#guid").val();
+		        var zhxx = $("#zhxxGuid").val();
 		        var typeDj = "false";
 	        	$.ajax({
 					    url:"doc/queryCondition",//请求的url地址
 					    dataType:"json",   //返回格式为json
 					 	async : false,//请求是否异步，默认为异步，这也是ajax重要特性
-					    data:{guid : guid,typeDj:typeDj},    //参数值
+					    data:{guid : guid,typeDj:typeDj,zhxxDj:zhxx},    //参数值
 					    type:"POST",   //请求方式
 					    success:function(con){
 					        //请求成功时处理
@@ -136,15 +137,7 @@ layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel', 'upload',
 								hide : true
 							}
 							cols.push(id);
-							var bar = {
-								title : '操作',
-								width : 180,
-								fixed : 'right',
-								align : 'center',
-								sort : true,
-								toolbar : '#barDemo'
-							}
-							cols.push(bar);
+							
 							// 然后开始渲染表格
 							var zhxxGuid =$("#zhxxGuid").val();
 							table.render({
@@ -181,14 +174,62 @@ layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel', 'upload',
 												.checkStatus(obj.config.id), data = checkStatus.data; // 获取选中的数据
 										switch (obj.event) {
 										case 'add':
-											var guid = $("#guid").val();
-											window.location.href = "zhxx/public/public_add.jsp?guid="+guid;
+											var guidBmodel = $("#guidBmodel").val();
+											if (guidBmodel==null||guidBmodel=="null"||guidBmodel==undefined||guidBmodel=="") {
+												var guid = $("#guid").val();
+												var bmc = $("#bmc").val();
+												window.location.href = "doc/toAddDataJsp?guid="+guid+"&bmc="+bmc;
+											}else{
+												window.location.href = "doc/toAddDataJsp?guid="+guidBmodel+"&bmc="+bmc;
+											}
 											break;
-										case 'delete':
-											window.location.href = "bmodel_Index.jsp";
+										 case 'delete':
+										        if(data.length === 0){
+										          layer.msg('请选择一行');
+										        } else {
+										        	layer.confirm('确认删除？', function(index) {
+										        		layer.msg('正在删除...', {icon: 16,shade: 0.3,time:1000});
+										        		var guid ="";
+										        		for (var i = 0; i < data.length; i++) {
+															guid +=data[i]["guid"]+","
+														}
+														var guidBmodel = $("#guid").val();
+														layer.close(index);
+														$.post("doc/deleteDoc", {
+															guid : guid,
+															guidBmodel :guidBmodel
+														}, function(result) {
+															if (result=="delFinish") {
+																layer.msg('已删除!', {
+							                                        icon: 1, time: 800, end: function () {
+							                                        	table.reload('demo',{page:{curr:1}});
+							                                            parent.reloadExpo();
+							                                        }
+							                                    });
+															}else{
+																layer.msg('删除失败', {
+							                                        icon: 1, time: 1000, end: function () {
+							                                           
+							                                        }
+							                                    });
+															}
+														});
+													});
+										        }
+										      break;
+										case 'update':
+											if(data.length === 0){
+										          layer.msg('请选择一行');
+										        } else if(data.length > 1){
+										          layer.msg('只能同时编辑一个');
+										        } else {
+										        	var guid = data[0]['guid'];//拿到一行数据中的guid
+													var guidBmodel =$("#guid").val();//拿到模型表中的guid
+													//方便显示表单
+													window.location.href = "doc/toUpdateDoc?guid="+guid+"&guidBmodel="+guidBmodel+"&bmc=展会";
+										        }
 											break;
-										}
-										;
+										};
 									});
 
 					// 监听行工具事件

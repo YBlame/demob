@@ -91,7 +91,7 @@ public class DocController {
 				sqlRale = "";
 				sqlDes = sqlDes + sqlRale;
 			}
-			sqlDes = sqlDes + " order by lisnum asc,id asc ";
+			sqlDes = sqlDes + " order by lisnum asc,id asc  ";
 			conn = LinkSql.getConn();
 			ps = LinkSql.Execute(conn, sqlDes, role, destn);
 			rs = ps.executeQuery();
@@ -138,6 +138,10 @@ public class DocController {
 		String bmDj = (String) session.getAttribute("bmDj");
 		String typeDj = (String) session.getAttribute("typeDj");
 		list = new ArrayList<Map<String, Object>>();
+		if (limit == null) {
+			limit = 10;
+		}
+		page.setRows(limit);
 		String tn = null;
 		ResultSetMetaData md = null;
 		int columnCount = 0;
@@ -149,10 +153,6 @@ public class DocController {
 			tn = Bmodel.findBmByGuId(guid);// 描述表
 			destn = tn + "_des";
 		}
-		if (limit == null) {
-			limit = 10;
-		}
-		page.setRows(limit);
 		list = new ArrayList<Map<String, Object>>();
 		String sqlZdmc = " ";
 		conn = LinkSql.getConn();
@@ -211,7 +211,7 @@ public class DocController {
 
 			}
 			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc
-					+ "   order by id desc";
+					+ "   order by id desc  limit " + page.getStart() + "," + page.getRows() + " ";
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
 			rs = ps.executeQuery();
 			md = rs.getMetaData();
@@ -471,9 +471,10 @@ public class DocController {
 				if (roleid.equals("4")) {
 					sqlWhere += " and id!=3 AND id!=1";
 				}
-			} else if (parts[2].equals("user")) {
+			} else if (parts[2].equals("syrzc")) {
 				if (roleid.equals("4")) {
-					sqlWhere += " AND  roleid!=4 AND roleid!=3 AND roleid!=1";
+					sqlWhere += " AND  roleid!=4 AND roleid!=3 AND roleid!=1 AND GS = '"
+							+ session.getAttribute("guid").toString().trim() + "'";
 				}
 			} else if (parts[2].equals("ZGGL")) {
 				if (roleid.equals("4")) {
@@ -607,6 +608,7 @@ public class DocController {
 		String bmDj = (String) session.getAttribute("bmDj");
 		String typeDj = (String) session.getAttribute("typeDj");
 		String bmcDj = (String) session.getAttribute("bmcDj");
+		String roleid = session.getAttribute("roleid").toString().trim();
 		String dataName = "";
 		String destn = "";
 		String dataTname = null;
@@ -679,8 +681,10 @@ public class DocController {
 					if (zdm.equals("GSBH")) {
 						String bh = session.getAttribute("guid").toString();
 						sqlZdmcXs += ",'" + bh + "'";
-					}else if(zdm.equals("MM")){
-						sqlZdmcXs +=",'E10ADC3949BA59ABBE56E057F20F883E'";
+					} else if (zdm.equals("GS")) {
+						sqlZdmcXs += ",'" + session.getAttribute("guid").toString().trim() + "'";
+					} else if (zdm.equals("MM")) {
+						sqlZdmcXs += ",'E10ADC3949BA59ABBE56E057F20F883E'";
 					} else {
 						sqlZdmcXs += ",null";
 					}
@@ -774,9 +778,29 @@ public class DocController {
 				if (typeDj.equals("false")) {
 					if (dataName.trim().toLowerCase().equals("zhxx")) {
 						request.getRequestDispatcher("/findZhxx").forward(request, response);
-					}else if(dataName.trim().toLowerCase().equals("syrzc")){
-						request.getRequestDispatcher("/syrzc/SYRZC.jsp?guid=1199221444f345a7bc770f8dc2ba9ed5&bmc=使用人").forward(request, response);
-					}  else {
+					} else if (dataName.trim().toLowerCase().equals("syrzc")) {
+						if (roleid.equals("4")) {
+							request.getRequestDispatcher(
+									"/zhxx/public/public_Index.jsp?guid=1199221444f345a7bc770f8dc2ba9ed5&bmc=人员管理")
+									.forward(request, response);
+						} else {
+							request.getRequestDispatcher(
+									"/syrzc/SYRZC.jsp?guid=1199221444f345a7bc770f8dc2ba9ed5&bmc=使用人")
+									.forward(request, response);
+						}
+					} else if (dataName.trim().toLowerCase().equals("zggl")) {
+						request.getRequestDispatcher(
+								"/zhxx/public/public_Index.jsp?guid=f77fa37759f44b1f8f49cd6b5c7c100f&bmc=展馆管理&zhxxGuid="+zhxxDj)
+								.forward(request, response);
+					}  else if (dataName.trim().toLowerCase().equals("zwgl")) {
+							request.getRequestDispatcher(
+									"/zhxx/public/public_Index.jsp?guid=171c6db9797e440abae1d787bd15792f&bmc=展位管理&zhxxGuid="+zhxxDj)
+									.forward(request, response);
+					} else if (dataName.trim().toLowerCase().equals("xxtz")) {
+						request.getRequestDispatcher(
+								"/zhxx/public/public_Index.jsp?guid=1178b7245d034da1a314cffe84698c44&bmc=消息通知&zhxxGuid="+zhxxDj)
+								.forward(request, response);
+					}else {
 						request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname)
 								.forward(request, response);
 					}
@@ -1016,6 +1040,7 @@ public class DocController {
 	public void doc_doEdit(Model model, String guid, String guidBmodel, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
+		String roleid = session.getAttribute("roleid").toString().trim();
 		String zhxxDj = (String) session.getAttribute("zhxxDj");
 		String bmDj = (String) session.getAttribute("bmDj");
 		String typeDj = (String) session.getAttribute("typeDj");
@@ -1078,7 +1103,12 @@ public class DocController {
 						valueXs += "," + zdm + "=NOW() ";
 						break;
 					case "varchar":
-						valueXs += "," + zdm + "=null";
+						if (zdm.equals("GS")) {
+							valueXs += "," + zdm + "='" + session.getAttribute("guid").toString().trim() + "'";
+						} else {
+							valueXs += "," + zdm + "=null";
+						}
+
 						break;
 					case "int":
 						if (zdm.equals("parentMenu")) {
@@ -1128,9 +1158,30 @@ public class DocController {
 				if (typeDj.equals("false")) {
 					if (dataName.trim().toLowerCase().equals("zhxx")) {
 						request.getRequestDispatcher("/findZhxx").forward(request, response);
-					}else if(dataName.trim().toLowerCase().equals("syrzc")){
-						request.getRequestDispatcher("/syrzc/SYRZC.jsp?guid=1199221444f345a7bc770f8dc2ba9ed5&bmc=使用人").forward(request, response);
-					} else {
+					} else if (dataName.trim().toLowerCase().equals("syrzc")) {
+						if (roleid.equals("4")) {
+							request.getRequestDispatcher(
+									"/zhxx/public/public_Index.jsp?guid=1199221444f345a7bc770f8dc2ba9ed5&bmc=人员管理")
+									.forward(request, response);
+						}else {
+							request.getRequestDispatcher(
+									"/syrzc/SYRZC.jsp?guid=1199221444f345a7bc770f8dc2ba9ed5&bmc=使用人")
+									.forward(request, response);
+						}
+
+					}else if (dataName.trim().toLowerCase().equals("zggl")) {
+						request.getRequestDispatcher(
+								"/zhxx/public/public_Index.jsp?guid=f77fa37759f44b1f8f49cd6b5c7c100f&bmc=展馆管理&zhxxGuid="+zhxxDj)
+								.forward(request, response);
+					}  else if (dataName.trim().toLowerCase().equals("zwgl")) {
+							request.getRequestDispatcher(
+									"/zhxx/public/public_Index.jsp?guid=171c6db9797e440abae1d787bd15792f&bmc=展位管理&zhxxGuid="+zhxxDj)
+									.forward(request, response);
+					} else if (dataName.trim().toLowerCase().equals("xxtz")) {
+						request.getRequestDispatcher(
+								"/zhxx/public/public_Index.jsp?guid=1178b7245d034da1a314cffe84698c44&bmc=消息通知&zhxxGuid="+zhxxDj)
+								.forward(request, response);
+					}  else {
 						request.getRequestDispatcher("/doc_Index.jsp?flag=" + flag + "&bmc=" + dataTname
 								+ "&guidBmodel=" + guid + " &guid=" + guidBmodel).forward(request, response);
 					}

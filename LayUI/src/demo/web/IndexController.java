@@ -98,7 +98,7 @@ public class IndexController {
 	public Integer userInsert(HttpServletRequest request, HttpServletResponse res) throws Exception{
 		Enumeration pNames = request.getParameterNames();
 		HttpSession session = request.getSession();
-		String zcbh = session.getAttribute("ZCBH").toString().trim();
+		Object zcbh = session.getAttribute("ZCBH");
 		Integer flag =null;
 		if(zcbh!=null&&!zcbh.equals("")){
 			String bmodelName = null;
@@ -111,7 +111,7 @@ public class IndexController {
 			guid = UUIDUtil.getUUID();
 			String sql = "INSERT INTO " + bmodelName + ""
 					+ "(sj,mm,NAME,ZW,SFZ,WXH,EMAIL,YJDZ,SFZSMJ,GSMC,CZ,BGDZ,FRXM,FRSJH,FRSFZ,FRZJ,YYZZ,FRSFZZ,guid,ZT,roleName,roleid,SHRQ,RQ,GS)  "
-					+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,null,NOW(),'"+zcbh+"')";
+					+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,null,NOW(),'"+zcbh.toString().trim()+"')";
 			ps = conn.prepareStatement(sql);
 			for (int e = 1; e <= v.length; e++) {
 				while (pNames.hasMoreElements()) {
@@ -147,24 +147,7 @@ public class IndexController {
 		
 		return flag ;
 	}
-	/**
-	 * 查询个主场信息
-	 * @param request
-	 * @param res
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "findZcglry")
-	public Integer findZcglry(HttpServletRequest request, HttpServletResponse res) throws Exception{
-		
-		
-		return null;
-		
-	}
-		
-	public static void main(String[] args) {
-		System.out.println(UUIDUtil.getUUID());
-	}
+
 	
 	
 }

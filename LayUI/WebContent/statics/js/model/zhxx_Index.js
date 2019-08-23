@@ -136,6 +136,7 @@ $(document).ready(function() {
 														,
 														title : '记录表',
 														page :true,
+														limit: 10,
 														defaultToolbar: ['exports'],
 														done:function (res, curr, count) {
 															this.where={};
@@ -183,7 +184,8 @@ $(document).ready(function() {
 																if (result=="delFinish") {
 																	layer.msg('已删除!', {
 								                                        icon: 1, time: 800, end: function () {
-								                                            window.location.reload();
+								                                        	table.reload('demo',{page:{curr:1}});
+								                                            parent.reloadExpo();
 								                                        }
 								                                    });
 																}else{
