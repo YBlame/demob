@@ -21,6 +21,7 @@
 	<div class="layui-fluid">
 		<div class="layui-card">
 			<div class="layui-card-header"><%=request.getParameter("bmc")%>-新增
+			<input id="bm" name="bm" style="display: none" value="<%=request.getParameter("bm")%>">
 			</div>
 			<div class="layui-card-body" style="padding: 15px;">
 				<input id="uuid" name="uuid" style="display: none" value="<%=request.getParameter("guid")%>"> <input id="flag" name="flag" style="display: none" value="<%=request.getParameter("flag")%>"> <input id="bmcDj" name="bmcDj" style="display: none" value="<%=request.getParameter("bmcDj")%>"> <span id="isform"></span>
@@ -176,7 +177,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 							option += "<option value='"+ strs[a].replace("|$|",",")+ "'>"+ strs[a].replace("|$|",",")+ "</option> ";
 						}
 						fromInput += "<div class='layui-form-item'>"
-								+ "<label class='layui-form-label'  style='width:150px;'>"
+								+ "<label class='layui-form-label' '>"
 								+ isform
 								+ result[i].zdmc
 								+ "</label>"
@@ -289,7 +290,12 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 				if (guid == "73c2efa3c34f4904ae0eee4ab31dfa79") {//此处是用于菜单的新增
 					fromInput += "<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">   <button class='layui-btn' >立即提交</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>"
 				} else {
-					fromInput += "<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' onclick='toSubmitMenu()' >保存</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>"
+					var bm = $("#bm").val();
+					if(bm=="SGRYBX"){
+						fromInput+="<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' lay-submit='' lay-filter='component-form-demo1'>保存</button></div> </div></div></div>";
+					}else{
+						fromInput += "<div class=\"layui-form-item layui-layout-admin\"><div class=\"layui-input-block\"><div class=\"layui-footer\" style=\"left: 0;\">  <button class='layui-btn' onclick='toSubmitMenu()' >保存</button><button type='button' onclick='bakcButton()'  class='layui-btn layui-btn-primary'>返回</button></div> </div></div></div>"
+					}
 				}
 				var formtypes = document.getElementById("layui-form");
 				formtypes.innerHTML = fromInput;
@@ -324,6 +330,39 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 								});
 					});
 				});
+	
+	
+	/* 监听提交审核 */
+	  form.on('submit(component-form-demo2)', function (data) {
+		  layer.open({
+           content: '确定要提交审核吗？系统将要提交全部数据，提交后将不能进行添加、修改、删除等操作！',
+           btn: ['确认', '取消'],
+        
+           yes: function (index, layero) {
+            //提交之后修改状态 重新加载框架 
+            $.ajax({
+                 url:"gzry/updtijiaobxStateByGuid",//请求的url地址
+                 dataType:"json",   //返回格式为json                                      
+                 data:{zhxxguid : cj.getCookie('selected_expo_id') },    //参数值
+                 type:"POST",   //请求方式
+                 success:function(con){
+            	 $(".layui-upload-list button").remove();
+					//$("div").removeClass("file-iteme");
+						$(".layui-layout-admin").remove();
+            	 layer.close(index);
+             }
+            });
+               
+           },
+           //btn2和cancel方法没有用到，可以不写
+           btn2: function (index, layero) {
+        
+           },
+           cancel: function () {
+           //右上角关闭回调
+           }
+       });
+	})
 	})
 	//查找JSDM关联字段
 	function findJSDM(api, guid, data, father) {
@@ -476,6 +515,9 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 	function hideDiv() {
 		$('#ulList').remove(); // 如不是则隐藏元素
 	}
+	
+	
+	
 	//提交
 
 	function fomrSubmit(form) {

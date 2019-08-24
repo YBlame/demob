@@ -97,20 +97,6 @@ var reloadExpo;
 	                        element.render('nav', 'top_expo_nav');
 
 	                    } 
-	                /*    else {
-	                        html = '<a href="javascript:;" id="g_expo" data-id="' + data[0].guid + '">' + data[0].ZHMC + '</a>';
-	                        if (data.length > 1) {
-	                            other = '<dl class="layui-nav-child">';
-	                            for (var i = 1; i < data.length; i++) {
-	                                other += '<dd><a href="javascript:;" id="g_expo" data-id="' + data[i].guid + '" >' + data[i].ZHMC + '</a></dd>';
-	                            }
-	                            other += '</dl>';
-	                            html += other;
-	                        }
-	                        $('#top_expo_nav li').html(html);
-	                        cj.setCookie('selected_expo_id', data[0].guid, 365);
-	                        element.render('nav', 'top_expo_nav');
-	                    }*/
 	                }  else { // 无展会，提示添加测试
 	                    cj.removeCookie('selected_expo_id');
 	                    html = '<a href="javascript:toAddZhxx();">添加展会</a>';

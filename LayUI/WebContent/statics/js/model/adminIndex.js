@@ -101,6 +101,12 @@ function findFybz(){
 	var bmc="费用标准";
 	$("#demoAdmin").attr("src", "zhxx/public/public_Index.jsp?guid="+guid+"&bmc="+bmc+"&zhxxGuid=");
 }
+function findRddjs(){
+	var guid="a4eb4d19df3644999c59c46aedbb533c";
+	var bmc="入围搭建商";
+	$("#demoAdmin").attr("src", "zhxx/public/public_Index.jsp?guid="+guid+"&bmc="+bmc+"&zhxxGuid=");
+}
+
 
 function toZggl(){//对展馆管理
 	var guid="f77fa37759f44b1f8f49cd6b5c7c100f";

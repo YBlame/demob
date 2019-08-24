@@ -167,7 +167,7 @@ $(document).ready(function() {
 																if(bm=="KFPXX"){
 																	window.location.href = "DJ/KPXX.jsp";
 																}else{
-																	window.location.href = "djpublic/toAddDataJsp?guid="+guid+"&bmc="+bmc;
+																	window.location.href = "djpublic/toAddDataJsp?guid="+guid+"&bmc="+bmc+"&bm="+bm;
 																}																
 																
 															}else{																
@@ -220,7 +220,6 @@ $(document).ready(function() {
 																	var guidB =$("#guid").val();//拿到模型表中的guid
 																	var bmc = $("#bmc").val();
 																	var bm = $("#bm").val();
-																	alert(guid)
 																	if(bm=="KFPXX"){
 																		window.location.href = "djpublic/toUpdateKfp?guid="+guid+"&guidBmodel="+guidB+"&bmc="+bmc;
 																	}else{
@@ -232,7 +231,6 @@ $(document).ready(function() {
 													        }
 													        break;
 														case 'tijiao':
-
 												               layer.open({
 												                   content: '确定要提交审核吗？系统将要提交全部数据，提交后将不能进行添加、修改、删除等操作！',
 												                   btn: ['确认', '取消'],
@@ -242,7 +240,7 @@ $(document).ready(function() {
 												                    $.ajax({
 												                         url:"gzry/updtijiaoStateByGuid",//请求的url地址
 												                         dataType:"json",   //返回格式为json                                      
-												                         data:{zhxxguid : $("#zhxx").val()},    //参数值
+												                         data:{zhxxguid : cj.getCookie('selected_expo_id')},    //参数值
 												                         type:"POST",   //请求方式
 												                         success:function(con){
 												                    	 	$("#toolbarDemo").remove();

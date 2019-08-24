@@ -186,6 +186,8 @@ public class ZcPublicController {
 					sqlWhere = " AND roleid =5 AND GS='"+roleid+"' ";
 				}
 				
+			}else if(tn.equals("FYBZ")){
+				
 			}  else {
 				sqlWhere = " AND 1>2 ";
 			}

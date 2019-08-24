@@ -74,7 +74,7 @@ public class DjController {
 		}
 		String[] menuGuid = DjMenu.returnMenu(session, roleGuid, zhxxGuid);
 		String tn = Bmodel.findBmByGuId("73c2efa3c34f4904ae0eee4ab31dfa79");
-		String sql = "select guid,id,name,zhxx_menu,bmc,bm from " + tn + " where zhxx_menu = ? ";
+		String sql = "select guid,id,name,zhxx_menu,bmc,bm from " + tn + " where zhxx_menu = ? ORDER BY sort ASC";
 
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, zhxxGuid);

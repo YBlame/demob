@@ -31,6 +31,7 @@ span {
 			<div class="layui-card-header"><%=request.getParameter("bmc")%>-编辑
 			</div>
 			<div class="layui-card-body" style="padding: 15px;">
+			<input id="flag" style="display: none" name="flag" value="<%=request.getParameter("flag")%>">
 			<input id="this" style="display: none" name="this" value="<%=request.getParameter("bm")%>">
 			<input id="type" style="display: none" name="type" value="<%=request.getParameter("type")%>">
 			<input id="zt" style="display: none" name="zt" value="<%=request.getParameter("zt")%>">

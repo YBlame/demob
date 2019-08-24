@@ -1,9 +1,9 @@
 $(document).ready(function(){
-				var flag =$("#type").val();
+				var flag =$("#flag").val();
 				if(flag!="null"){
 					layui.use("layer", function() {
 						layer.msg(flag);
-						$("#type").val("");
+						$("#flag").val("");
 					});
 				}
 				
@@ -207,7 +207,7 @@ $(document).ready(function(){
 										    	var img = "";
 										    	if (picture.length >= 1) {
 													for (var q = 0; q < picture.length; q++) {
-														img +="<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='" + picture[q] + "' id='' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='" + picture[q] + "' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>";
+														img +="<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='" + picture[q] + "' id='' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' id='prew' style='position:absolute;z-index:10;display:none'><a href='" + picture[q] + "' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' id='del' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>";
 													}
 													none = result[i].zdm
 												}
@@ -263,13 +263,14 @@ $(document).ready(function(){
 										        		var dData = $("#"+d+"").val();
 										        		dData +=imgData+","
 										        		$("#"+d+"").val(dData);
-										       	  		$('#'+d+'Btn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
+										       	  		$('#'+d+'Btn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' id='del' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
 										            }
 										        });
 										    }
 											if(zt=="false"){
 												$(".layui-upload-list button").remove();
-												$("div").removeClass("file-iteme");
+												//$("div").removeClass("file-iteme");
+												$(".file-iteme #del").remove();
 											}
 											picZdm = picZdm.substring(0,picZdm.length-1);
 											selectImg(picZdm)
@@ -304,10 +305,12 @@ $(document).ready(function(){
 													        dataType:"json", 
 													        success:function(data){
 													           if(data.success){
-																layer.msg("保存成功..可进行提交..");
+																layer.msg("保存成功");
+																window.location = "DJ/public/public_Index.jsp?zhxx="+ data.zhxx+"&bmc="+data.bmc+"&bm="+data.bm+"&typeDj=true"
+																
 																$("#tj").attr("class","layui-btn")
 													           }else{
-													              layer.alert("保存失败...")
+													              layer.alert("保存失败")
 													           }
 													        },
 													        error:function(jqXHR){
@@ -327,11 +330,11 @@ $(document).ready(function(){
 									                    $.ajax({
 									                         url:"gzry/updtijiaobxStateByGuid",//请求的url地址
 									                         dataType:"json",   //返回格式为json                                      
-									                         data:{zhxxguid : $("#ZHBH").val()},    //参数值
+									                         data:{zhxxguid : cj.getCookie('selected_expo_id') },    //参数值
 									                         type:"POST",   //请求方式
 									                         success:function(con){
 									                    	 $(".layui-upload-list button").remove();
-															$("div").removeClass("file-iteme");
+															//$("div").removeClass("file-iteme");
 															$(".layui-layout-admin").remove();
 									                    	 layer.close(index);
 									                     }

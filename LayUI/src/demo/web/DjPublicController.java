@@ -41,7 +41,11 @@ public class DjPublicController {
 	@ResponseBody
 	public JSONObject submitXx(HttpServletRequest request) throws Exception {
 		// 获取描述表字段
+		HttpSession session = request.getSession();
 		Enumeration pNames = request.getParameterNames();
+		String zhxxDj = (String) session.getAttribute("zhxxDj");
+		String bmDj = (String) session.getAttribute("bmDj");
+		String typeDj = (String) session.getAttribute("typeDj");
 		JSONObject json = new JSONObject();
 		String name = null;
 		String sqlSet = "";
@@ -85,6 +89,9 @@ public class DjPublicController {
 			conn.commit();
 			json.put("msg", "修改信息成功");
 			json.put("success", true);
+			json.put("zhxx", zhxxDj);
+			json.put("bm", bmDj);
+			json.put("bmc", bmc);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			conn.rollback();
@@ -407,6 +414,7 @@ public class DjPublicController {
 			request.setAttribute("id", null);
 			request.setAttribute("parentName", null);
 			request.setAttribute("bmc", bmc);
+			request.setAttribute("bm", bm);
 		}
 		return "/DJ/public/public_add";
 	}
