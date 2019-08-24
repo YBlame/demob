@@ -269,7 +269,7 @@ $(document).ready(function(){
 										    }
 											if(zt=="false"){
 												$(".layui-upload-list button").remove();
-												//$("div").removeClass("file-iteme");
+												$("div").removeClass("file-iteme");
 												$(".file-iteme #del").remove();
 											}
 											picZdm = picZdm.substring(0,picZdm.length-1);
