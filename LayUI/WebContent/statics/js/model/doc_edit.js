@@ -127,7 +127,6 @@ $(document).ready(function(){
 																+ "<div class='layui-form-mid layui-word-aux'></div></div>";
 											    	break;
 											   case "textarea"://文本域
-												   alert(data[result[i].zdm])
 							            	        fromInput +="<div class='layui-form-item layui-form-text'><label class='layui-form-label' style='width:150px;'>"+result[i].zdmc+isform+"</label><div class='layui-input-block'><textarea id='"+result[i].zdm+"'  name='"+result[i].zdm+"' placeholder='请输入"+result[i].zdmc+"' "+isedit+"  style='width:"+result[i].width+"px;height:"+result[i].height+"' class='layui-textarea'>"+data[result[i].zdm]+"</textarea></div></div>";
 											        break;
 											    case "number"://数字

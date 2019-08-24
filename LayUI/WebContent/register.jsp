@@ -229,7 +229,7 @@ span{cursor: pointer;}
 												style="margin-top: 10px;">
 												身份证扫描件预览图：
 												<div class="layui-upload-list" id="sfzDiv">
-												<input id='sfzsmj' name='sfzsmj' style='display: none' lay-verify="required" lay-reqtext="身份证扫描件不能为空"  />
+												<input id='sfzsmj' name='sfzsmj'  class="ant-input ant-input-lg bitian" style='display: none' lay-verify="required" lay-reqtext="身份证扫描件不能为空"  />
 													<button type="button" class="layui-btn"
 														style="display: block; margin: 0 auto" id="sfzsmjBtn">加盖公章的个人身份证扫描件</button>
 												</div>
@@ -350,7 +350,7 @@ span{cursor: pointer;}
 												style="margin-top: 10px;">
 												营业执照：
 												<div class="layui-upload-list" id="yyzzDiv">
-												<input id='yyzz' name='yyzz' style='display: none' lay-verify="required" lay-reqtext="营业执照不能为空"  />
+												<input id='yyzz' name='yyzz' style='display: none' class="ant-input ant-input-lg bitian" lay-verify="required" lay-reqtext="营业执照不能为空"  />
 													<button type="button" class="layui-btn"
 														style="display: block; margin: 0 auto" id="yyzzBtn">营业执照</button>
 												</div>
@@ -392,7 +392,7 @@ span{cursor: pointer;}
 												style="margin-top: 10px;">
 												法人身份证：
 												<div class="layui-upload-list" id="frsfzDiv">
-												<input id='frsfzz' name='frsfzz' style='display: none' lay-verify="required" lay-reqtext="法人身份证不能为空"  />
+												<input id='frsfzz' name='frsfzz' style='display: none' class="ant-input ant-input-lg bitian" lay-verify="required" lay-reqtext="法人身份证不能为空"  />
 													<button type="button" class="layui-btn"
 														style="display: block; margin: 0 auto" id="frsfzzBtn">上传法人身份证</button>
 												</div>
@@ -600,14 +600,13 @@ html body { -
 			 url: "userInsert",
 			 data:formData,
 			 success: function(data){
-			       if(data=="1"){
-			         alert("注册成功，联系或等待管理员审核");
-			         window.location = "logins.jsp";
-			        }else{
-			         //失败执行的代码
-			        alert("注册失败，请重试");
-			        }
+				 if(data.success){
+			    	  alert(data.msg)
+			    	  window.location = "login";
+			      }else{
+			    	  alert(data.msg)
 			      }
+			 }
 		 })
 		
 	}

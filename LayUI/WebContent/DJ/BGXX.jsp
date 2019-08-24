@@ -424,6 +424,7 @@
                     $("#snsc").hide();
                     $("#zwtz").attr("lay-verify","");
                     $("#zwjgt").attr("lay-verify","");
+                    $("#snsc input").val("");
                     break;
             }
            form.render();

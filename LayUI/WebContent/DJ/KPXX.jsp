@@ -99,79 +99,81 @@
                 
                 <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">开票金额</label>
+                            <label class="layui-form-label"><font color=red>*</font>开票金额</label>
                             <div class="layui-input-block">
                                 <input type="text" name="KPJE" placeholder="请输入开票金额"
-                                       autocomplete="off" class="layui-input">
+                                       autocomplete="off" class="layui-input" lay-verify="required" lay-reqtext="开票金额不能为空">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">发票抬头</label>
+                            <label class="layui-form-label"><font color=red>*</font>发票抬头</label>
                             <div class="layui-input-block">
-                                <input type="text" name="FPTT" placeholder="请输入发票抬头"
-                                       autocomplete="off" class="layui-input">
+                                <input type="text" style="width: 300px;" name="FPTT" placeholder="请输入发票抬头"
+                                       autocomplete="off" class="layui-input" lay-verify="required" lay-reqtext="发票抬头不能为空">
                             </div>
                         </div>
                     </div>
                 
                  <div id='snsc' >                                                          
                     <div class="layui-form-item">
+                     <p class="details-component-line-margin"
+								style="margin-bottom: 0px;font-size: 12px;">注意：请上传一般纳税人证明，单个图片不超过1M。
+						</p>
                         <div class="layui-upload">
                             <blockquote class="layui-elem-quote layui-quote-nm"
                                         style="margin-top: 10px;">
                                 <font color=red>*</font>一般纳税人证明：
                                 <div class="layui-upload-list" id="ctgcszzzsDiv">
-                                 <input id='gcszzzs' name='NSRZM' style='display: none' lay-reqtext="一般纳税人证明不能为空" />
+                                 <input id='gcszzzs' name='YBRNSRZM' style='display: none' lay-verify="required"  lay-reqtext="一般纳税人证明不能为空" />
                                     <button type="button" class="layui-btn" style="display:block;margin:0 auto"
                                             id="gcszzzsBtn">一般纳税人证明
                                     </button>
                                 </div>
                             </blockquote>
                         </div>
-                        <p class="details-component-line-margin"
-								style="margin-bottom: 0px;">注意：请上传一般纳税人证明，单个图片不超过1M，支持JPG格式。
-						</p>
+                       
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">纳税人识别号</label>
+                            <label class="layui-form-label"><font color=red>*</font>纳税人识别号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="NSRSBH" placeholder="纳税人识别号"
-                                       autocomplete="off" class="layui-input">
+                                <input type="text" id="NSRSBH" name="NSRSBH" placeholder="纳税人识别号"
+                                       autocomplete="off" class="layui-input" lay-verify="required"  lay-reqtext="一般纳税人识别号不能为空">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">开户行</label>
+                            <label class="layui-form-label"><font color=red>*</font>开户行</label>
                             <div class="layui-input-block">
-                                <input type="text" name="KHH"  placeholder="开户行"
-                                       autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">账号</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="ZH" placeholder="请输入账号"
-                                       autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">地址</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="DZ"  placeholder="请输入地址"
-                                       autocomplete="off" class="layui-input">
+                                <input type="text" id="KHH" name="KHH" style="width: 250px"   placeholder="开户行"
+                                       autocomplete="off" class="layui-input" lay-verify="required"  lay-reqtext="开户行不能为空">
                             </div>
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">电话</label>
+                         <div class="layui-inline">
+                            <label class="layui-form-label"><font color=red>*</font>电话</label>
                             <div class="layui-input-block">
-                                <input type="text" name="DH" placeholder="请输入电话"
-                                       autocomplete="off" class="layui-input">
+                                <input type="text" id="DH" name="DH" placeholder="请输入电话"
+                                       autocomplete="off" class="layui-input"  lay-verify="required|phone|number"   lay-reqtext="电话不能为空">
                             </div>
-                        </div>                      
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label"><font color=red>*</font>账号</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="ZH" name="ZH" placeholder="请输入账号"
+                                       autocomplete="off" class="layui-input" style="width: 250px"   lay-verify="required"  lay-reqtext="账号不能为空">
+                            </div>
+                        </div>  
+                       
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label"><font color=red>*</font>地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="DZ" name="DZ"  style="width: 300px"  placeholder="请输入地址"
+                                       autocomplete="off" class="layui-input"  lay-verify="required"  lay-reqtext="地址不能为空">
+                            </div>
+                        </div>
                     </div>
                 </div>                                                              
                 
@@ -181,7 +183,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label"><font color=red>*</font>收件地址</label>
                     <div class="layui-input-block">
-                        <input type="text" name="SJDZ" lay-verify="required" placeholder="请输入收件地址" style="width: 300px" lay-reqtext="收件地址不能为空" 
+                        <input type="text" name="SJDZ" lay-verify="required" placeholder="请输入收件地址" style="width: 300px"  lay-verify="required"  lay-reqtext="收件地址不能为空" 
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
@@ -189,14 +191,14 @@
                     <div class="layui-inline">
                         <label class="layui-form-label"><font color=red>*</font>收件人</label>
                         <div class="layui-input-block">
-                            <input type="text" name="SJR" lay-verify="required" placeholder="请输入收件人" lay-reqtext="收件人不能为空" 
+                            <input type="text" name="SJR" lay-verify="required" placeholder="请输入收件人"  lay-verify="required"  lay-reqtext="收件人不能为空" 
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label"><font color=red>*</font>手机</label>
                         <div class="layui-input-block">
-                            <input type="text" name="SJ" lay-verify="required|phone|number" placeholder="请输入手机" lay-reqtext="收件人手机不能为空" 
+                            <input type="text" name="SJ" lay-verify="required|phone|number" placeholder="请输入手机" lay-verify="required"  lay-reqtext="收件人手机不能为空" 
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -287,9 +289,14 @@
                 case "增值税专用发票":
                     $("#snsc").show();
                     break;
-                case "增值税普通发票":
-                	  $("#zwtz").attr("lay-verify","required");
-                      $("#zwjgt").attr("lay-verify","required");
+                case "增值税普通发票":    
+                	  $("#gcszzzs").attr("lay-verify","");
+                      $("#NSRSBH").attr("lay-verify","");
+                      $("#KHH").attr("lay-verify","");
+                      $("#ZH").attr("lay-verify","");
+                      $("#DZ").attr("lay-verify","");
+                      $("#DH").attr("lay-verify","");
+                      $("#snsc input").val("");
                       $("#snsc").hide();                  	
                     break;          
             }
@@ -303,19 +310,12 @@
         	var formList = $('.layui-form-pane').serialize()
         	$.ajax({
        		        type:"POST",
-       		        url:"bg/submitBgxx",
+       		        url:"dj/submitKfpxx",
        		      	data: formList,
        		        success:function(data){
        		           if(data.success){
-       						window.location.href = "DJ/FYHZ.jsp"
-       		             /*  layer.alert(data.msg,function() {
-       			var index = layer.open({
-                    type: 2,
-                    content: 'DJ/FYHZ.jsp',
-                    title: '费用汇总',
-                });
-                layer.full(index); 
-                });*/
+       						layer.alert(data.msg)
+       						window.location.href = "DJ/public/public_Index.jsp?zhxx="+ data.zhxx+"&bmc="+data.bmc+"&bm="+data.bm+"&typeDj=true";
        		           }else{
        					  layer.alert(data.msg);
        		           }

@@ -27,19 +27,19 @@
 								<div class="layadmin-shortcut">
 									<div carousel-item>
 										<ul class="layui-row layui-col-space10">
-											<li class="layui-col-xs3"><a href="javascript:toBgxx();" lay-href=""> <i class="layui-icon layui-icon-home" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>我要报馆</cite>
+											<li class="layui-col-xs3"><a href="javascript:;" name="WDZL"  class="bm" rea><i class="layui-icon layui-icon-username" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>我的资料</cite>
 											</a></li>
-											<li class="layui-col-xs3"><a lay-href="home/homepage2.html"> <i class="layui-icon layui-icon-util" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>施工人员</cite>
+											<li class="layui-col-xs3"><a href="javascript:;"  name="BGXX" class="bm"> <i class="layui-icon layui-icon-home" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>我要报馆</cite>
 											</a></li>
-											<li class="layui-col-xs3"><a lay-href="component/layer/list.html"> <i class="layui-icon layui-icon-notice" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>通知</cite>
+											<li class="layui-col-xs3"><a href="javascript:;" name="SGRYBX" class="bm"> <i class="layui-icon layui-icon-file" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>保险信息</cite>
 											</a></li>
-											<li class="layui-col-xs3"><a layadmin-event="im"> <i class="layui-icon layui-icon-form" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>付款通知单</cite>
+											<li class="layui-col-xs3"><a href="javascript:;" name="SGRYXX" class="bm"> <i class="layui-icon layui-icon-util" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>施工人员信息</cite>
 											</a></li>
-											<li class="layui-col-xs3"><a lay-href="user/user/list.html"> <i class="layui-icon layui-icon-rmb" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>汇款水单和发票</cite>
+											<li class="layui-col-xs3"><a href="javascript:;" name="aa" class="bm"> <i class="layui-icon layui-icon-flag" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>货车信息</cite>
 											</a></li>
-											<li class="layui-col-xs3"><a lay-href="user/user/list.html"> <i class="layui-icon layui-icon-close-fill" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>违规记录</cite>
+											<li class="layui-col-xs3"><a href="javascript:;" name="KFPXX" class="bm"> <i class="layui-icon layui-icon-rmb" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>开票及退押金</cite>
 											</a></li>
-											<li class="layui-col-xs3"><a lay-href="user/user/list.html"> <i class="layui-icon layui-icon-username" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>我的资料</cite>
+											<li class="layui-col-xs3"><a href="javascript:;" name="ss" class="bm"> <i class="layui-icon layui-icon-log" style="height: 146px; line-height: 146px; font-size: 60px;"></i> <cite>转账凭证</cite>
 											</a></li>
 										</ul>
 									</div>
@@ -87,9 +87,12 @@
 		</div>
 	</div>
 </body>
+<script type="text/javascript" src="statics/js/jquery-1.8.0.js"></script>
+<script src="statics/layui/layui.js?t=1"></script>
+<script src="statics/js/concisejs.js?t=1"></script>
 <script type="text/html" id="toolbarDemo">
-		 <button type="button" class="layui-btn layui-btn-normal"  lay-event="detail">新增</button>
-    <button type="button" class="layui-btn layui-btn-danger">删除</button>
+	 <button type="button" class="layui-btn layui-btn-normal"  lay-event="detail">新增</button>
+    <button type="button" class="layui-btn layui-btn-danger" lay-event="delete">删除</button>
         <div class="layui-btn-container" style="float: right;">
             <i class="layui-icon layui-icon-ok-circle" style="font-size: 15px; color: #AFF42C;">
                 <span style="color: black">审核通过</span>
@@ -102,11 +105,6 @@
             </i>
         </div>
     </script>
-
-<script type="text/javascript" src="statics/js/jquery-1.8.0.js"></script>
-<script src="statics/layui/layui.js?t=1"></script>
-<script src="statics/js/concisejs.js?t=1"></script>
-
 <script type="text/javascript">
 	layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel',
 							'upload', 'element', 'slider' ],
@@ -115,6 +113,29 @@
 						carousel = layui.carousel, device = layui.device();
 
 						var zhxxGuid = cj.getCookie('selected_expo_id');
+						$.ajax({
+							type : "POST",
+							url : "dj/GetMenuByExpoGuid",
+							data : {"zhxxGuid" : zhxxGuid},
+							success : function(data) 
+							{  
+								var liBm = document.getElementsByClassName('bm');
+								for(var i=0;i<data.length;i++){
+									for(var a=0;a<liBm.length-1;a++){
+									
+										var li=liBm[a].name;
+										
+										if(data[i].bm.toLowerCase()!=li.toLowerCase()){
+											
+											$('[name='+li+']').attr("href","javascript:toNoMsg()")
+										}
+										
+									}
+								  
+								}
+								
+							}
+							});
 						$.ajax({
 							type : "POST",
 							url : "dj/findXxtz",
@@ -340,7 +361,53 @@
 											,
 											cols : [ cols ]
 										});
-									}
+										
+										//监听头工具栏事件
+										table.on('toolbar(test)',
+														function(obj) {
+															var checkStatus = table
+																	.checkStatus(obj.config.id), data = checkStatus.data; //获取选中的数据
+															switch (obj.event) {
+															case 'detail':
+																window.location.href="DJ/BGXX.jsp"
+																break;
+															case 'delete':
+																if(data.length === 0){
+															          layer.msg('请选择一行');
+															        } else {
+															        	layer.confirm('确认删除？', function(index) {
+															        		layer.msg('正在删除...', {icon: 16,shade: 0.3,time:1000});
+															        		var guid ="";
+															        		for (var i = 0; i < data.length; i++) {
+																				guid +=data[i]["guid"]+","
+																			}
+																			var guidBmodel = $("#guid").val();
+																			layer.close(index);
+																			$.post("doc/deleteDoc", {
+																				guid : guid,
+																				guidBmodel :guidBmodel
+																			}, function(result) {
+																				if (result=="delFinish") {
+																					layer.msg('已删除!', {
+												                                        icon: 1, time: 800, end: function () {
+												                                        	table.reload('demo',{page:{curr:1}});
+												                                            parent.reloadExpo();
+												                                        }
+												                                    });
+																				}else{
+																					layer.msg('删除失败', {
+												                                        icon: 1, time: 1000, end: function () {
+												                                           
+												                                        }
+												                                    });
+																				}
+																			});
+																		});
+															        }
+															      break;
+															};
+														});
+									}					
 	
 								});
 							}

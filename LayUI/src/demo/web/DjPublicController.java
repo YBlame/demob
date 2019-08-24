@@ -299,13 +299,13 @@ public class DjPublicController {
 				if (tn.equals("user")) {// 该操作对应主场管理员,工作人员中的人员管理，因人员管理只需要审核搭建商即可。
 					if (guid.equals("00c99009ec2d4cb883acc9ae24f73b6e")
 							|| guid.equals("b58f1fdfb3cf451fabd704a6c8f8eadf")) {
-						sqlWhereZc += " and roleid=1  order by id desc";
+						sqlWhereZc += " and roleid=1";
 					} else {// 该操作对应权限表中显示除开发人员外的其他人员的权限管理。
-						sqlWhereZc += " and roleid!=3 order by id desc";
+						sqlWhereZc += " and roleid!=3 ";
 					}
 				}
 			}
-			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc;
+			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc +"   order by id desc";
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
 			rs = ps.executeQuery();
 			md = rs.getMetaData();

@@ -54,7 +54,7 @@ public class ZhxxController {
 		int columnCount = 0;
 		String tn  = Bmodel.findBmByGuId("a65611e7bc194941a7050bb14000967d");
 		conn = LinkSql.getConn();
-		String sql="select guid,ZHMC from "+tn+" where 1=1 AND GSBH = '"+zcbh+"'";
+		String sql="select guid,ZHMC from "+tn+" where 1=1 AND GSBH = '"+zcbh+"' AND bgjsrq >NOW()";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 		md = rs.getMetaData(); // 获得结果集结构信息,元数据

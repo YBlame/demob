@@ -27,6 +27,7 @@ import demo.tool.MD5;
 import demo.tool.PageUtils;
 import demo.tool.UUIDUtil;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 /**
  * 首页Controller
  * @author BLAME
@@ -95,10 +96,11 @@ public class IndexController {
 	
 	@RequestMapping(value = "userInsert")
 	@ResponseBody
-	public Integer userInsert(HttpServletRequest request, HttpServletResponse res) throws Exception{
+	public JSONObject userInsert(HttpServletRequest request, HttpServletResponse res) throws Exception{
 		Enumeration pNames = request.getParameterNames();
 		HttpSession session = request.getSession();
 		Object zcbh = session.getAttribute("ZCBH");
+		JSONObject json = new JSONObject();
 		Integer flag =null;
 		if(zcbh!=null&&!zcbh.equals("")){
 			String bmodelName = null;
@@ -133,19 +135,23 @@ public class IndexController {
 			ps.setString(21, "搭建商");
 			ps.setString(22, "1");
 			try {
-				flag = ps.executeUpdate();
+				ps.executeUpdate();
+				json.put("msg", "注册成功");
+				json.put("success", true);
 				conn.commit();
 			} catch (Exception e) {
+				json.put("msg", "注册失败");
+				json.put("success", false);
 				e.printStackTrace();
 				conn.rollback();
-				flag=-404;
 			}
 		}else{
-			flag =-500;
-			return flag;
+			json.put("msg", "您的链接有误请核实并重新输入。");
+			json.put("success", false);
+			return json;
 		}
 		
-		return flag ;
+		return json ;
 	}
 
 	
