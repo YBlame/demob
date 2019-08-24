@@ -330,7 +330,7 @@ public class DjPublicController {
 						rowData.put(md.getColumnName(i), rs.getObject(i));
 					} else {
 						// 图片重新定义字段值
-						if (md.getColumnName(i).equals("SFZSMJ") || md.getColumnName(i).equals("SGRYBD")) {
+						if (md.getColumnName(i).equals("SFZSMJ") || md.getColumnName(i).equals("SGRYBD")|| md.getColumnName(i).equals("YBRNSRZM")|| md.getColumnName(i).equals("PZ")) {
 							String[] tp = rs.getObject(i).toString().split(",");
 							String chakan = "";
 							String ck = "<div><div style='text-align: center;'>";
@@ -542,6 +542,12 @@ public class DjPublicController {
 				String zdm = rs.getString("zdm");
 				valueXs += "," + zdm;
 				switch (zdm) {
+				case "DW":
+					sqlZdmcXs += ",'"+session.getAttribute("GSMC").toString()+"'";
+					break;
+				case "ZHBH":
+					sqlZdmcXs += ",'"+zhxxDj+"'";
+					break;
 				case "ZHMC":
 					sqlZdmcXs += ",''";
 					break;
