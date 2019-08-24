@@ -134,7 +134,7 @@ $(document).ready(function() {
 								                    // 然后开始渲染表格
 								                    table.render({
 								                    	elem : '#demo',
-														height : 420,		//描述
+														height : 410,		//描述
 														url : 'djpublic/findDocTable?guid='+guid+"&num="+num//数据接口
 														,
 														title : '记录表',
@@ -214,12 +214,18 @@ $(document).ready(function() {
 													        } else if(data.length > 1){
 													          layer.msg('只能同时编辑一个');
 													        } else {
-													        	var guid = data.id;//拿到一行数据中的guid
+													        	var guid = data[0]['guid'];//拿到一行数据中的guid
 																var guidBmodel = $("#guidBmodel").val();
 																if (guidBmodel==null||guidBmodel=="null"||guidBmodel==undefined||guidBmodel=="") {
 																	var guidB =$("#guid").val();//拿到模型表中的guid
 																	var bmc = $("#bmc").val();
-																	window.location.href = "djpublic/toUpdateDoc?guid="+guid+"&guidBmodel="+guidB+"&bmc="+bmc;
+																	var bm = $("#bm").val();
+																	alert(guid)
+																	if(bm=="KFPXX"){
+																		window.location.href = "djpublic/toUpdateKfp?guid="+guid+"&guidBmodel="+guidB+"&bmc="+bmc;
+																	}else{
+																		window.location.href = "djpublic/toUpdateDoc?guid="+guid+"&guidBmodel="+guidB+"&bmc="+bmc;
+																	}
 																}else{
 																	window.location.href = "djpublic/toUpdateDoc?guid="+guid+"&guidBmodel="+guidBmodel+"&bmc="+bmc;
 																}

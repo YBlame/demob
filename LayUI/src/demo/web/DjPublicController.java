@@ -71,7 +71,13 @@ public class DjPublicController {
 		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
 		String tn = bm + "_" + zhxxGuid;
-		String sqlSelect = "UPDATE " + tn + " SET " + sqlSet + ",RQ=NOW(),ZT='未提交' where guid = ?";
+		String sqlSelect = "";
+		if(bm.equals("SGRYBX")){
+			sqlSelect = "UPDATE " + tn + " SET " + sqlSet + ",RQ=NOW(),ZT='未提交' where guid = ?";
+		}else{
+			sqlSelect = "UPDATE " + tn + " SET " + sqlSet + " where guid = ?";
+		}
+		
 		ps = conn.prepareStatement(sqlSelect);
 		ps.setString(1, thisGuid);
 		try {

@@ -293,7 +293,10 @@ $(document).ready(function(){
 											
 											 /* 监听提交 */
 											  form.on('submit(component-form-demo1)', function (data) {
+												var selected = cj.getCookie('selected_expo_id'); 
+												$("#ZHBH").val(selected);
 												var formList = $('#layui-form').serialize();
+												
 												$.ajax({
 													        type:"POST",
 													        url:"djpublic/submitXx",

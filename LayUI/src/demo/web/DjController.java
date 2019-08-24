@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.dao.Bmodel;
 import demo.dao.DjMenu;
 import demo.tool.LinkSql;
+import demo.tool.MD5;
 import demo.tool.PageUtils;
 import demo.tool.UUIDUtil;
 import net.sf.json.JSONObject;
@@ -279,7 +280,36 @@ public class DjController {
 
 		}
 	}
+		// 修改密码时发送验证码
+		@RequestMapping(value = "SendSmsCaptcha")
+		@ResponseBody
+		public Object SendSmsCaptcha(String phoneNumber) throws Exception {
+			String sql = "SELECT ID FROM user WHERE SJ=?";
+			conn = LinkSql.getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, phoneNumber);
+			rs = ps.executeQuery();
+			JSONObject json = new JSONObject();
+			if (rs.next()) {
+				Boolean result = SendSmsCaptcha(phoneNumber, "REG");
+				if (result) {
+					json.put("msg", "发送成功");
+					json.put("success", true);
+					return json;
+				} else {
+					json.put("msg", "发送失败");
+					json.put("success", false);
+					return json;
+				}
 
+			} else {
+				// 发送验证码，并记录
+				json.put("msg", "该手机号没有注册");
+				json.put("success", false);
+				return json;
+
+			}
+		}
 	private Boolean SendSmsCaptcha(String phoneNumber, String CaptchaType) throws Exception {
 		String smsCaptcha = RandomCode();
 		String smsContent = String.format("您的验证码为 %s ，请在五分钟之内使用，该验证码不可重复使用。", smsCaptcha);
@@ -389,6 +419,89 @@ public class DjController {
 			return json;
 		}
 	}
+	
+	// 判断验证码是不是正确
+		@RequestMapping(value = "Forgetmm")
+		@ResponseBody
+		public Object Forgetmm(String phoneNumber,String mm, String phoneyzm) throws Exception {
+			String flag = "false";
+
+			String sql = "SELECT ID FROM USER WHERE SJ=?";
+			conn = LinkSql.getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, phoneNumber);
+			rs = ps.executeQuery();
+			JSONObject json = new JSONObject();
+			if (rs.next()) {
+				sql = "SELECT sj FROM YZMK WHERE PHONE=?";
+				conn = LinkSql.getConn();
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, phoneNumber);
+				rs = ps.executeQuery();
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date = new Date();
+				if (rs.next()) {
+					String sj = rs.getObject("sj").toString();
+					// 获取String类型的时间
+					String createdate = sdf.format(date);
+					Date datanow = df.parse(createdate);
+					Date time = df.parse(sj);
+					long diff = datanow.getTime() - time.getTime();
+					long days = diff / (1000 * 60 * 60 * 24);
+					long hours = (diff - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+					long minutes = (diff - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60)) / (1000 * 60);
+					System.out.println(diff);
+					System.out.println(days);
+					System.out.println(hours);
+					System.out.println(minutes);
+					if (minutes > 5) {
+						json.put("msg", "验证码已超时，请重新发送!");
+						json.put("success", false);
+						return json;
+					} else {
+						sql = "SELECT ID FROM YZMK WHERE PHONE=? AND YZM=?";
+						conn = LinkSql.getConn();
+						ps = conn.prepareStatement(sql);
+						ps.setString(1, phoneNumber);
+						ps.setString(2, phoneyzm);
+						rs = ps.executeQuery();
+						json = new JSONObject();
+						if (rs.next()) {//修改手机号码
+							sql = "UPDATE USER SET MM=? WHERE SJ=?";
+							ps = conn.prepareStatement(sql);
+							ps.setString(1, MD5.GetMd5(mm));
+							ps.setString(2, phoneNumber);
+							try {
+								ps.executeUpdate();
+								json.put("success", true);
+								return json;
+							} catch (Exception e) {
+								// TODO 自动生成的 catch 块
+								e.printStackTrace();
+								json.put("msg", "修改失败");
+								json.put("success", false);
+								return json;
+							}																		
+						} else {
+							json.put("msg", "手机验证码不正确");
+							json.put("success", false);
+							return json;
+						}
+					}
+
+				} else {
+					json.put("msg", "手机验证码不正确");
+					json.put("success", false);
+					return json;
+				}
+			} else {
+				json.put("msg", "该手机号没有注册");
+				json.put("success", false);
+				return json;
+
+			}
+		}
 
 	public String RandomCode() {
 		String code = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));

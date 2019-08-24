@@ -37,6 +37,7 @@ span {
 				 <input id="guidBmodel" style="display: none" value="<%=request.getParameter("guidBmodel")%>"> <input id="flag" style="display: none" value="<%=request.getParameter("flag")%>">
 				<form id="layui-form" class="layui-form layui-form-pane" action="" onsubmit="return false;" lay-filter="component-form-group" method="post">
 					<input id="bmc" style="display: none" name="bmc" value="<%=request.getParameter("bmc")%>">
+					<input id="ZHBH" style="display: none" name="ZHBH">
 					<input id="guid" style="display: none" name="guid" value="<%=request.getParameter("guid")%>">
 				</form>
 			</div>

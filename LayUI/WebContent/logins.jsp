@@ -82,7 +82,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<span>
 							<!-- react-text: 34 -->还没有账号 <!-- /react-text -->
 						<a href="reg.jsp">注册</a>
-						</span><a href="https://bg.bjgjlc.com/#">忘记密码？</a>
+						</span><a href="forget.jsp">忘记密码？</a>
 					</footer>
 				</div>
 				<footer class="abs b0 wp-10 lh-14 mb20 tc">
