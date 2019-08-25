@@ -160,7 +160,11 @@ public class BgController {
 				}
 				for (int i = 1; i <= columnCount; i++) {
 					if (rs.getObject(i) == null) {
-						rowData.put(md.getColumnName(i), rs.getObject(i));
+						
+						
+							rowData.put(md.getColumnName(i), rs.getObject(i));
+						
+						
 					} else {
 						System.out.println(md.getColumnName(i));
 						System.out.println(md.getColumnName(i).equals(guid));
@@ -201,7 +205,29 @@ public class BgController {
 							}
 							
 						}else{
+							if(md.getColumnName(i).equals("FYXXZT")){
+								String wtg="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
+								String wsh="<div><div style='text-align: center;'><img src='statics/icon/yt.png' style='margin-top:4px;'></div><div>";
+								String tg="<div><div style='text-align: center;'><img src='statics/icon/dh.png' style='margin-top:4px;'></div><div>";
+								String wtj="<div><div style='text-align: center;'><img src='statics/icon/wtj.png' style='margin-top:4px;'></div><div>";
+								if(rs.getObject(i).equals("未通过")){//未通过
+								
+									rowData.put(md.getColumnName(i), wtg);
+																	
+								}else if(rs.getObject(i).equals("已提交")){//未审核
+									
+									rowData.put(md.getColumnName(i), wsh);
+									
+								}else if(rs.getObject(i).equals("通过")){//通过
+									
+									rowData.put(md.getColumnName(i), tg);									
+								}else if(rs.getObject(i).equals("未提交")){
+									rowData.put(md.getColumnName(i), wtj);
+								}
+															
+							}else{
 							rowData.put(md.getColumnName(i), rs.getObject(i).toString());
+							}
 						}							
 					}
 				}
