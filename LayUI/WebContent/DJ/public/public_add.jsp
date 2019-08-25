@@ -276,7 +276,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 						fromInput += "  	<div class=\"layui-upload\">"
 						fromInput += "  	 <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\">"+isform+result[i].zdmc
 						fromInput += "  	 	<div class=\"layui-upload-list\" >"
-						fromInput += "  			<input id='"+result[i].zdm+"' name='"+result[i].zdm+"' style='display: none' lay-reqtext=\""+result[i].zdmc+"不能为空\" />"
+						fromInput += "  			<input id='"+result[i].zdm+"' name='"+result[i].zdm+"'  lay-verify='required' style='display: none' lay-reqtext=\""+result[i].zdmc+"不能为空\" />"
 						fromInput += "  			<button type=\"button\" class=\"layui-btn\" style=\"display:block;margin:0 auto\" id=\""+result[i].zdm+"Btn\">"+result[i].zdmc+" </button>"
 						fromInput += "			</div>"
 						fromInput += "		 </blockquote>"

@@ -6,7 +6,7 @@ $(document).ready(function() {
     var bmc = $("#bmc").val();
     var typeDj = $("#typeDj").val();
 	$.ajax({
-		    url:"gzry/queryRybdbCondition",//请求的url地址
+		    url:"gzry/queryHcxxCondition",//请求的url地址
 		    dataType:"json",   //返回格式为json
 		 	async : false,//请求是否异步，默认为异步，这也是ajax重要特性
 		    data:{guid : guid,zhxxDj : zhxx,bmDj:bm,typeDj:typeDj,bmcDj:bmc},    //参数值
@@ -97,7 +97,7 @@ $(document).ready(function() {
 										//获取表头并且获取数据
 											var num =1;
 											$.ajax({
-											    url:"gzry/findRybdb",//请求的url地址
+											    url:"gzry/findZzpz",//请求的url地址
 											    dataType:"json",   //返回格式为json
 											    async : false,//请求是否异步，默认为异步，这也是ajax重要特性
 											    data:{guid:guid,num:num},    //参数值
@@ -134,7 +134,7 @@ $(document).ready(function() {
 								                    table.render({
 								                    	elem : '#demo',
 														height : 420,		//描述
-														url : 'gzry/findkptyjTable?guid='+guid+"&num="+num//数据接口
+														url : 'gzry/findZzpzTable?guid='+guid+"&num="+num//数据接口
 														,
 														title : '记录表',
 														page:true,
@@ -253,22 +253,15 @@ $(document).ready(function() {
 								});
 				
 				// 打开查看按钮 href="zhxx/bgxxsh.jsp"
-				function chakan(zhxxguid,dataGuid) {
+				function chakan(zhxxguid,dataGuid,dwbh) {
 				    layer.open({
 				        type: 2,
 				        area: ["80%", "80%"],
 				        title: '审核',
 				        maxmin: true,
-				        content: 'zhxx/tyjxxsh.jsp?zhxxguid=' + zhxxguid+'&dataGuid='+dataGuid, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+				        content: 'zhxx/zzpzsh.jsp?zhxxguid=' + zhxxguid+'&dataGuid='+dataGuid+'&dwbh='+dwbh, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
 				    });
-				}
-				
-				function chakankp(zhxxguid,dataGuid) {
-				    layer.open({
-				        type: 2,
-				        area: ["80%", "80%"],
-				        title: '审核',
-				        maxmin: true,
-				        content: 'zhxx/kpxxsh.jsp?zhxxguid=' + zhxxguid+'&dataGuid='+dataGuid, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-				    });
+
+				    /* window.location = "zhxx/bgxxsh.jsp?guid="
+				             + guid;*/
 				}

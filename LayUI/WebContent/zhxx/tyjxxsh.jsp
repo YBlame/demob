@@ -56,9 +56,8 @@ a {
 <body>
 	<div id="myContent">	
 	<div class="layui-fluid">
-    <label class="layui-form-label">施工人员信息：</label>
 </div>
-<div >
+<div style="text-align: center;" >
     <div class="layui-btn-group">
         <div class="layui-fluid">
             <table id="tableElem" class="layui-table">
@@ -66,12 +65,6 @@ a {
         </div>
     </div>
 </div>
-		<div class="piclist" id="plist" style="margin-top: 20px;">
-			<input type="hidden" id="ZT"/>
-<!-- 			<span style="margin-left: 50px;" id="mc"></span> -->
-			<label id="mc" class="layui-form-label" style="margin-left: 15px;margin-right: 14px;">施工人员保单：</label>
-            <!-- <div id="img"></div> -->
-		</div>
 		<hr>
 		<form class="layui-form" action=""
 style="margin-top: 15px; width: 950px;" onsubmit="return false;">
@@ -107,34 +100,16 @@ data-type="pass">合 格</button>
 <script>
 	var dataguid = cj.queryString("dataGuid");
     var zhxxguid = cj.queryString("zhxxguid");
+    var dwbh = cj.queryString("dwbh");
     /* var shguid = cj.queryString("shguid");
     var shmc = cj.queryString("shmc"); */
 //获取图片路径以及审核项
 layui.use(['form', 'layer', 'table'], function () {
     var form = layui.form, layer = layui.layer, table = layui.table;
-    $.ajax({
-        type: "POST",
-        url: "gzry/GetbdimgByGuid?zhxxguid=" + zhxxguid + "&time="+ new Date().getMilliseconds(),
-        cache: false,
-        dataType: "json",
-        success: function (data) {
-            if (data) {  
-            	if(data.tp){
-            		var sfzsmj = data.tp.split(',');
-                  	if (sfzsmj.length >= 1) {
-      					for (var i = 0; i < sfzsmj.length-1; i++) {
-      						$("#mc").after('<div class="layui-input-inline" style="width: 170px; height: 100px;margin-right: 10px;"><div style="display:inline-block;"><a	 href="'+sfzsmj[i]+'"	target="_blank"> <img  width="170px" height="100px" src="'+sfzsmj[i]+'" name="sfzsmj_upload" alt="" style="position: relative;" class="">  </a></div></div>');
-      					}
-      				}            		
-            	}     		           			            			            	          		           		                    	             	                 	
-            }
-        }
-    });
-    
-    
+   
     var guid =dataguid;
     var zhxx =zhxxguid;
-    var bm = "sgryxx";
+    var bm = "tyjxx";
     var bmc ="";
     var typeDj = true;
 	$.ajax({
@@ -165,9 +140,9 @@ layui.use(['form', 'layer', 'table'], function () {
                        var zdmc = doclist[k].zdmc;
                        var width = doclist[k].width;
 					var t ={
+							width : width,
                             field: zdm,
-                            title: zdmc,
-                            width : width,
+                            title: zdmc,                       
                             sort: true,                            
                         };
                        cols.push(t);
@@ -225,11 +200,12 @@ layui.use(['form', 'layer', 'table'], function () {
     var audit = function (auditing) {
         $.ajax({
                     type: "POST",
-                    url: "gzry/updryStateByGuid?time="+ new Date().getMilliseconds(),
+                    url: "gzry/updtyjshStateByGuid?time="+ new Date().getMilliseconds(),
                     data: {
                     	zhxxguid: zhxxguid,                    
                     	audit : auditing,
-                    	suggest : $("#SHYJ").val()
+                    	suggest : $("#SHYJ").val(),
+                    	dwbh:dwbh,
                     },
                     cache: false,
                     dataType: "json",

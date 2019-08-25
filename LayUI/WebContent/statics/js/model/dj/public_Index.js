@@ -231,22 +231,75 @@ $(document).ready(function() {
 													        }
 													        break;
 														case 'tijiao':
+															   var bm = $("#bm").val();
 												               layer.open({
 												                   content: '确定要提交审核吗？系统将要提交全部数据，提交后将不能进行添加、修改、删除等操作！',
 												                   btn: ['确认', '取消'],
 												                
 												                   yes: function (index, layero) {
 												                    //提交之后修改状态 重新加载框架 
-												                    $.ajax({
-												                         url:"gzry/updtijiaoStateByGuid",//请求的url地址
-												                         dataType:"json",   //返回格式为json                                      
-												                         data:{zhxxguid : cj.getCookie('selected_expo_id')},    //参数值
-												                         type:"POST",   //请求方式
-												                         success:function(con){
-												                    	 	$("#toolbarDemo").remove();
-												                    	 	layer.close(index);
-												                     	}
-												                    });
+												                	   if(bm=="HCXX"){
+												                		      $.ajax({
+																                         url:"gzry/updhcxxStateByGuid",//请求的url地址
+																                         dataType:"json",   //返回格式为json                                      
+																                         data:{zhxxguid : cj.getCookie('selected_expo_id')},    //参数值
+																                         type:"POST",   //请求方式
+																                         success:function(con){
+																                    	 	$("#toolbarDemo").remove();
+																                    	 	layer.close(index);
+																                     	}
+																                    });
+												                		   
+												                	   }else if(bm=="ZZPZ"){
+												                		      $.ajax({
+																                         url:"gzry/updzzpzStateByGuid",//请求的url地址
+																                         dataType:"json",   //返回格式为json                                      
+																                         data:{zhxxguid : cj.getCookie('selected_expo_id')},    //参数值
+																                         type:"POST",   //请求方式
+																                         success:function(con){
+																                    	 	$("#toolbarDemo").remove();
+																                    	 	layer.close(index);
+																                     	}
+																                    });
+												                		   
+												                	   }else if(bm=="TYJXX"){
+												                		   $.ajax({
+															                         url:"gzry/updtyjStateByGuid",//请求的url地址
+															                         dataType:"json",   //返回格式为json                                      
+															                         data:{zhxxguid : cj.getCookie('selected_expo_id')},    //参数值
+															                         type:"POST",   //请求方式
+															                         success:function(con){
+															                    	 	$("#toolbarDemo").remove();
+															                    	 	layer.close(index);
+															                     	}
+															                    });
+												                		   
+												                		   
+												                	   }else if(bm=="KFPXX"){
+												                		   $.ajax({
+															                         url:"gzry/updkfpStateByGuid",//请求的url地址
+															                         dataType:"json",   //返回格式为json                                      
+															                         data:{zhxxguid : cj.getCookie('selected_expo_id')},    //参数值
+															                         type:"POST",   //请求方式
+															                         success:function(con){
+															                    	 	$("#toolbarDemo").remove();
+															                    	 	layer.close(index);
+															                     	}
+															                    });												               		   
+												                		   
+												                	   }else{
+												                		      $.ajax({
+																                         url:"gzry/updtijiaoStateByGuid",//请求的url地址
+																                         dataType:"json",   //返回格式为json                                      
+																                         data:{zhxxguid : cj.getCookie('selected_expo_id')},    //参数值
+																                         type:"POST",   //请求方式
+																                         success:function(con){
+																                    	 	$("#toolbarDemo").remove();
+																                    	 	layer.close(index);
+																                     	}
+																                    });
+												                		   
+												                	   }												                	   											                										              
 												                       
 												                   },
 												                   //btn2和cancel方法没有用到，可以不写

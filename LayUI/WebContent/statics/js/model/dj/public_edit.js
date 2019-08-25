@@ -216,7 +216,7 @@ $(document).ready(function(){
 												fromInput += "  	<div class=\"layui-upload\">"
 												fromInput += "  	 <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\">"+isform+result[i].zdmc
 												fromInput += "  	 	<div class=\"layui-upload-list\" >"
-												fromInput += "  			<input id='"+result[i].zdm+"' name='"+result[i].zdm+"' style='display: none' value='"+dataZdm+"' lay-reqtext=\""+result[i].zdmc+"不能为空\" />"
+												fromInput += "  			<input id='"+result[i].zdm+"' name='"+result[i].zdm+"' style='display: none' value='"+dataZdm+"' lay-verify='required' lay-reqtext=\""+result[i].zdmc+"不能为空\" />"
 												fromInput += ""+img+""
 												fromInput += "  			<button type=\"button\" class=\"layui-btn\" style=\"display:block;margin:0 auto\" id=\""+result[i].zdm+"Btn\">"+result[i].zdmc+" </button>"
 												fromInput += "			</div>"
@@ -306,8 +306,9 @@ $(document).ready(function(){
 													        success:function(data){
 													           if(data.success){
 																layer.msg("保存成功");
-																window.location = "DJ/public/public_Index.jsp?zhxx="+ data.zhxx+"&bmc="+data.bmc+"&bm="+data.bm+"&typeDj=true"
-																
+																if(data.bm!="SGRYBX"){
+																	window.location = "DJ/public/public_Index.jsp?zhxx="+ data.zhxx+"&bmc="+data.bmc+"&bm="+data.bm+"&typeDj=true"
+																}
 																$("#tj").attr("class","layui-btn")
 													           }else{
 													              layer.alert("保存失败")

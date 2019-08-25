@@ -225,9 +225,10 @@ public class DjController {
 		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
 		String tn = "kfpxx_" + zhxxDj;
-		String sqlSelect = "INSERT INTO " + tn + " (guid,RQ," + sqlSet + ") values (?,now()," + sqlVal + ") ";
+		String sqlSelect = "INSERT INTO " + tn + " (guid,ZT,RQ," + sqlSet + ") values (?,?,now()," + sqlVal + ") ";
 		ps = conn.prepareStatement(sqlSelect);
 		ps.setString(1, UUIDUtil.getUUID());
+		ps.setString(2, "未提交");
 		try {
 			ps.executeUpdate();
 			conn.commit();

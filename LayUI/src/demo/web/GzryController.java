@@ -229,6 +229,61 @@ public class GzryController {
 		return list;
 
 	}
+	
+	///货车信息
+	@RequestMapping(value = "queryHcxxCondition")
+	@ResponseBody
+	public Object queryHcxxCondition(HttpServletRequest request, HttpServletResponse res, String guid, String zhxxDj,
+			String bmDj, String bmcDj, String typeDj) throws Exception {
+		HttpSession session = request.getSession();
+		String role = session.getAttribute("role").toString();
+		session.setAttribute("zhxxDj", zhxxDj);
+		session.setAttribute("bmDj", bmDj);
+		session.setAttribute("bmcDj", bmcDj);
+		session.setAttribute("typeDj", typeDj);
+		try {
+			/*
+			 * 定义
+			 */
+			list = new ArrayList<Map<String, Object>>();// 实例化
+			String tn = null;// 数据表表名，根据guid获取
+			String desTn = null;// 描述表表名
+			String sqlWhere = null;// sql语句条件
+			ResultSetMetaData md = null;
+			int columnCount = 0;
+			// 根据guid获取数据表表名，根据规则得到描述表表名
+			if (typeDj.equals("true")) {
+				tn = bmDj+"_"+zhxxDj;
+				desTn = bmDj + "_des_"+zhxxDj;
+			} else {
+				tn = Bmodel.findBmByGuId(guid);// 描述表
+				desTn = tn + "_des";
+			}
+
+			// 连接数据库
+			conn = LinkSql.getConn();// 创建对象
+			sqlWhere = " and  isselect >=1 ORDER BY isselect asc";
+			String sqlFind = " SELECT id,zdm,zdmc,initval,types,jsdm,isedit,api,formtypes,guid,isselect,width FROM  "
+					+ desTn + " WHERE 1=1" + sqlWhere;
+			ps = LinkSql.Execute(conn, sqlFind, role, desTn);
+			rs = ps.executeQuery();
+			md = rs.getMetaData(); // 获得结果集结构信息,元数据
+			columnCount = md.getColumnCount(); // 获得列数
+			while (rs.next()) {
+				Map<String, Object> rowData = new HashMap<String, Object>();
+				for (int i = 1; i <= columnCount; i++) {
+					rowData.put(md.getColumnName(i), rs.getObject(i));
+				}
+				list.add(rowData);
+			}
+		} finally {
+			rs.close();
+			ps.close();
+			conn.close();
+		}
+		return list;
+
+	}
 
 	/**
 	 * 获取表头
@@ -268,6 +323,102 @@ public class GzryController {
 				sqlDes = sqlDes + sqlRale;
 			}
 			sqlDes = sqlDes + " order by lisnum asc,id asc ";
+			conn = LinkSql.getConn();
+			ps = LinkSql.Execute(conn, sqlDes, role, destn);
+			rs = ps.executeQuery();
+			md = rs.getMetaData(); // 获得结果集结构信息,元数据
+			columnCount = md.getColumnCount(); // 获得列数
+			while (rs.next()) {
+				Map<String, Object> rowData = new HashMap<String, Object>();
+				for (int i = 1; i <= columnCount; i++) {
+					rowData.put(md.getColumnName(i), rs.getObject(i));
+				}
+				list.add(rowData);
+			}
+		} finally {
+			ps.close();
+			rs.close();
+			conn.close();
+		}
+		return list;
+
+	}
+	
+	
+	@RequestMapping(value = "findHcxx")
+	@ResponseBody
+	public Object findHcxx(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid,
+			Integer num, Integer limit) throws Exception {
+		try {
+			HttpSession session = request.getSession();
+			final String user = (String) session.getAttribute("user");
+			final String role = (String) session.getAttribute("role");
+			String zhxxDj = (String) session.getAttribute("zhxxDj");
+			String bmDj = (String) session.getAttribute("bmDj");
+			String typeDj = (String) session.getAttribute("typeDj");
+			list = new ArrayList<Map<String, Object>>();
+			String tn = null;
+			ResultSetMetaData md = null;
+			int columnCount = 0;
+			String destn = null;
+			String sqlRale = null;
+			tn = bmDj+"_"+zhxxDj;
+			destn = bmDj + "_des_"+zhxxDj;
+			String sqlDes = "select zdm,zdmc,width,formtypes from " + destn + " where 1=1 ";
+			sqlDes = sqlDes + " and iskeep = 1  ";
+			if (user != null && role != null) {
+				sqlRale = "";
+				sqlDes = sqlDes + sqlRale;
+			}
+			sqlDes = sqlDes + " order by lisnum asc,id asc ";
+			conn = LinkSql.getConn();
+			ps = LinkSql.Execute(conn, sqlDes, role, destn);
+			rs = ps.executeQuery();
+			md = rs.getMetaData(); // 获得结果集结构信息,元数据
+			columnCount = md.getColumnCount(); // 获得列数
+			while (rs.next()) {
+				Map<String, Object> rowData = new HashMap<String, Object>();
+				for (int i = 1; i <= columnCount; i++) {
+					rowData.put(md.getColumnName(i), rs.getObject(i));
+				}
+				list.add(rowData);
+			}
+		} finally {
+			ps.close();
+			rs.close();
+			conn.close();
+		}
+		return list;
+
+	}
+	
+	
+	@RequestMapping(value = "findZzpz")
+	@ResponseBody
+	public Object findZzpz(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid,
+			Integer num, Integer limit) throws Exception {
+		try {
+			HttpSession session = request.getSession();
+			final String user = (String) session.getAttribute("user");
+			final String role = (String) session.getAttribute("role");
+			String zhxxDj = (String) session.getAttribute("zhxxDj");
+			String bmDj = (String) session.getAttribute("bmDj");
+			String typeDj = (String) session.getAttribute("typeDj");
+			list = new ArrayList<Map<String, Object>>();
+			String tn = null;
+			ResultSetMetaData md = null;
+			int columnCount = 0;
+			String destn = null;
+			String sqlRale = null;
+			tn = bmDj+"_"+zhxxDj;
+			destn = bmDj + "_des_"+zhxxDj;
+			String sqlDes = "select zdm,zdmc,width,formtypes from " + destn + " where 1=1 ";
+			sqlDes = sqlDes + " and iskeep >= 1  ";
+			if (user != null && role != null) {
+				sqlRale = "";
+				sqlDes = sqlDes + sqlRale;
+			}
+			sqlDes = sqlDes + " order by iskeep asc,id asc ";
 			conn = LinkSql.getConn();
 			ps = LinkSql.Execute(conn, sqlDes, role, destn);
 			rs = ps.executeQuery();
@@ -577,6 +728,436 @@ public class GzryController {
 									+ "')\"  class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
 							String tg = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakan('"
 									+ zhxxDj + "','" + dataGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
+							String wtj = "<div><div id=\"sh\" style='text-align: center;'><a class='layui-table-link'><img src='statics/icon/wtj.png' style='margin-top:4px;'></a></div><div>";
+							if (rs.getObject(i).toString().equals("未提交")) {
+								rowData.put(md.getColumnName(i), wtj);
+
+							} else if (rs.getObject(i).toString().equals("已提交")) {// 未审核
+								rowData.put(md.getColumnName(i), wsh);
+
+							} else if (rs.getObject(i).toString().equals("未通过")) {// 未通过
+								rowData.put(md.getColumnName(i), wtg);
+
+							} else if (rs.getObject(i).toString().equals("已通过")) {// 通过
+								rowData.put(md.getColumnName(i), tg);
+							}
+						} else {
+							rowData.put(md.getColumnName(i), rs.getObject(i).toString());
+						}
+
+						// rowData.put(md.getColumnName(i),
+						// rs.getObject(i).toString());
+					}
+
+				}
+				list.add(rowData);
+			}
+
+			// 得到总数
+			String sqlCount = "select count(*) from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc + " ";
+			ps = conn.prepareStatement(sqlCount);
+			rs = ps.executeQuery();
+			md = rs.getMetaData();
+			columnCount = md.getColumnCount();
+			String count = null;
+			while (rs.next()) {
+				for (int i = 1; i <= columnCount; i++) {
+					count = rs.getObject(i).toString();
+				}
+			}
+			JSONArray json = JSONArray.fromObject(list);
+			String js = json.toString();
+			String jso = "{\"code\":0,\"msg\":\"\",\"count\":" + count + ",\"data\":" + js + "}";
+			return jso;
+		} else {
+			String jso = "{\"code\":0,\"msg\":\"\",\"count\":" + 0 + ",\"data\":" + null + "}";
+			return jso;
+		}
+
+	}
+	
+	
+	@RequestMapping(value = "findkptyjTable", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	// 获取表头、表数据
+	public Object findkptyjTable(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid,
+			String postData, Integer num, Integer limit) throws Exception {
+		HttpSession session = request.getSession();
+		final String role = (String) session.getAttribute("role");
+		String sj = (String) session.getAttribute("SJ");
+		String roleid = (String) session.getAttribute("roleid");
+		String zhxxDj = (String) session.getAttribute("zhxxDj");
+		String bmDj = (String) session.getAttribute("bmDj");
+		String typeDj = (String) session.getAttribute("typeDj");
+		list = new ArrayList<Map<String, Object>>();
+		String tn = null;
+		ResultSetMetaData md = null;
+		int columnCount = 0;
+		String destn = null;
+		if (typeDj.equals("true")) {
+			tn = "KPTYJ";
+			destn = "KPTYJ" + "_des";
+		} else {
+			tn = Bmodel.findBmByGuId(guid);// 描述表
+			destn = tn + "_des";
+		}
+		if (limit == null) {
+			limit = 10;
+		}
+		page.setRows(limit);
+		list = new ArrayList<Map<String, Object>>();
+		String sqlZdmc = " ";
+		conn = LinkSql.getConn();
+		String sqlzdm = "select zdm from " + destn;
+		ps = LinkSql.Execute(conn, sqlzdm, role, destn);
+		rs = ps.executeQuery();
+		md = rs.getMetaData(); // 获得结果集结构信息,元数据
+		columnCount = md.getColumnCount(); // 获得列数
+		while (rs.next()) {
+			for (int i = 1; i <= columnCount; i++) {
+				sqlZdmc = sqlZdmc + rs.getObject(i) + ",";
+			}
+		}
+		sqlZdmc = sqlZdmc.substring(0, sqlZdmc.length() - 1);
+		if (sqlZdmc.length() != 0) {
+			String sqlWhere = "";
+			if (postData != null) {
+				String tmp[] = postData.split("&");
+				for (int i = 0; i < tmp.length; i++) {
+					String s = postData.split("&")[i];
+					s = s + " ";
+					String name = s.split("=")[0];
+					String value = s.split("=")[1];
+					value = value.trim();
+					if (value.length() != 0) {
+						if (!value.equals("请选择")) {
+							sqlWhere += " and " + name + " like '%" + value + "%' ";
+						}
+					}
+				}
+			}
+			String sqlData = null;
+			String sqlWhereZc = " and ZHBH = '" + zhxxDj + "'  ";
+			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc;
+			ps = LinkSql.Execute(conn, sqlData, role, tn);
+			rs = ps.executeQuery();
+			md = rs.getMetaData();
+			columnCount = md.getColumnCount();
+			while (rs.next()) {
+				Map<String, Object> rowData = new HashMap<String, Object>();
+				for (int i = 1; i <= columnCount; i++) {
+					if (rs.getObject(i) == null) {
+						rowData.put(md.getColumnName(i), rs.getObject(i));
+					} else {
+						String mc = md.getColumnName(i);
+						// guids=rs.getObject(i).toString();
+						System.out.println(md.getColumnName(i));
+						String dataGuid = (String) rs.getObject("guid");
+						if (md.getColumnName(i).equals("HKZT") ) { // onclick=\"chakan('"+mc+"','"+guids+"','"+mc+"','"+mc+"')\"
+							String wtg = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakan('"
+									+ zhxxDj + "','" + dataGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
+							String wsh = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakan('"
+									+ zhxxDj + "','" + dataGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
+							String tg = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakan('"
+									+ zhxxDj + "','" + dataGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
+							String wtj = "<div><div id=\"sh\" style='text-align: center;'><a class='layui-table-link'><img src='statics/icon/wtj.png' style='margin-top:4px;'></a></div><div>";
+							if (rs.getObject(i).toString().equals("未提交")) {
+								rowData.put(md.getColumnName(i), wtj);
+
+							} else if (rs.getObject(i).toString().equals("已提交")) {// 未审核
+								rowData.put(md.getColumnName(i), wsh);
+
+							} else if (rs.getObject(i).toString().equals("未通过")) {// 未通过
+								rowData.put(md.getColumnName(i), wtg);
+
+							} else if (rs.getObject(i).toString().equals("已通过")) {// 通过
+								rowData.put(md.getColumnName(i), tg);
+							}
+						} else if(md.getColumnName(i).equals("KPZT")){
+							String wtg = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakankp('"
+									+ zhxxDj + "','" + dataGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
+							String wsh = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakankp('"
+									+ zhxxDj + "','" + dataGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
+							String tg = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakankp('"
+									+ zhxxDj + "','" + dataGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
+							String wtj = "<div><div id=\"sh\" style='text-align: center;'><a class='layui-table-link'><img src='statics/icon/wtj.png' style='margin-top:4px;'></a></div><div>";
+							if (rs.getObject(i).toString().equals("未提交")) {
+								rowData.put(md.getColumnName(i), wtj);
+
+							} else if (rs.getObject(i).toString().equals("已提交")) {// 未审核
+								rowData.put(md.getColumnName(i), wsh);
+
+							} else if (rs.getObject(i).toString().equals("未通过")) {// 未通过
+								rowData.put(md.getColumnName(i), wtg);
+
+							} else if (rs.getObject(i).toString().equals("已通过")) {// 通过
+								rowData.put(md.getColumnName(i), tg);
+							}
+							
+						} else{
+							rowData.put(md.getColumnName(i), rs.getObject(i).toString());
+						}
+
+						// rowData.put(md.getColumnName(i),
+						// rs.getObject(i).toString());
+					}
+
+				}
+				list.add(rowData);
+			}
+
+			// 得到总数
+			String sqlCount = "select count(*) from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc + " ";
+			ps = conn.prepareStatement(sqlCount);
+			rs = ps.executeQuery();
+			md = rs.getMetaData();
+			columnCount = md.getColumnCount();
+			String count = null;
+			while (rs.next()) {
+				for (int i = 1; i <= columnCount; i++) {
+					count = rs.getObject(i).toString();
+				}
+			}
+			JSONArray json = JSONArray.fromObject(list);
+			String js = json.toString();
+			String jso = "{\"code\":0,\"msg\":\"\",\"count\":" + count + ",\"data\":" + js + "}";
+			return jso;
+		} else {
+			String jso = "{\"code\":0,\"msg\":\"\",\"count\":" + 0 + ",\"data\":" + null + "}";
+			return jso;
+		}
+
+	}
+	
+	@RequestMapping(value = "findHcxxTable", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	// 获取表头、表数据
+	public Object findHcxxTable(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid,
+			String postData, Integer num, Integer limit) throws Exception {
+		HttpSession session = request.getSession();
+		final String role = (String) session.getAttribute("role");
+		String sj = (String) session.getAttribute("SJ");
+		String roleid = (String) session.getAttribute("roleid");
+		String zhxxDj = (String) session.getAttribute("zhxxDj");
+		String bmDj = (String) session.getAttribute("bmDj");
+		String typeDj = (String) session.getAttribute("typeDj");
+		list = new ArrayList<Map<String, Object>>();
+		String tn = null;
+		ResultSetMetaData md = null;
+		int columnCount = 0;
+		String destn = null;
+		if (typeDj.equals("true")) {
+			tn = "hcxx_"+zhxxDj;
+			destn = "hcxx" + "_des_"+zhxxDj;
+		} else {
+			tn = Bmodel.findBmByGuId(guid);// 描述表
+			destn = tn + "_des";
+		}
+		if (limit == null) {
+			limit = 10;
+		}
+		page.setRows(limit);
+		list = new ArrayList<Map<String, Object>>();
+		String sqlZdmc = " ";
+		conn = LinkSql.getConn();
+		String sqlzdm = "select zdm from " + destn;
+		ps = LinkSql.Execute(conn, sqlzdm, role, destn);
+		rs = ps.executeQuery();
+		md = rs.getMetaData(); // 获得结果集结构信息,元数据
+		columnCount = md.getColumnCount(); // 获得列数
+		while (rs.next()) {
+			for (int i = 1; i <= columnCount; i++) {
+				sqlZdmc = sqlZdmc + rs.getObject(i) + ",";
+			}
+		}
+		sqlZdmc = sqlZdmc.substring(0, sqlZdmc.length() - 1);
+		if (sqlZdmc.length() != 0) {
+			String sqlWhere = "";
+			if (postData != null) {
+				String tmp[] = postData.split("&");
+				for (int i = 0; i < tmp.length; i++) {
+					String s = postData.split("&")[i];
+					s = s + " ";
+					String name = s.split("=")[0];
+					String value = s.split("=")[1];
+					value = value.trim();
+					if (value.length() != 0) {
+						if (!value.equals("请选择")) {
+							sqlWhere += " and " + name + " like '%" + value + "%' ";
+						}
+					}
+				}
+			}
+			String sqlData = null;
+			String sqlWhereZc = " and ZHBH = '" + zhxxDj + "'  ";
+			sqlData = "select" + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc +" group BY dwbh";
+			ps = LinkSql.Execute(conn, sqlData, role, tn);
+			rs = ps.executeQuery();
+			md = rs.getMetaData();
+			columnCount = md.getColumnCount();
+			while (rs.next()) {
+				Map<String, Object> rowData = new HashMap<String, Object>();
+				for (int i = 1; i <= columnCount; i++) {
+					if (rs.getObject(i) == null) {
+						rowData.put(md.getColumnName(i), rs.getObject(i));
+					} else {
+						String mc = md.getColumnName(i);
+						// guids=rs.getObject(i).toString();
+						System.out.println(md.getColumnName(i));
+						String dataGuid = (String) rs.getObject("guid");
+						String dwbhGuid = (String) rs.getObject("dwbh");
+						if (md.getColumnName(i).equals("ZT")) { // onclick=\"chakan('"+mc+"','"+guids+"','"+mc+"','"+mc+"')\"
+							String wtg = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakan('"
+									+ zhxxDj + "','" + dataGuid+ "','" + dwbhGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
+							String wsh = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakan('"
+									+ zhxxDj + "','" + dataGuid+ "','" + dwbhGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
+							String tg = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakan('"
+									+ zhxxDj + "','" + dataGuid+ "','" + dwbhGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
+							String wtj = "<div><div id=\"sh\" style='text-align: center;'><a class='layui-table-link'><img src='statics/icon/wtj.png' style='margin-top:4px;'></a></div><div>";
+							if (rs.getObject(i).toString().equals("未提交")) {
+								rowData.put(md.getColumnName(i), wtj);
+
+							} else if (rs.getObject(i).toString().equals("已提交")) {// 未审核
+								rowData.put(md.getColumnName(i), wsh);
+
+							} else if (rs.getObject(i).toString().equals("未通过")) {// 未通过
+								rowData.put(md.getColumnName(i), wtg);
+
+							} else if (rs.getObject(i).toString().equals("已通过")) {// 通过
+								rowData.put(md.getColumnName(i), tg);
+							}
+						} else {
+							rowData.put(md.getColumnName(i), rs.getObject(i).toString());
+						}
+
+						// rowData.put(md.getColumnName(i),
+						// rs.getObject(i).toString());
+					}
+
+				}
+				list.add(rowData);
+			}
+
+			// 得到总数
+			String sqlCount = "select count(*) from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc + " ";
+			ps = conn.prepareStatement(sqlCount);
+			rs = ps.executeQuery();
+			md = rs.getMetaData();
+			columnCount = md.getColumnCount();
+			String count = null;
+			while (rs.next()) {
+				for (int i = 1; i <= columnCount; i++) {
+					count = rs.getObject(i).toString();
+				}
+			}
+			JSONArray json = JSONArray.fromObject(list);
+			String js = json.toString();
+			String jso = "{\"code\":0,\"msg\":\"\",\"count\":" + count + ",\"data\":" + js + "}";
+			return jso;
+		} else {
+			String jso = "{\"code\":0,\"msg\":\"\",\"count\":" + 0 + ",\"data\":" + null + "}";
+			return jso;
+		}
+
+	}
+	
+	
+	@RequestMapping(value = "findZzpzTable", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	// 获取表头、表数据
+	public Object findZzpzTable(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid,
+			String postData, Integer num, Integer limit) throws Exception {
+		HttpSession session = request.getSession();
+		final String role = (String) session.getAttribute("role");
+		String sj = (String) session.getAttribute("SJ");
+		String roleid = (String) session.getAttribute("roleid");
+		String zhxxDj = (String) session.getAttribute("zhxxDj");
+		String bmDj = (String) session.getAttribute("bmDj");
+		String typeDj = (String) session.getAttribute("typeDj");
+		list = new ArrayList<Map<String, Object>>();
+		String tn = null;
+		ResultSetMetaData md = null;
+		int columnCount = 0;
+		String destn = null;
+		if (typeDj.equals("true")) {
+			tn = "zzpz_"+zhxxDj;
+			destn = "zzpz" + "_des_"+zhxxDj;
+		} else {
+			tn = Bmodel.findBmByGuId(guid);// 描述表
+			destn = tn + "_des";
+		}
+		if (limit == null) {
+			limit = 10;
+		}
+		page.setRows(limit);
+		list = new ArrayList<Map<String, Object>>();
+		String sqlZdmc = " ";
+		conn = LinkSql.getConn();
+		String sqlzdm = "select zdm from " + destn;
+		ps = LinkSql.Execute(conn, sqlzdm, role, destn);
+		rs = ps.executeQuery();
+		md = rs.getMetaData(); // 获得结果集结构信息,元数据
+		columnCount = md.getColumnCount(); // 获得列数
+		while (rs.next()) {
+			for (int i = 1; i <= columnCount; i++) {
+				sqlZdmc = sqlZdmc + rs.getObject(i) + ",";
+			}
+		}
+		sqlZdmc = sqlZdmc.substring(0, sqlZdmc.length() - 1);
+		if (sqlZdmc.length() != 0) {
+			String sqlWhere = "";
+			if (postData != null) {
+				String tmp[] = postData.split("&");
+				for (int i = 0; i < tmp.length; i++) {
+					String s = postData.split("&")[i];
+					s = s + " ";
+					String name = s.split("=")[0];
+					String value = s.split("=")[1];
+					value = value.trim();
+					if (value.length() != 0) {
+						if (!value.equals("请选择")) {
+							sqlWhere += " and " + name + " like '%" + value + "%' ";
+						}
+					}
+				}
+			}
+			String sqlData = null;
+			String sqlWhereZc = " and ZHBH = '" + zhxxDj + "'  ";
+			sqlData = "select" + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc +" group BY dwbh";
+			ps = LinkSql.Execute(conn, sqlData, role, tn);
+			rs = ps.executeQuery();
+			md = rs.getMetaData();
+			columnCount = md.getColumnCount();
+			while (rs.next()) {
+				Map<String, Object> rowData = new HashMap<String, Object>();
+				for (int i = 1; i <= columnCount; i++) {
+					if (rs.getObject(i) == null) {
+						rowData.put(md.getColumnName(i), rs.getObject(i));
+					} else {
+						String mc = md.getColumnName(i);
+						// guids=rs.getObject(i).toString();
+						System.out.println(md.getColumnName(i));
+						String dataGuid = (String) rs.getObject("guid");
+						String dwbhGuid = (String) rs.getObject("dwbh");
+						if (md.getColumnName(i).equals("ZT")) { // onclick=\"chakan('"+mc+"','"+guids+"','"+mc+"','"+mc+"')\"
+							String wtg = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakan('"
+									+ zhxxDj + "','" + dataGuid+ "','" + dwbhGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
+							String wsh = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakan('"
+									+ zhxxDj + "','" + dataGuid+ "','" + dwbhGuid
+									+ "')\"  class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
+							String tg = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakan('"
+									+ zhxxDj + "','" + dataGuid+ "','" + dwbhGuid
 									+ "')\"  class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
 							String wtj = "<div><div id=\"sh\" style='text-align: center;'><a class='layui-table-link'><img src='statics/icon/wtj.png' style='margin-top:4px;'></a></div><div>";
 							if (rs.getObject(i).toString().equals("未提交")) {
@@ -1201,8 +1782,7 @@ public class GzryController {
 	  * @return
 	  * @throws Exception
 	  */
-	 public Object findsgryDoc(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid, Integer num,
-	   Integer limit) throws Exception {
+	 public Object findsgryDoc(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid) throws Exception {
 	  try {
 	   HttpSession session = request.getSession();
 	   final String user = (String) session.getAttribute("user");
@@ -1351,7 +1931,7 @@ public class GzryController {
 						rowData.put(md.getColumnName(i), rs.getObject(i));
 					} else {
 						//图片重新定义字段值
-						if(md.getColumnName(i).equals("SFZSMJ")||md.getColumnName(i).equals("SGRYBD")){
+						if(md.getColumnName(i).equals("SFZSMJ")||md.getColumnName(i).equals("SGRYBD")||md.getColumnName(i).equals("PZ")){
 							String[] tp=rs.getObject(i).toString().split(",");
 							String chakan="";
 							String ck="<div><div style='text-align: center;'>";
@@ -1519,6 +2099,361 @@ public class GzryController {
 			return flag;
 		}
 	}
+	
+	
+	@RequestMapping("updhcStateByGuid")
+	@ResponseBody
+	public int updhcStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest,String dwbh) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;
+			try {
+				if(audit.equals("pass")){
+					String tn = "hcxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "hcxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE "+tn+" SET ZT='已通过'  WHERE ZHBH=? and dwbh=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+						flag=1;
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}																																													
+										
+				}else if(audit.equals("NoPass")){
+					//修改报馆信息状态
+					String tn = "hcxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "hcxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE "+tn+" SET ZT='未通过'  WHERE ZHBH=? and dwbh=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}											
+					
+					//向审核记录表中插入数据
+					// SHYJ, SHRY, SHRYBH, SHDXBH, SHSJ, SHXM,ZHBH, GH, ZWH
+					String shry=(String)session.getAttribute("NAME");
+				    String shrybh=(String)session.getAttribute("guid");
+				    String guid=UUIDUtil.getUUID();
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH) VALUES(?,?,?,?,now(),?,?)";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sqlinsert);				
+					ps.setString(1, guid);
+					ps.setString(2, suggest);
+					ps.setString(3, shry);
+					ps.setString(4, shrybh);		
+					ps.setString(5, "HCXX");
+					ps.setString(6, zhxxguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+						conn.rollback();
+					}				   					
+					
+				}else{
+					return flag;
+				}		
+
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	
+	
+	@RequestMapping("updpzStateByGuid")
+	@ResponseBody
+	public int updpzStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest,String dwbh) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;
+			try {
+				if(audit.equals("pass")){
+					String tn = "zzpz_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "zzpz_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE "+tn+" SET ZT='已通过'  WHERE ZHBH=? and dwbh=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+						flag=1;
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}																																													
+										
+				}else if(audit.equals("NoPass")){
+					//修改报馆信息状态
+					String tn = "zzpz_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "zzpz_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE "+tn+" SET ZT='未通过'  WHERE ZHBH=? and dwbh=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}											
+					
+					//向审核记录表中插入数据
+					// SHYJ, SHRY, SHRYBH, SHDXBH, SHSJ, SHXM,ZHBH, GH, ZWH
+					String shry=(String)session.getAttribute("NAME");
+				    String shrybh=(String)session.getAttribute("guid");
+				    String guid=UUIDUtil.getUUID();
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH) VALUES(?,?,?,?,now(),?,?)";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sqlinsert);				
+					ps.setString(1, guid);
+					ps.setString(2, suggest);
+					ps.setString(3, shry);
+					ps.setString(4, shrybh);		
+					ps.setString(5, "ZZPZ");
+					ps.setString(6, zhxxguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+						conn.rollback();
+					}				   					
+					
+				}else{
+					return flag;
+				}		
+
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	
+	//退押金审核
+	@RequestMapping("updtyjshStateByGuid")
+	@ResponseBody
+	public int updtyjshStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest,String dwbh) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;
+			try {
+				if(audit.equals("pass")){
+					String tn = "tyjxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "tyjxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE KPTYJ SET HKZT='已通过'  WHERE ZHBH=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}
+					
+					String sql1 = "UPDATE "+tn+" SET  ZT='已通过'";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql1);				
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}																																										
+										
+				}else if(audit.equals("NoPass")){
+					//修改报馆信息状态
+					String tn = "tyjxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "tyjxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE KPTYJ SET HKZT='未通过'  WHERE ZHBH=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}
+					
+					String sql1 = "UPDATE "+tn+" SET  ZT='未通过'";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql1);				
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}								
+					
+					//向审核记录表中插入数据
+					// SHYJ, SHRY, SHRYBH, SHDXBH, SHSJ, SHXM,ZHBH, GH, ZWH
+					String shry=(String)session.getAttribute("NAME");
+				    String shrybh=(String)session.getAttribute("guid");
+				    String guid=UUIDUtil.getUUID();
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH) VALUES(?,?,?,?,now(),?,?)";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sqlinsert);				
+					ps.setString(1, guid);
+					ps.setString(2, suggest);
+					ps.setString(3, shry);
+					ps.setString(4, shrybh);		
+					ps.setString(5, "TYJXX");
+					ps.setString(6, zhxxguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+						conn.rollback();
+					}				   					
+					
+				}else{
+					return flag;
+				}		
+
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	
+	//开票信息审核
+	@RequestMapping("updkpshStateByGuid")
+	@ResponseBody
+	public int updkpshStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest,String dwbh) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;
+			try {
+				if(audit.equals("pass")){
+					String tn = "kfpxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "kfpxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE KPTYJ SET KPZT='已通过'  WHERE ZHBH=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}
+					
+					String sql1 = "UPDATE "+tn+" SET  ZT='已通过'";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql1);				
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}																																										
+										
+				}else if(audit.equals("NoPass")){
+					//修改报馆信息状态
+					String tn = "kfpxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "kfpxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE KPTYJ SET KPZT='未通过'  WHERE ZHBH=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}
+					
+					String sql1 = "UPDATE "+tn+" SET  ZT='未通过'";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql1);				
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}								
+					
+					//向审核记录表中插入数据
+					// SHYJ, SHRY, SHRYBH, SHDXBH, SHSJ, SHXM,ZHBH, GH, ZWH
+					String shry=(String)session.getAttribute("NAME");
+				    String shrybh=(String)session.getAttribute("guid");
+				    String guid=UUIDUtil.getUUID();
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH) VALUES(?,?,?,?,now(),?,?)";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sqlinsert);				
+					ps.setString(1, guid);
+					ps.setString(2, suggest);
+					ps.setString(3, shry);
+					ps.setString(4, shrybh);		
+					ps.setString(5, "KFPXX");
+					ps.setString(6, zhxxguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+						conn.rollback();
+					}				   					
+					
+				}else{
+					return flag;
+				}		
+
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	//施工人员信息提交审核
 	@RequestMapping("updtijiaoStateByGuid")
 	@ResponseBody
 	public int updtijiaoStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid) throws Exception {
@@ -1595,6 +2530,225 @@ public class GzryController {
 			return flag;
 		}
 	}
+	
+	
+	@RequestMapping("updtyjStateByGuid")
+	@ResponseBody
+	public int updtyjStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;		
+			String gsmc = session.getAttribute("GSMC").toString();
+			String names = session.getAttribute("NAME").toString();
+			String sjDJ = session.getAttribute("SJ").toString();
+			String guiddwbh = session.getAttribute("guid").toString();			
+			try {				
+					
+					String tn = "tyjxx_" + zhxxguid;
+					String desTn = "tyjxx_des_" + zhxxguid;
+					String sqlAudit = "UPDATE "+tn+" SET ZT='已提交'";
+													
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sqlAudit);								
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}				
+					
+					
+					//根据展会编号查找展会名称
+					String str = "select id from kptyj where zhbh='"+zhxxguid+"'";
+					ps = conn.prepareStatement(str);
+					rs = ps.executeQuery();
+					String flagcz="false";
+					while (rs.next()) {
+						flagcz="true";
+					}
+					
+					if(flagcz.equals("true")){//存在						
+						String sql = "UPDATE kptyj SET HKZT='已提交'  WHERE ZHBH=?";
+						
+						conn.setAutoCommit(false);
+						ps = conn.prepareStatement(sql);				
+						ps.setString(1, zhxxguid);
+						try {
+							flag = ps.executeUpdate();
+							conn.commit();
+						} catch (Exception e) {
+							// TODO 自动生成的 catch 块
+							conn.rollback();
+						}													
+						
+					}else{
+						//根据展会编号查找展会名称
+						String sqlzhbh = "select zhmc from zhxx where guid='"+zhxxguid+"'";
+						ps = conn.prepareStatement(sqlzhbh);
+						rs = ps.executeQuery();
+						String zhmc="";
+						while (rs.next()) {
+							zhmc = rs.getString("zhmc");
+						}			
+
+						String sqlinsert = "INSERT INTO kptyj (ZHBH,DWMC,LXR,SJ,HKZT,KPZT,guid,DWBH) VALUES (\'" + zhxxguid + "\',\'" + gsmc + "\',\'" + names + "\',\'" + sjDJ + "\','已提交','未提交',\'" + UUIDUtil.getUUID() + "\',\'" + guiddwbh + "\')";
+						ps = conn.prepareStatement(sqlinsert);
+						ps.executeUpdate();
+						conn.commit();						
+					}
+																				
+
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	
+	
+	@RequestMapping("updkfpStateByGuid")
+	@ResponseBody
+	public int updkfpStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;		
+			String gsmc = session.getAttribute("GSMC").toString();
+			String names = session.getAttribute("NAME").toString();
+			String sjDJ = session.getAttribute("SJ").toString();
+			String guiddwbh = session.getAttribute("guid").toString();			
+			try {				
+					
+					String tn = "kfpxx_" + zhxxguid;
+					String desTn = "kfpxx_des_" + zhxxguid;
+					String sqlAudit = "UPDATE "+tn+" SET ZT='已提交'";
+													
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sqlAudit);								
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}				
+					
+					
+					//根据展会编号查找展会名称
+					String str = "select id from kptyj where zhbh='"+zhxxguid+"'";
+					ps = conn.prepareStatement(str);
+					rs = ps.executeQuery();
+					String flagcz="false";
+					while (rs.next()) {
+						flagcz="true";
+					}
+					
+					if(flagcz.equals("true")){//存在						
+						String sql = "UPDATE kptyj SET KPZT='已提交'  WHERE ZHBH=?";
+						
+						conn.setAutoCommit(false);
+						ps = conn.prepareStatement(sql);				
+						ps.setString(1, zhxxguid);
+						try {
+							flag = ps.executeUpdate();
+							conn.commit();
+						} catch (Exception e) {
+							// TODO 自动生成的 catch 块
+							conn.rollback();
+						}													
+						
+					}else{
+						//根据展会编号查找展会名称
+						String sqlzhbh = "select zhmc from zhxx where guid='"+zhxxguid+"'";
+						ps = conn.prepareStatement(sqlzhbh);
+						rs = ps.executeQuery();
+						String zhmc="";
+						while (rs.next()) {
+							zhmc = rs.getString("zhmc");
+						}			
+
+						String sqlinsert = "INSERT INTO kptyj (ZHBH,DWMC,LXR,SJ,HKZT,KPZT,guid,DWBH) VALUES (\'" + zhxxguid + "\',\'" + gsmc + "\',\'" + names + "\',\'" + sjDJ + "\','未提交','已提交',\'" + UUIDUtil.getUUID() + "\',\'" + guiddwbh + "\')";
+						ps = conn.prepareStatement(sqlinsert);
+						ps.executeUpdate();
+						conn.commit();						
+					}
+																				
+
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	
+	@RequestMapping("updhcxxStateByGuid")
+	@ResponseBody
+	public int updhcxxStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;		
+			String gsmc = session.getAttribute("GSMC").toString();
+			String names = session.getAttribute("NAME").toString();
+			String sjDJ = session.getAttribute("SJ").toString();
+			String guiddwbh = session.getAttribute("guid").toString();	
+			try {				
+				//修改报馆信息状态
+				String tn = "hcxx_" + zhxxguid;
+				String desTn = "hcxx_des_" + zhxxguid;
+				String sqlAudit = "UPDATE "+tn+" SET ZT='已提交' where DWBH='"+guiddwbh+"'";
+												
+				conn.setAutoCommit(false);
+				ps = conn.prepareStatement(sqlAudit);								
+				try {
+					flag = ps.executeUpdate();
+					conn.commit();
+				} catch (Exception e) {
+					// TODO 自动生成的 catch 块
+					conn.rollback();
+				}																																							
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	
+	@RequestMapping("updzzpzStateByGuid")
+	@ResponseBody
+	public int updzzpzStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;		
+			String gsmc = session.getAttribute("GSMC").toString();
+			String names = session.getAttribute("NAME").toString();
+			String sjDJ = session.getAttribute("SJ").toString();
+			String guiddwbh = session.getAttribute("guid").toString();	
+			try {				
+				//修改报馆信息状态
+				String tn = "zzpz_" + zhxxguid;
+				String desTn = "zzpz_des_" + zhxxguid;
+				String sqlAudit = "UPDATE "+tn+" SET ZT='已提交' where DWBH='"+guiddwbh+"'";
+												
+				conn.setAutoCommit(false);
+				ps = conn.prepareStatement(sqlAudit);								
+				try {
+					flag = ps.executeUpdate();
+					conn.commit();
+				} catch (Exception e) {
+					// TODO 自动生成的 catch 块
+					conn.rollback();
+				}																																							
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	
 	@RequestMapping("updtijiaobxStateByGuid")
 	@ResponseBody
 	public int updtijiaobxStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid) throws Exception {
