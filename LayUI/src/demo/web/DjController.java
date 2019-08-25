@@ -388,10 +388,6 @@ public class DjController {
 			long days = diff / (1000 * 60 * 60 * 24);
 			long hours = (diff - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
 			long minutes = (diff - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60)) / (1000 * 60);
-			System.out.println(diff);
-			System.out.println(days);
-			System.out.println(hours);
-			System.out.println(minutes);
 			if (minutes > 10) {
 				json.put("msg", "验证码已超时，请重新发送!");
 				json.put("success", false);
@@ -659,7 +655,7 @@ public class DjController {
 		List<Map<String, Object>> mcList = new ArrayList<Map<String, Object>>();
 		conn = LinkSql.getConn();
 		String tn = "FYBZ";
-		String sql = "SELECT ID,XMMC FROM FYBZ";
+		String sql = "SELECT  XMMC,id,XMMS,RQ FROM FYBZ WHERE 1=1 AND xmmc !='施工押金' GROUP BY   XMMC";
 		conn = LinkSql.getConn();
 		ps = LinkSql.Execute(conn, sql, "1", tn);
 		rs = ps.executeQuery();
@@ -699,6 +695,29 @@ public class DjController {
 		return msList;
 	}
 
+	
+	@RequestMapping("GetFybzSgyj")
+	@ResponseBody
+	public List<Map<String, Object>> GetFybzSgyj(HttpServletRequest request, HttpServletResponse res) throws Exception {
+		List<Map<String, Object>> sgyjList = new ArrayList<Map<String, Object>>();
+		conn = LinkSql.getConn();
+		String tn = "FYBZ";
+		String sql = "SELECT  XMMC,id,fy,XMMS FROM FYBZ WHERE xmmc ='施工押金' ";
+		conn = LinkSql.getConn();
+		ps = LinkSql.Execute(conn, sql, "1", tn);
+		rs = ps.executeQuery();
+		ResultSetMetaData md = rs.getMetaData();
+		int columnCount = md.getColumnCount();
+		while (rs.next()) {
+			Map<String, Object> rowData = new HashMap<String, Object>();
+			for (int i = 1; i <= columnCount; i++) {
+				rowData.put(md.getColumnName(i), rs.getObject(i).toString().trim());
+			}
+			sgyjList.add(rowData);
+		}
+		return sgyjList;
+	}
+	
 	@RequestMapping("GetMenuByExpoGuid")
 	@ResponseBody
 	public List<Map<String, Object>> GetExpoMenu(HttpServletRequest request, HttpServletResponse res, String zhxxGuid)

@@ -130,6 +130,7 @@ public class SmodelController {
 			try {
 				flag = ps.executeUpdate();
 			} catch (Exception e) {
+				e.printStackTrace();
 				conn.rollback();
 			}
 			if (flag==1) {

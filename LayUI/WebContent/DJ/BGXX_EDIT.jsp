@@ -585,14 +585,11 @@ cursor:pointer;
 							data: formList,
 							success: function (data) {
 								if (data.success) {
-									
-                                 window.location.href = "DJ/FYHZ.jsp";
-							/*  var index =layer.open({
-					               
-					                type: 2, content: 'DJ/FYHZ.jsp', title: '费用汇总',
-					            });
-					         layer.full(index); */
-								/* 	history.go(0) */
+									var zgh = $("[name=ZGH]").val();
+									var zwh = $("[name=ZWH]").val();
+									cj.setCookie('bgxx_zgh', zgh, 365);
+								    cj.setCookie('bgxx_zwh', zwh, 365); 
+	                                window.location.href = "DJ/FYHZ.jsp";
 								} else {
 									layer.alert(data.msg);
 								}

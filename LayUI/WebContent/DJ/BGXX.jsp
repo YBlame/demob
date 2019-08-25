@@ -441,15 +441,12 @@
        		      	data: formList,
        		        success:function(data){
        		           if(data.success){
+			       			var zgh = $("[name=ZGH]").val();
+							var zwh = $("[name=ZWH]").val();
+							cj.setCookie('bgxx_zgh', zgh, 365);
+						    cj.setCookie('bgxx_zwh', zwh, 365); 
        						window.location.href = "DJ/FYHZ.jsp"
-       		             /*  layer.alert(data.msg,function() {
-       			var index = layer.open({
-                    type: 2,
-                    content: 'DJ/FYHZ.jsp',
-                    title: '费用汇总',
-                });
-                layer.full(index); 
-                });*/
+       		            
        		           }else{
        					  layer.alert(data.msg);
        		           }

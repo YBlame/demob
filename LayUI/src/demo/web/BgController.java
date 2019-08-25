@@ -1,17 +1,26 @@
 package demo.web;
 
 import demo.dao.Bmodel;
+import demo.entity.FyInfo;
+import demo.entity.XmInfo;
 import demo.tool.LinkSql;
 import demo.tool.PageUtils;
 import demo.tool.PublicMethod;
 import demo.tool.UUIDUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +29,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * 展会Controller
@@ -418,6 +429,98 @@ public class BgController {
 		return json;
 	}
 	
+	/**
+	 * 费用汇总提交
+	 * @param model
+	 * @param request
+	 * @param res
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="submitFyhz",method = RequestMethod.POST)
+	@ResponseBody
+	public Object submitFyhz(Model model, HttpServletRequest request, HttpServletResponse res, FyInfo fy) throws Exception {
+		// 获取描述表字段
+		HttpSession session = request.getSession();
+		String userGuid = (String) session.getAttribute("guid");
+		JSONObject json = new JSONObject();
+		String name = null;
+		String sqlSet = "";
+		String sqlVal = "";
+		String zhxxGuid = null;
+		System.out.println(fy.getZgh());
+		System.out.println(fy.xm);
+		Integer xj = 0;//小计
+		Integer sum =0;//总计
+		
+		if(fy.SGYJJE!=null&&!fy.SGYJJE.equals("")){
+			for (XmInfo x : fy.xm) {
+				if(x.XMMC_DATA!=null&&!x.XMMC_DATA.equals("")){
+					if(!x.DJ.equals("")&&!x.SL.equals("")){
+						x.HXJ = x.DJ * x.SL;
+						xj+=x.HXJ;
+					}
+				}
+			}
+			sum =fy.SGYJJE+xj;
+		}else{
+			json.put("smg", "请填写施工押金");
+			return json;
+		}
+		//滞纳金
+		conn=LinkSql.getConn();
+		conn.setAutoCommit(false);
+		ps= conn.prepareStatement("SELECT RQ FROM fybz WHERE xmmc='滞纳金'");
+		rs = ps.executeQuery();
+		rs.next();
+		String rq = rs.getString("RQ").toString();
+		
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date a=sdf.parse(sdf.format(new Date()));
+		Date b=sdf.parse(rq);
+		Integer znj =0;
+		if(b.before(a)){//b时间早于a
+			znj = xj/2;
+			sum +=znj;
+			
+		}else{
+			sum +=znj;
+		}
+		fy.ZJ = sum;
+		fy.ZNJ = znj;
+		fy.XJ = xj;
+			
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+		JSONArray j = JSONArray.fromObject(fy.xm, jsonConfig);
+		String result = j.toString();
+		fy.FYXX = result;
+		
+		String sql ="insert into fyxx_"+fy.zhxx+" (guid,ZGH, ZWH, FYXX, RQ, YHBH, XJ, SGYJ, ZNJ, ZJ) "
+					+ "	values('"+UUIDUtil.getUUID()+"','"+fy.zgh+"','"+fy.zwh+"','"+fy.FYXX+"',NOW(),'"+userGuid+"','"+fy.XJ+"','"+fy.SGYJJE+"','"+fy.ZNJ+"','"+fy.ZJ+"')";
+		ps= conn.prepareStatement(sql);
+		try {
+			ps.executeUpdate();
+			conn.commit();
+			//1报馆基本信息费用汇总状态更新已提交
+			//2报馆基本信息总状态
+			String sqlUpdate="UPDATE bgxx_"+fy.zhxx+" SET ZT='待审核' ,FYXXZT='已提交' where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
+			ps = conn.prepareStatement(sqlUpdate);
+			ps.executeUpdate();
+			conn.commit();
+			json.put("success", true);
+			json.put("msg", "报馆成功，请等待审核");
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO Auto-generated catch block
+			conn.rollback();
+			json.put("success", false);
+			json.put("msg", "报馆异常");
+		}
+		return json;
+	}
+	
+	
 	@RequestMapping("findBgxxInfo")
 	@ResponseBody
 	public List<Map<String, Object>> findBgxxInfo(HttpServletRequest request, HttpServletResponse res, String zhxxGuid,String bgGuid)
@@ -541,6 +644,23 @@ public class BgController {
 		}
 		return json;
 	}
-	
+	@RequestMapping("findFyxxInfo")
+	@ResponseBody
+	public Object findFyxxInfo(Model model, HttpServletRequest request,String zgh,String zwh,String zhxx) throws Exception {
+		HttpSession session  = request.getSession();
+		conn = LinkSql.getConn();
+		String sql="select fyxx,xj,sgyj,znj,zj from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+session.getAttribute("guid").toString()+"'   ";
+		ps = conn.prepareStatement(sql);
+		rs = ps.executeQuery();
+		String fyxx= "";
+		while(rs.next()){
+			fyxx = rs.getObject("fyxx").toString();
+			
+		}
+		com.alibaba.fastjson.JSONObject json = JSON.parseObject(fyxx);
+        String dj = json.getString("DJ");
+		return zhxx;
+		
+	}
 	 
 }

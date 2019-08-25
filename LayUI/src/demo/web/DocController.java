@@ -848,7 +848,6 @@ public class DocController {
 		} else {
 			bmodelName = Bmodel.findBmByGuId(guidBmodel);// 描述表
 		}
-
 		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
 		guid = guid.substring(0, guid.length() - 1);

@@ -201,12 +201,12 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 								option += "<option value='"+ strs[a].replace("|$|",",")+ "'>"+ strs[a].replace("|$|",",")+ "</option> ";
 							}
 							fromInput += "<div class='layui-form-item'>"
-									+ "<label class='layui-form-label'>"
+									+ "<label class='layui-form-label' style='width:110px;'>"
 									+ isform
 									+ result[i].zdmc
 									+ "</label>"
 									+ "<div class=\"layui-input-block\"  style='width:"+result[i].width+"px;' >"
-									+ "<select name='"+result[i].zdm+"' "+selectDisabled+" id='"+result[i].zdm+"' >"
+									+ "<select name='"+result[i].zdm+"' "+selectDisabled+" id='"+result[i].zdm+"'   lay-search=''>"
 									+ ""
 									+ option
 									+ ""

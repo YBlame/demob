@@ -244,13 +244,13 @@
 	  table.on('row(Table3)', function(obj){
 		    var data = obj.data;
 		    var guid = data['guid'];
-		    window.location.href = "DJ/BGXX_EDIT.jsp?bgGuid="+guid;
+		    window.location.href = "DJ/BGXX_SHOW.jsp?bgGuid="+guid;
 		  });
 	  
 	  table.on('row(Table4)', function(obj){
 		    var data = obj.data;
 		    var guid = data['guid'];
-		    window.location.href = "DJ/BGXX_EDIT.jsp?bgGuid="+guid;
+		    window.location.href = "DJ/BGXX_SHOW.jsp?bgGuid="+guid;
 		  });
           
         });

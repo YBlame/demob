@@ -99,7 +99,7 @@ function toSyrgl(){//对一般工作人员管理
 function findFybz(){
 	var guid="57d75cd50cf14c639da65d25ad74ee84";
 	var bmc="费用标准";
-	$("#demoAdmin").attr("src", "zhxx/public/public_Index.jsp?guid="+guid+"&bmc="+bmc+"&zhxxGuid=");
+	$("#demoAdmin").attr("src", "zhxx/public/public_Index.jsp?guid="+guid+"&bmc="+bmc+"&zhxxGuid="+zhxxGuid);
 }
 function findRddjs(){
 	var guid="a4eb4d19df3644999c59c46aedbb533c";

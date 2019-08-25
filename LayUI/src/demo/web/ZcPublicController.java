@@ -165,9 +165,7 @@ public class ZcPublicController {
 		}
 		String sqlWhere = "";
 		if (!zhxxGuid.equals("")) {
-			if (tn.equals("FYBZ")) {
-				sqlWhere = "  ";
-			}else if (tn.equals("SYRZC")) {//如果进入
+			if (tn.equals("SYRZC")) {//如果进入
 				if(roleid.equals("3")){
 					sqlWhere = " AND roleid =4 ";
 				}else{
@@ -186,9 +184,7 @@ public class ZcPublicController {
 					sqlWhere = " AND roleid =5 AND GS='"+roleid+"' ";
 				}
 				
-			}else if(tn.equals("FYBZ")){
-				
-			}  else {
+			}else {
 				sqlWhere = " AND 1>2 ";
 			}
 		}
@@ -215,12 +211,10 @@ public class ZcPublicController {
 			if (!zhxxGuid.equals("")) {
 				if (tn.equals("SYRZC")) {
 				} else {
-					if (!tn.equals("FYBZ")) {
-						if (!tn.equals("user")) {
-							ps.setString(1, zhxxGuid);
-						}
-
+					if (!tn.equals("user")) {
+						ps.setString(1, zhxxGuid);
 					}
+
 				}
 
 			}
@@ -246,12 +240,10 @@ public class ZcPublicController {
 			if (!zhxxGuid.equals("")) {
 				if (tn.equals("SYRZC")) {
 				} else {
-					if (!tn.equals("FYBZ")) {
-						if (!tn.equals("user")) {
-							ps.setString(1, zhxxGuid);
-						}
-
+					if (!tn.equals("user")) {
+						ps.setString(1, zhxxGuid);
 					}
+
 				}
 			}
 			rs = ps.executeQuery();
