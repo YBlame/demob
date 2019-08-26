@@ -648,6 +648,7 @@ public class BgController {
 	@ResponseBody
 	public Object findFyxxInfo(Model model, HttpServletRequest request,String zgh,String zwh,String zhxx) throws Exception {
 		HttpSession session  = request.getSession();
+		List<Map<String, String>> fyList = new ArrayList<>();
 		conn = LinkSql.getConn();
 		String sql="select fyxx,xj,sgyj,znj,zj from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+session.getAttribute("guid").toString()+"'   ";
 		ps = conn.prepareStatement(sql);
@@ -657,8 +658,15 @@ public class BgController {
 			fyxx = rs.getObject("fyxx").toString();
 			
 		}
-		com.alibaba.fastjson.JSONObject json = JSON.parseObject(fyxx);
-        String dj = json.getString("DJ");
+        List<Map<String,String>> listObjectFir = (List<Map<String,String>>) com.alibaba.fastjson.JSONArray.parse(fyxx);
+        for(Map<String,String> mapList : listObjectFir){
+        	Map<String, String> rowData = new HashMap<String, String>();
+            for (Map.Entry entry : mapList.entrySet()){
+            	rowData.put((String) entry.getKey(),(String) entry.getValue());
+            }
+            fyList.add(rowData);
+        }
+        System.out.println(fyList);
 		return zhxx;
 		
 	}
