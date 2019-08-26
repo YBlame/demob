@@ -17,8 +17,8 @@ public class LinkSql {
 	public static String adminmName = "smodel";
 	private static String driver = "com.mysql.jdbc.Driver";
 	private static String url = "jdbc:mysql://localhost/layui?characterEncoding=UTF-8";
-	private static String username = "y";
-	private static String password = "xing";
+	private static String username = "root";
+	private static String password = "123456";
 	private static Connection conn = null;
 	private static PreparedStatement ps = null;	
 
