@@ -21,7 +21,7 @@
 	    </ul>
 		<ul class="layui-nav layui-layout-right">
 		      <li class="layui-nav-item">
-		        <a href="javascript:;">
+		        <a href="javascript:toXgmm()" >
 		        	<%String user = request.getSession().getAttribute("user").toString();%>  
 					<%=user %>  
 					<%String role = request.getSession().getAttribute("role").toString();%>  

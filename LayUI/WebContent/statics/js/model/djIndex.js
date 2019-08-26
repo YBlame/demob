@@ -203,3 +203,11 @@ var reloadExpo;
 				layer.close(index);
 		});
 	}
+	function toXgmm()
+	{
+	        layer.open({
+	            type: 2, content: 'yhmm_xg.jsp',
+	            area: ["460px", "360px"],
+	            title: "修改密码"
+	        });
+	}

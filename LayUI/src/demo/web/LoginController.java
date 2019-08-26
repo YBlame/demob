@@ -22,6 +22,7 @@ import demo.dao.Bmodel;
 import demo.tool.LinkSql;
 import demo.tool.MD5;
 import demo.tool.UUIDUtil;
+import net.sf.json.JSONObject;
 
 /**
  * 登录页面
@@ -247,6 +248,63 @@ public class LoginController {
 		}
 		return flag;
 
+	}
+	@RequestMapping(value = "isPwdCorrect")
+	@ResponseBody
+	public Object isPwdCorrect(HttpServletRequest request, HttpServletResponse res,String oldPwd,String newPwd) throws Exception {
+		int flag=0;
+		String  oldpwd = MD5.GetMd5(oldPwd);
+		String  newpwd=MD5.GetMd5(newPwd);
+		HttpSession session = request.getSession();
+		String guid = (String) session.getAttribute("guid");
+		String role = (String) session.getAttribute("role");
+		JSONObject json = new JSONObject();
+		conn = LinkSql.getConn();
+		String tn="";
+		String sql="";
+		if(role.equals("搭建商"))
+		{
+			tn="USER";
+		}
+		else
+		{
+			tn="SYRZC";
+		}
+		 sql = "SELECT * FROM "+tn+" WHERE mm=? AND guid=?";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1,oldpwd );
+		ps.setString(2,guid );
+		rs = ps.executeQuery();
+
+		if (rs.next()) {
+			 sql="UPDATE "+tn+" SET MM=? WHERE GUID=?";
+				conn.setAutoCommit(false);
+				ps = conn.prepareStatement(sql);
+			
+				ps.setString(1,newpwd);
+				ps.setString(2,guid);
+			
+			flag=ps.executeUpdate();
+			conn.commit();
+				if (flag==1) {
+		
+					 json.put("success", true);
+					 json.put("msg", "密码修改成功");
+				}
+				else
+				{
+					
+					 json.put("success", false);
+					 json.put("msg", "密码修改失败");
+				}
+				
+		} else {
+			
+			 json.put("success", false);
+			 json.put("msg", "旧密码不正确");
+			
+		}
+		return json;
 	}
 
 }
