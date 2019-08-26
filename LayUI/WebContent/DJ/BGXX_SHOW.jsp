@@ -296,18 +296,7 @@ cursor:pointer;
 									<th>金额（元）</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td colspan="2"><span style="text-align: center;">401-600㎡（含600㎡）</span>
-
-									</select></td>
-									<td colspan="2"><span style="text-align: center;">401-600㎡（含600㎡）</span>
-
-									</select></td>
-									<td colspan="1"><input type="text" name="xm[0].DJ" id="DJ0" class="layui-input " readonly="readonly"></td>
-									<td><input type="text" name="xm[0].SL" id="SL0" class="layui-input binputs"></td>
-									<td><input type="text" name="xm[0].HXJ" id="XJ0" class="layui-input XJ_value" readonly="readonly"></td>
-								</tr>
+							<tbody >
 
 								<tr class="addlists">
 									<td colspan="2">小计</td>
@@ -319,7 +308,7 @@ cursor:pointer;
 									<td rowspan="2" colspan="2">其他</td>
 									<td colspan="2">施工押金</td>
 									<td colspan="2">
-									<span style="text-align: center;">401-600㎡（含600㎡）</span>
+									<span style="text-align: center;"></span>
 									</td>
 									<td><input type="text" name="SGYJJE" class="layui-input" readonly="readonly"></td>
 								</tr>
@@ -421,7 +410,7 @@ cursor:pointer;
 										var btn = n.toLowerCase();
 										if (picture.length >= 1) {
 											for (var i = 0; i < picture.length; i++) {
-												$("#"+ btn+ "Btn").before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='" + picture[i] + "' id='' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='" + picture[i] + "' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>")
+												$("#"+ btn+ "Btn").before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='" + picture[i] + "' id='' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='" + picture[i] + "' target='_blank'><image src='statics/login/prew.png'></image></a></span></div>")
 											}
 										}
 										$("#"+ btn+ "Btn").removeAttr("style");
@@ -606,14 +595,28 @@ cursor:pointer;
 			        url:"bg/findFyxxInfo",
 			      	data: {"zgh":zgh,"zwh":zwh,"zhxx":zhxx},
 			        success:function(data){
-			           if(data.success){
-			       			
-							
-							window.location.href = "DJ/FYHZ.jsp"
-			            
-			           }else{
-						  layer.alert(data.msg);
-			           }
+						var fy = data.fyList;
+						var tr = "";
+						for (var i = 0; i < fy.length; i++) {
+							 var strs= new Array(); //定义一数组 
+							 strs=fy[i].XMDES_DATA.split(","); //字符分割 
+							 tr += "<tr>";
+							 tr += "<td colspan=\"2\"><input type=\"text\" value='"+fy[i].XMMC_DATA+"' lay-verify=\"required\"  readonly=\"readonly\" class=\"layui-input\">";
+							 tr += "<td colspan=\"2\"><input type=\"text\" value='"+strs[0]+"' lay-verify=\"required\"  readonly=\"readonly\" class=\"layui-input\">";
+							 tr += "<td colspan=\"1\"><input type=\"text\" value='"+fy[i].DJ+"' lay-verify=\"required\"  readonly=\"readonly\" class=\"layui-input\">";
+							 tr += "<td><input type=\"text\" value='"+fy[i].SL+"' class=\"layui-input\"  readonly=\"readonly\"></td>"
+							 tr += "<td><input type=\"text\" value='"+fy[i].HXJ+"' class=\"layui-input\" readonly=\"readonly\"></td>"
+							 tr += "</tr>";
+						}
+						$(".addlists").before(tr);
+						var xm = data.xmList;	
+						for (var i = 0; i < xm.length; i++) {
+							$("[name=SGYJJE]").val(xm[i].SGYJ);
+							$("[name=XJ]").val(xm[i].XJ);
+							$("[name=ZNJ]").val(xm[i].ZNJ);
+							$("[name=ZJ]").val(xm[i].ZJ);
+						}
+						
 			        },
 			        error:function(jqXHR){
 			           alert("发生错误："+ jqXHR.status);

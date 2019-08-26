@@ -655,7 +655,7 @@ public class DjController {
 		List<Map<String, Object>> mcList = new ArrayList<Map<String, Object>>();
 		conn = LinkSql.getConn();
 		String tn = "FYBZ";
-		String sql = "SELECT  XMMC,id,XMMS,RQ FROM FYBZ WHERE 1=1 AND xmmc !='施工押金' GROUP BY   XMMC";
+		String sql = "SELECT  XMMC,id,XMMS,RQ FROM "+tn+" WHERE 1=1 AND xmmc !='施工押金' GROUP BY   XMMC";
 		conn = LinkSql.getConn();
 		ps = LinkSql.Execute(conn, sql, "1", tn);
 		rs = ps.executeQuery();
@@ -664,7 +664,7 @@ public class DjController {
 		while (rs.next()) {
 			Map<String, Object> rowData = new HashMap<String, Object>();
 			for (int i = 1; i <= columnCount; i++) {
-				rowData.put(md.getColumnName(i), rs.getObject(i).toString().trim());
+					rowData.put(md.getColumnName(i), rs.getObject(i).toString().trim());
 			}
 			mcList.add(rowData);
 		}

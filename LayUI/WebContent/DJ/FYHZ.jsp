@@ -33,6 +33,8 @@
 				<blockquote class="layui-elem-quote" style="display: inline-block; float: right;">展馆号：<p id="zgh" style="display: inline-block;"></p>&nbsp;&nbsp;&nbsp;展位号：<p style="display: inline-block;" id="zwh"></p></blockquote>
 				</div>
 				<div class="layui-row">
+				
+					<input id="bgGuid" name="bgGuid" style="display: none" value="<%=request.getParameter("bgGuid")%>">
 					<form class="layui-form fyhzForm" id="vform" lay-filter="fyhzform">
 						<table class="layui-table" lay-filter="test" id="test_table">
 							<colgroup>
@@ -57,7 +59,7 @@
 							<tbody>
 								<tr>
 									<td></td>
-									<td colspan="2"><select id="XMMC_DATA" name="xm[0].XMMC_DATA" class="proName" lay-filter="projectNameSel">
+									<td colspan="2"><select id="XMMC_DATA" name="xm[0].XMMC_DATA" class="proName" lay-filter="projectNameSel">	
 
 									</select></td>
 									<td colspan="2"><select name="xm[0].XMDES_DATA" id="XMDES_DATA" class="proDescSel" lay-filter="projectDescSel">
@@ -246,8 +248,8 @@
                                 }
                             });
                         };
-                        sgyj_select(false);
                         xmmc_select(false);
+                        sgyj_select(false);
                         //项目名称监听事件
                         form.on('select(projectNameSel)',
                                 function () {
@@ -306,7 +308,7 @@
                                                 });
                                                 $("[name=XJ]").val(sums);//总金额
                                                 var sgyj = Number($('[name=SGYJJE]').val());
-                    							var znj ="";
+                    							var znj;
                     							var znjzt = $("#znjzt").val()
                     							if(znjzt=="true"){
                     								znj= xj / 2;
@@ -448,9 +450,10 @@
                        		      	data: fy,
 		                            dataType:"json",
                        		        success:function(data){
+                       					var bgGuid = $("#bgGuid").val();
                        		           if(data.success){
                        						layer.alert(data.msg);
-                       						window.location.href = "DJ/BGXX_LIST.jsp"
+                       						window.location.href = "DJ/BGXX_SHOW.jsp?bgGuid="+bgGuid
                        		           }else{
                        					  layer.alert(data.msg);
                        		           }
@@ -464,20 +467,7 @@
                         });
                         
                     });
-			
 
-			function getUser(tableID){
-				var args ={} ;
-				$("#test_table tr:gt(0)").each(function(i){
-					var data = new Object();
-					$(this).find("select[name],input[name]").each(function(){
-						var name = $(this).attr("name");
-						data[name]= $(this).val();
-					});
-					args=JSON.stringify(data);
-				});
-				return JSON.stringify(args);
-			}
 			//获取当前时间，格式YYYY-MM-DD
 			function getNow(s) {
 					return s < 10 ? '0' +s: s;
@@ -500,7 +490,6 @@
 				 	return false;
 				}
 				return true;
-			
 			}
 			</script>
 </body>
