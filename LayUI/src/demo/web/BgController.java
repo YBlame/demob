@@ -422,8 +422,6 @@ public class BgController {
 			json.put("success", false);
 			return json;
 		} finally {
-			rs.close();
-			ps.close();
 			conn.close();
 		}
 		return json;
@@ -476,14 +474,13 @@ public class BgController {
 		String rq = rs.getString("RQ").toString();
 		
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Date a=sdf.parse(sdf.format(new Date()));
-		Date b=sdf.parse(rq);
+		Date a=sdf.parse(sdf.format(new Date()));//当前时间
+		Date b=sdf.parse(rq);//
 		Integer znj =0;
-		if(b.before(a)){//b时间早于a
-			znj = xj/2;
+		if(a.before(b)){//b时间早于a
 			sum +=znj;
-			
 		}else{
+			znj = xj/2;
 			sum +=znj;
 		}
 		fy.ZJ = sum;
@@ -638,8 +635,6 @@ public class BgController {
 			json.put("success", false);
 			return json;
 		} finally {
-			rs.close();
-			ps.close();
 			conn.close();
 		}
 		return json;
@@ -648,26 +643,34 @@ public class BgController {
 	@ResponseBody
 	public Object findFyxxInfo(Model model, HttpServletRequest request,String zgh,String zwh,String zhxx) throws Exception {
 		HttpSession session  = request.getSession();
-		List<Map<String, String>> fyList = new ArrayList<>();
+		JSONObject json = new JSONObject();
+		List<Map<String, Object>> fyList = new ArrayList<>();
 		conn = LinkSql.getConn();
 		String sql="select fyxx,xj,sgyj,znj,zj from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+session.getAttribute("guid").toString()+"'   ";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 		String fyxx= "";
+		List<Map<String, Object>> xmList = new ArrayList<>();
+		Map<String, Object> row = new HashMap<String, Object>();
 		while(rs.next()){
 			fyxx = rs.getObject("fyxx").toString();
-			
+			row.put("ZJ", rs.getObject("zj").toString());
+			row.put("XJ", rs.getObject("xj").toString());
+			row.put("SGYJ", rs.getObject("sgyj").toString());
+			row.put("ZNJ", rs.getObject("znj").toString());
 		}
+		xmList.add(row);
         List<Map<String,String>> listObjectFir = (List<Map<String,String>>) com.alibaba.fastjson.JSONArray.parse(fyxx);
         for(Map<String,String> mapList : listObjectFir){
-        	Map<String, String> rowData = new HashMap<String, String>();
+        	Map<String, Object> rowData = new HashMap<String, Object>();
             for (Map.Entry entry : mapList.entrySet()){
-            	rowData.put((String) entry.getKey(),(String) entry.getValue());
+            	rowData.put((String) entry.getKey(),entry.getValue());
             }
             fyList.add(rowData);
         }
-        System.out.println(fyList);
-		return zhxx;
+        json.put("fyList", fyList);
+        json.put("xmList", xmList);
+		return json;
 		
 	}
 	 

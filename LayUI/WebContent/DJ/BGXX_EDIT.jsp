@@ -576,7 +576,8 @@ cursor:pointer;
 					function (data) {
 						var selected = cj
 							.getCookie('selected_expo_id');
-						$("#zhxxGuid").val(selected)
+						$("#zhxxGuid").val(selected);
+						var bgGuid =$("#bgGuid").val();
 						var formList = $('.layui-form-pane')
 							.serialize()
 						$.ajax({
@@ -589,7 +590,7 @@ cursor:pointer;
 									var zwh = $("[name=ZWH]").val();
 									cj.setCookie('bgxx_zgh', zgh, 365);
 								    cj.setCookie('bgxx_zwh', zwh, 365); 
-	                                window.location.href = "DJ/FYHZ.jsp";
+	                                window.location.href = "DJ/FYHZ.jsp?bgGuid="+bgGuid;
 								} else {
 									layer.alert(data.msg);
 								}
