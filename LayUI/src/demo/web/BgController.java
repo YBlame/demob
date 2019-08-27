@@ -70,7 +70,6 @@ public class BgController {
 		final String role = (String) session.getAttribute("role");
 		String roleid = (String) session.getAttribute("roleid");
 		String zhxxDj = (String) session.getAttribute("zhxxDj");
-		
 		String bmDj = (String) session.getAttribute("bmDj");
 		String typeDj = (String) session.getAttribute("typeDj");
 		list = new ArrayList<Map<String, Object>>();
@@ -473,8 +472,7 @@ public class BgController {
 			}
 			sum =fy.SGYJJE+xj;
 		}else{
-			json.put("success", false);
-			json.put("msg", "请填写施工押金");
+			json.put("smg", "请填写施工押金");
 			return json;
 		}
 		//滞纳金
@@ -504,8 +502,9 @@ public class BgController {
 		JSONArray j = JSONArray.fromObject(fy.xm, jsonConfig);
 		String result = j.toString();
 		fy.FYXX = result;
-		String sql ="insert into fyxx_"+fy.zhxx+" (guid,ZGH, ZWH, FYXX, RQ, SGYJ_DATA, YHBH, XJ, SGYJ, ZNJ, ZJ) "
-					+ "	values('"+UUIDUtil.getUUID()+"','"+fy.zgh+"','"+fy.zwh+"','"+fy.FYXX+"',NOW(),'"+fy.SGYJ_DATA+"','"+userGuid+"','"+fy.XJ+"','"+fy.SGYJJE+"','"+fy.ZNJ+"','"+fy.ZJ+"')";
+		
+		String sql ="insert into fyxx_"+fy.zhxx+" (guid,ZGH, ZWH, FYXX, RQ, YHBH, XJ, SGYJ, ZNJ, ZJ) "
+					+ "	values('"+UUIDUtil.getUUID()+"','"+fy.zgh+"','"+fy.zwh+"','"+fy.FYXX+"',NOW(),'"+userGuid+"','"+fy.XJ+"','"+fy.SGYJJE+"','"+fy.ZNJ+"','"+fy.ZJ+"')";
 		ps= conn.prepareStatement(sql);
 		try {
 			ps.executeUpdate();
@@ -528,100 +527,6 @@ public class BgController {
 		return json;
 	}
 	
-	/**
-	 * 费用汇总提交
-	 * @param model
-	 * @param request
-	 * @param res
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value="updateFyhz",method = RequestMethod.POST)
-	@ResponseBody
-	public Object updateFyhz(Model model, HttpServletRequest request, HttpServletResponse res, FyInfo fy) throws Exception {
-		// 获取描述表字段
-		HttpSession session = request.getSession();
-		String userGuid = (String) session.getAttribute("guid");
-		JSONObject json = new JSONObject();
-		String name = null;
-		String sqlSet = "";
-		String sqlVal = "";
-		String zhxxGuid = null;
-		System.out.println(fy.getZgh());
-		System.out.println(fy.xm);
-		Integer xj = 0;//小计
-		Integer sum =0;//总计
-		
-		if(fy.SGYJJE!=null&&!fy.SGYJJE.equals("")){
-			for (XmInfo x : fy.xm) {
-				if(x.XMMC_DATA!=null&&!x.XMMC_DATA.equals("")){
-					if(!x.DJ.equals("")&&!x.SL.equals("")){
-						x.HXJ = x.DJ * x.SL;
-						xj+=x.HXJ;
-					}
-				}
-			}
-			sum =fy.SGYJJE+xj;
-		}else{
-			json.put("success", false);
-			json.put("msg", "请填写施工押金");
-			return json;
-		}
-		//滞纳金
-		conn=LinkSql.getConn();
-		conn.setAutoCommit(false);
-		ps= conn.prepareStatement("SELECT RQ FROM fybz WHERE xmmc='滞纳金'");
-		rs = ps.executeQuery();
-		rs.next();
-		String rq = rs.getString("RQ").toString();
-		
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Date a=sdf.parse(sdf.format(new Date()));//当前时间
-		Date b=sdf.parse(rq);//
-		Integer znj =0;
-		if(a.before(b)){//b时间早于a
-			sum +=znj;
-		}else{
-			znj = xj/2;
-			sum +=znj;
-		}
-		fy.ZJ = sum;
-		fy.ZNJ = znj;
-		fy.XJ = xj;
-			
-		JsonConfig jsonConfig = new JsonConfig();
-		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
-		JSONArray j = JSONArray.fromObject(fy.xm, jsonConfig);
-		String result = j.toString();
-		fy.FYXX = result;
-		String sql ="UPDATE fyxx_"+fy.zhxx+" SET  FYXX = '"+fy.FYXX+"'  , XJ = '"+fy.XJ+"' , SGYJ = '"+fy.SGYJJE+"' , ZNJ = '"+fy.ZNJ+"' , ZJ = '"+fy.ZJ+"' , SGYJ_DATA = '"+fy.SGYJ_DATA+"' where YHBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
-		
-		
-		ps= conn.prepareStatement(sql);
-		try {
-			ps.executeUpdate();
-			conn.commit();
-			//1报馆基本信息费用汇总状态更新已提交
-			//2报馆基本信息总状态
-			String sqlUpdate="UPDATE bgxx_"+fy.zhxx+" SET ZT='待审核' ,FYXXZT='已提交' where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
-			ps = conn.prepareStatement(sqlUpdate);
-			ps.executeUpdate();
-			conn.commit();
-			json.put("success", true);
-			json.put("msg", "提交成功，请等待审核");
-		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO Auto-generated catch block
-			conn.rollback();
-			json.put("success", false);
-			json.put("msg", "报馆异常");
-		}
-		return json;
-	}
-	
-	
-	
-	
 	
 	@RequestMapping("findBgxxInfo")
 	@ResponseBody
@@ -640,7 +545,7 @@ public class BgController {
 		while (rs.next()) {
 			Map<String, Object> rowData = new HashMap<String, Object>();
 			for (int i = 1; i <= columnCount; i++) {
-				rowData.put(md.getColumnName(i), rs.getString(i));
+				rowData.put(md.getColumnName(i), rs.getObject(i).toString().trim());
 			}
 			desList.add(rowData);
 		}
@@ -693,8 +598,6 @@ public class BgController {
 		String zhxxGuid = null;
 		String bgGuid = null;
 		String djsshdx = null;
-		String zgh = null;
-		String zwh = null;
 		while (pNames.hasMoreElements()) {
 			name = (String) pNames.nextElement();
 			if (name.equals("zhxxGuid")) {
@@ -753,7 +656,7 @@ public class BgController {
 		JSONObject json = new JSONObject();
 		List<Map<String, Object>> fyList = new ArrayList<>();
 		conn = LinkSql.getConn();
-		String sql="select fyxx,xj,sgyj,znj,zj,SGYJ_DATA from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+session.getAttribute("guid").toString()+"'   ";
+		String sql="select fyxx,xj,sgyj,znj,zj from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+session.getAttribute("guid").toString()+"'   ";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 		String fyxx= "";
@@ -765,7 +668,6 @@ public class BgController {
 			row.put("XJ", rs.getObject("xj").toString());
 			row.put("SGYJ", rs.getObject("sgyj").toString());
 			row.put("ZNJ", rs.getObject("znj").toString());
-			row.put("SGYJ_DATA",  rs.getObject("SGYJ_DATA").toString());
 		}
 		xmList.add(row);
         List<Map<String,String>> listObjectFir = (List<Map<String,String>>) com.alibaba.fastjson.JSONArray.parse(fyxx);
@@ -781,47 +683,5 @@ public class BgController {
 		return json;
 		
 	}
-	@RequestMapping("findEdit")
-	@ResponseBody
-	public Object findEdit(Model model, HttpServletRequest request,String zgh,String zwh,String zhxx) throws Exception {
-		HttpSession session  = request.getSession();
-		JSONObject json = new JSONObject();
-		List<Map<String, Object>> fyList = new ArrayList<>();
-		conn = LinkSql.getConn();
-		String sql="select fyxx,xj,sgyj,znj,zj,SGYJ_DATA from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+session.getAttribute("guid").toString()+"'   ";
-		ps = conn.prepareStatement(sql);
-		rs = ps.executeQuery();
-		String fyxx= "";
-		List<Map<String, Object>> xmList = new ArrayList<>();
-		Map<String, Object> row = new HashMap<String, Object>();
-		if(rs.next()){
-			rs.beforeFirst();
-			while(rs.next()){
-				fyxx = rs.getObject("fyxx").toString();
-				row.put("ZJ", rs.getObject("zj").toString());
-				row.put("XJ", rs.getObject("xj").toString());
-				row.put("SGYJ", rs.getObject("sgyj").toString());
-				row.put("ZNJ", rs.getObject("znj").toString());
-				row.put("SGYJ_DATA", rs.getObject("SGYJ_DATA").toString());
-			}
-			xmList.add(row);
-	        List<Map<String,String>> listObjectFir = (List<Map<String,String>>) com.alibaba.fastjson.JSONArray.parse(fyxx);
-	        for(Map<String,String> mapList : listObjectFir){
-	        	Map<String, Object> rowData = new HashMap<String, Object>();
-	            for (Map.Entry entry : mapList.entrySet()){
-	            	rowData.put((String) entry.getKey(),entry.getValue());
-	            }
-	            fyList.add(rowData);
-	        }
-	        json.put("fyList", fyList);
-	        json.put("xmList", xmList);
-	        json.put("success", true);
-		}else{
-			 json.put("success", false);
-		}
-		return json;
-		
-	}
-	
 	 
 }

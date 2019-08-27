@@ -752,15 +752,16 @@ public class GzryController {
 						// guids=rs.getObject(i).toString();
 						System.out.println(md.getColumnName(i));
 						String dataGuid = (String) rs.getObject("guid");
+						String dwbh = (String) rs.getObject("DWBH");
 						if (md.getColumnName(i).equals("BDZT") || md.getColumnName(i).equals("RYZT")) { // onclick=\"chakan('"+mc+"','"+guids+"','"+mc+"','"+mc+"')\"
 							String wtg = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakan('"
-									+ zhxxDj + "','" + dataGuid
+									+ zhxxDj + "','" + dataGuid+ "','" + dwbh
 									+ "')\"  class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
 							String wsh = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakan('"
-									+ zhxxDj + "','" + dataGuid
+									+ zhxxDj + "','" + dataGuid+ "','" + dwbh
 									+ "')\"  class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
 							String tg = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakan('"
-									+ zhxxDj + "','" + dataGuid
+									+ zhxxDj + "','" + dataGuid+ "','" + dwbh
 									+ "')\"  class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
 							String wtj = "<div><div id=\"sh\" style='text-align: center;'><a class='layui-table-link'><img src='statics/icon/wtj.png' style='margin-top:4px;'></a></div><div>";
 							if (rs.getObject(i).toString().equals("未提交")) {
@@ -2049,7 +2050,7 @@ public class GzryController {
 	
 	@RequestMapping("updryStateByGuid")
 	@ResponseBody
-	public int updryStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest) throws Exception {
+	public int updryStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest,String dwbh) throws Exception {
 		{
 			HttpSession session = request.getSession();
 			conn = LinkSql.getConn();
@@ -2059,10 +2060,11 @@ public class GzryController {
 					String tn = "sgryxx_" + zhxxguid;// 数据表表名，根据guid获取
 					String desTn = "sgryxx_des_" + zhxxguid;// 描述表表名
 					
-					String sql = "UPDATE RYBDB SET BDZT='已通过',RYZT='已通过'  WHERE ZHBH=?";					
+					String sql = "UPDATE RYBDB SET BDZT='已通过',RYZT='已通过'  WHERE ZHBH=? and dwbh=?";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sql);				
 					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2071,9 +2073,10 @@ public class GzryController {
 						conn.rollback();
 					}
 					
-					String sql1 = "UPDATE "+tn+" SET  ZT='已通过'";					
+					String sql1 = "UPDATE "+tn+" SET  ZT='已通过' where dwbh=?";					
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sql1);				
+					ps = conn.prepareStatement(sql1);
+					ps.setString(1, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2083,9 +2086,10 @@ public class GzryController {
 					}
 					
 					tn = "sgrybx_" + zhxxguid;
-					String sql2 = "UPDATE "+tn+" SET ZT='已通过'";													
+					String sql2 = "UPDATE "+tn+" SET ZT='已通过' where dwbh=?";													
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sql2);								
+					ps = conn.prepareStatement(sql2);	
+					ps.setString(1, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2100,10 +2104,11 @@ public class GzryController {
 					String tn = "sgryxx_" + zhxxguid;// 数据表表名，根据guid获取
 					String desTn = "sgryxx_des_" + zhxxguid;// 描述表表名
 					
-					String sql = "UPDATE RYBDB SET BDZT='未通过',RYZT='未通过'  WHERE ZHBH=?";					
+					String sql = "UPDATE RYBDB SET BDZT='未通过',RYZT='未通过'  WHERE ZHBH=? and dwbh=?";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sql);				
 					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2112,9 +2117,10 @@ public class GzryController {
 						conn.rollback();
 					}
 					
-					String sql1 = "UPDATE "+tn+" SET  ZT='未通过'";					
+					String sql1 = "UPDATE "+tn+" SET  ZT='未通过' where dwbh=?";					
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sql1);				
+					ps = conn.prepareStatement(sql1);	
+					ps.setString(1, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2124,9 +2130,10 @@ public class GzryController {
 					}
 					
 					tn = "sgrybx_" + zhxxguid;
-					String sql2 = "UPDATE "+tn+" SET ZT='未通过'";													
+					String sql2 = "UPDATE "+tn+" SET ZT='未通过' where dwbh=?";													
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sql2);								
+					ps = conn.prepareStatement(sql2);
+					ps.setString(1, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2140,7 +2147,7 @@ public class GzryController {
 					String shry=(String)session.getAttribute("NAME");
 				    String shrybh=(String)session.getAttribute("guid");
 				    String guid=UUIDUtil.getUUID();
-				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH) VALUES(?,?,?,?,now(),?,?)";					
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH,DWBH) VALUES(?,?,?,?,now(),?,?,?)";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlinsert);				
 					ps.setString(1, guid);
@@ -2149,6 +2156,7 @@ public class GzryController {
 					ps.setString(4, shrybh);		
 					ps.setString(5, "SGRYXX");
 					ps.setString(6, zhxxguid);
+					ps.setString(7, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2219,7 +2227,7 @@ public class GzryController {
 					String shry=(String)session.getAttribute("NAME");
 				    String shrybh=(String)session.getAttribute("guid");
 				    String guid=UUIDUtil.getUUID();
-				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH) VALUES(?,?,?,?,now(),?,?)";					
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH,DWBH) VALUES(?,?,?,?,now(),?,?,?)";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlinsert);				
 					ps.setString(1, guid);
@@ -2228,6 +2236,7 @@ public class GzryController {
 					ps.setString(4, shrybh);		
 					ps.setString(5, "HCXX");
 					ps.setString(6, zhxxguid);
+					ps.setString(7, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();

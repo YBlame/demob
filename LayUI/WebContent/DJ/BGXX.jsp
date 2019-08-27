@@ -405,24 +405,24 @@
                 case "室内单层":
                     $("#sndc").show();
                     $("#snsc").hide();
-                    $("#gcszzzs").attr("lay-verify","");
+                    $("#zwtz").attr("lay-verify","");
                     $("#zwjgt").attr("lay-verify","");
                     break;
                 case "室内双层":
+                	  $("#zwtz").attr("lay-verify","required");
                       $("#zwjgt").attr("lay-verify","required");
-                      $("#gcszzzs").attr("lay-verify","required");
                     $("#snsc").show();
                   
                     break;
                 case "室外钢木结构":
+                	$("#zwtz").attr("lay-verify","required");
                     $("#zwjgt").attr("lay-verify","required");
-                    $("#gcszzzs").attr("lay-verify","required");
                     $("#snsc").show();
                     break;
                 case "室外简易结构":
                     $("#sndc").show();
                     $("#snsc").hide();
-                    $("#gcszzzs").attr("lay-verify","");
+                    $("#zwtz").attr("lay-verify","");
                     $("#zwjgt").attr("lay-verify","");
                     $("#snsc input").val("");
                     break;

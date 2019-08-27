@@ -253,13 +253,13 @@ $(document).ready(function() {
 								});
 				
 				// 打开查看按钮 href="zhxx/bgxxsh.jsp"
-				function chakan(zhxxguid,dataGuid) {
+				function chakan(zhxxguid,dataGuid,dwbh) {
 				    layer.open({
 				        type: 2,
 				        area: ["80%", "80%"],
 				        title: '审核',
 				        maxmin: true,
-				        content: 'zhxx/sgrybdxxsh.jsp?zhxxguid=' + zhxxguid+'&dataGuid='+dataGuid, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+				        content: 'zhxx/sgrybdxxsh.jsp?zhxxguid=' + zhxxguid+'&dataGuid='+dataGuid+'&dwbh='+dwbh, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
 				    });
 
 				    /* window.location = "zhxx/bgxxsh.jsp?guid="

@@ -27,18 +27,6 @@ public class FyInfo {
 	
 	public Integer SGYJJE;//施工押金
 	
-	public String SGYJ_DATA;//施工描述
-	
-
-	
-	
-	public String getSGYJ_DATA() {
-		return SGYJ_DATA;
-	}
-
-	public void setSGYJ_DATA(String sGYJ_DATA) {
-		SGYJ_DATA = sGYJ_DATA;
-	}
 
 	public String getFYXX() {
 		return FYXX;
@@ -120,7 +108,7 @@ public class FyInfo {
 	}
 
 	public FyInfo(String zhxx, String zgh, String zwh, Integer zJ, Integer zNJ, Integer xJ, List<XmInfo> xm,
-			String fYXX, Integer sGYJJE, String sGYJ_DATA) {
+			String fYXX, Integer sGYJJE) {
 		super();
 		this.zhxx = zhxx;
 		this.zgh = zgh;
@@ -131,12 +119,7 @@ public class FyInfo {
 		this.xm = xm;
 		FYXX = fYXX;
 		SGYJJE = sGYJJE;
-		SGYJ_DATA = sGYJ_DATA;
 	}
-
-	
-
-	
 
 
 	

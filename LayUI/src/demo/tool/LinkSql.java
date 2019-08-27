@@ -16,9 +16,15 @@ public class LinkSql {
 	// adminName为管理员中的表如：栏目表
 	public static String adminmName = "smodel";
 	private static String driver = "com.mysql.jdbc.Driver";
+	
 	private static String url = "jdbc:mysql://localhost/layui?characterEncoding=UTF-8";
 	private static String username = "root";
-	private static String password = "123456";
+	private static String password = "sa";
+	
+	/*private static String url = "jdbc:mysql://101.37.160.115/layui?characterEncoding=UTF-8";
+	private static String username = "djsxt";
+	private static String password = "DJSXT!@#";*/
+
 	private static Connection conn = null;
 	private static PreparedStatement ps = null;	
 

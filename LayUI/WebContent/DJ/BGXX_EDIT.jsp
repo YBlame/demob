@@ -197,33 +197,33 @@ cursor:pointer;
 					<div id='sndc'>
 						<div class="layui-form-item">
 							<div class="layui-upload">
-	                            <blockquote class="layui-elem-quote layui-quote-nm"
-	                                        style="margin-top: 10px;">
-	                               <font color=red>*</font> 展位图纸预览图：
-	                                <div class="layui-upload-list" id="zwtzDiv">
-	                                <input id='zwtz' name='zwtz' style='display: none' lay-verify="required" lay-reqtext="展位图纸不能为空"  />
-	                                    <button type="button" class="layui-btn" style="display:block;margin:0 auto"
-	                                            id="zwtzBtn">展位图纸
-	                                    </button>
-	                                </div>
-	                            </blockquote>
-                        </div>
+								<blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+									<font color=red>*</font> 展位图纸预览图：
+									<div class="layui-upload-list" id="zwtzDiv">
+										<input id='ZWTZ' name='zwtz' style='display: none' lay-verify="required"
+											lay-reqtext="展位图纸不能为空" />
+										<button type="button" class="layui-btn" style="display: block; margin: 0 auto"
+											id="zwtzBtn">展位图纸
+										</button>
+									</div>
+								</blockquote>
+							</div>
 						</div>
 					</div>
 					<div id='snsc' style="display: none">
 						<div class="layui-form-item">
 							<div class="layui-upload">
-	                            <blockquote class="layui-elem-quote layui-quote-nm"
-	                                        style="margin-top: 10px;">
-	                                <font color=red>*</font>展位结构图及审核报告：
-	                                <div class="layui-upload-list" id="xbjgtjshbgDiv">
-	                                 <input id='zwjgt' name='zwjgt' style='display: none' lay-reqtext="展位细部结构图及审核报告不能为空"/>
-	                                    <button type="button" class="layui-btn" style="display:block;margin:0 auto"
-	                                            id="zwjgtBtn">展位结构图及审核报告
-	                                    </button>
-	                                </div>
-	                            </blockquote>
-                        </div>
+								<blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+									<font color=red>*</font>展位细部结构图及审核报告： 
+									<div class="layui-upload-list" id="xbjgtjshbgDiv">
+										<input id='ZWJGT' name='zwjgt' style='display: none'
+											lay-reqtext="展位细部结构图及审核报告不能为空" />
+										<button type="button" class="layui-btn" style="display: block; margin: 0 auto"
+											id="zwjgtBtn">展位细部结构图及审核报告
+										</button>
+									</div>
+								</blockquote>
+							</div>
 						</div>
 						<div class="layui-form-item">
 							<div class="layui-inline">
@@ -257,22 +257,20 @@ cursor:pointer;
 								</div>
 							</div>
 						</div>
-					<div class="layui-form-item">
-                     <p class="details-component-line-margin"
-								style="margin-bottom: 0px;font-size: 12px;">注意：请上传工程师资质证书，单个图片不超过1M。
-						</p>
-						<div class="layui-upload">
-                            <blockquote class="layui-elem-quote layui-quote-nm"
-                                        style="margin-top: 10px;">
-                                <font color=red>*</font>出图工程师资质证书：
-                                <div class="layui-upload-list" id="ctgcszzzsDiv">
-                                 <input id='gcszzzs' name='gcszzzs' style='display: none' lay-reqtext="出图工程师资质证不能为空" />
-                                    <button type="button" class="layui-btn" style="display:block;margin:0 auto"
-                                            id="gcszzzsBtn">工程师资质证书
-                                    </button>
-                                </div>
-                            </blockquote>
-                        </div>
+						<div class="layui-form-item">
+							<div class="layui-upload">
+								<blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+									<font color=red>*</font>出图工程师资质证书：
+									<div class="layui-upload-list" id="ctgcszzzsDiv">
+										<input id='GCSZZZS' name='gcszzzs' style='display: none'
+											lay-reqtext="出图工程师资质证不能为空" />
+										<button type="button" class="layui-btn" style="display: block; margin: 0 auto"
+											id="gcszzzsBtn">工程师资质证书
+										</button>
+									</div>
+								</blockquote>
+							</div>
+						</div>
 					</div>
 
 					<div class="layui-form-item layui-layout-admin">
@@ -326,19 +324,21 @@ cursor:pointer;
 								if (n == 'ZTJG') {
 									$('[name=ztjg][value=' + v + ']').prop("checked", true);
 									if (v.trim() == '室外钢木结构' || v.trim() == "室内双层") {
-										$("#zwjgt").attr("lay-verify", "required");
-										$("#gcszzzs").attr("lay-verify", "required");
+										$("#zwtz").attr("lay-verify", "required");
+										$("#zwtz").attr("lay-verify", "required");
 										$("#snsc").show();
 									}
 								}
 								
+								
+								
+								
 								if (n.indexOf("_ZT")!=-1) {
-									if (v == '已通过'||v=='未审核') {
+									if (v == '通过') {
 										var btn = n.substring(0,n.length-3);
 										btn = btn.toLocaleLowerCase();
-										
-										$("#"+btn+"Btn").prevAll(".file-iteme").children(':last-child').remove();
-										$("#"+btn+"Btn").remove();
+										$("#"+btn+"Btn").hide();
+										$("#"+btn+"Btn").prevAll().removeClass("file-iteme")
 									}else{
 										if(btn="ZWTZ"){
 											$("#zwtzBtn").show();
@@ -353,15 +353,12 @@ cursor:pointer;
 								}
 								if (v.indexOf("/kh/")!=-1) {
 									if (v != "") {
-										var btn = n.toLowerCase();
-										$("#"+btn+"").val(v)
 										v = v.substring(0,v.length-1);
 										var picture = v.split(',');
-										
+										var btn = n.toLowerCase();
 										if (picture.length >= 1) {
-											
 											for (var i = 0; i < picture.length; i++) {
-												$("#"+ btn+ "Btn").before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='" + picture[i] + "' id='' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='" + picture[i] + "' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>")
+												$("#"+ btn+ "Btn").before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='" + picture[i] + "' id='' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='" + picture[i] + "' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>")
 											}
 										}
 										$("#"+ btn+ "Btn").removeAttr("style");
@@ -370,6 +367,8 @@ cursor:pointer;
 
 								form.render();
 							});
+							/* var radio = data[0].ZTJG; 
+							$("input[name='ztjg'][value=室外钢木结构]").attr("checked",true); */
 
 							if (shzt == '拒绝') {
 								$.ajax({
@@ -383,8 +382,7 @@ cursor:pointer;
 											for (var i = 0; i < result.length; i++) {
 												var shdx = $("#djsshdx").val();
 												shdx +=result[i].SHXM+",";
-												$("#djsshdx").val(shdx);
-												$("#"+result[i].SHXM.toLowerCase()+"").parent().before("<span style=\"font-size: 19px; float: right; color: red;\">"+ result[i].SHYJ +"</span>");
+												$("#"+result[i].SHXM+"").parent().before("<span style=\"font-size: 19px; float: right; color: red;\">"+ result[i].SHYJ +"</span>");
 											}
 										}
 									}
@@ -413,7 +411,7 @@ cursor:pointer;
 		            		var dData = $("#"+d+"").val();
 		            		dData +=imgData+","
 		            		$("#"+d+"").val(dData);
-		           	  		$('#'+d+'Btn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn'  style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
+		           	  		$('#'+d+'Btn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
 
 		                }
 		            });
@@ -493,10 +491,10 @@ cursor:pointer;
             }
             , done: function (res) {
             	var imgData = res.data.src
-            	var zwtzData = $('#zwtz').val();
+            	var zwtzData = $('#ZWTZ').val();
             	zwtzData +=imgData+","
-            	$("#zwtz").val(zwtzData);
-          	  	$('#zwtzBtn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
+            	$("#ZWTZ").val(zwtzData);
+          	  	$('#zwtzBtn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
             }
         });
 
@@ -514,10 +512,10 @@ cursor:pointer;
             }
             , done: function (res) {
             		var imgData = res.data.src
-            		var zwjgtData = $('#zwjgt').val();
+            		var zwjgtData = $('#ZWJGT').val();
             		zwjgtData +=imgData+","
-                	$("#zwjgt").val(zwjgtData);
-            	  $('#zwjgtBtn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
+                	$("#ZWJGT").val(zwjgtData);
+            	  $('#zwjgtBtn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
 					
             }
         });
@@ -535,10 +533,10 @@ cursor:pointer;
             }
             , done: function (res) {
             	var imgData = res.data.src
-        		var gcszzzsData = $('#gcszzzs').val();
+        		var gcszzzsData = $('#GCSZZZS').val();
         		gcszzzsData +=imgData+","
-            	$("#gcszzzs").val(gcszzzsData);
-           	  		$('#gcszzzsBtn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
+            	$("#GCSZZZS").val(gcszzzsData);
+           	  		$('#gcszzzsBtn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
 
             }
         });
@@ -547,29 +545,28 @@ cursor:pointer;
 					var ztjg = data.value;
 					switch (ztjg) {
 						case "室内单层":
-		                    $("#sndc").show();
-		                    $("#snsc").hide();
-		                    $("#gcszzzs").attr("lay-verify","");
-		                    $("#zwjgt").attr("lay-verify","");
-		                    break;
-		                case "室内双层":
-		                    $("#zwjgt").attr("lay-verify","required");
-		                    $("#gcszzzs").attr("lay-verify","required");
-		                    $("#snsc").show();
-		                  
-		                    break;
-		                case "室外钢木结构":
-		                    $("#zwjgt").attr("lay-verify","required");
-		                    $("#gcszzzs").attr("lay-verify","required");
-		                    $("#snsc").show();
-		                    break;
-		                case "室外简易结构":
-		                    $("#sndc").show();
-		                    $("#snsc").hide();
-		                    $("#gcszzzs").attr("lay-verify","");
-		                    $("#zwjgt").attr("lay-verify","");
-		                    $("#snsc input").val("");
-		                    break;
+							$("#ZWJGT").removeAttr("lay-verify");
+							$("#GCSZZZS").removeAttr("lay-verify");
+							$("#sndc").show();
+							$("#snsc").hide();
+							break;
+						case "室内双层":
+							$("#ZWJGT").attr("lay-verify", "required");
+							$("#GCSZZZS").attr("lay-verify", "required");
+							$("#snsc").show();
+
+							break;
+						case "室外钢木结构":
+							$("#ZWJGT").attr("lay-verify", "required");
+							$("#GCSZZZS").attr("lay-verify", "required");
+							$("#snsc").show();
+							break;
+						case "室外简易结构":
+							$("#ZWJGT").removeAttr("lay-verify");
+							$("#GCSZZZS").removeAttr("lay-verify");
+							$("#sndc").show();
+							$("#snsc").hide();
+							break;
 					}
 					form.render();
 				});
@@ -593,7 +590,7 @@ cursor:pointer;
 									var zwh = $("[name=ZWH]").val();
 									cj.setCookie('bgxx_zgh', zgh, 365);
 								    cj.setCookie('bgxx_zwh', zwh, 365); 
-								    window.location.href = "DJ/FYHZ.jsp?bgGuid="+bgGuid;
+	                                window.location.href = "DJ/FYHZ.jsp?bgGuid="+bgGuid;
 								} else {
 									layer.alert(data.msg);
 								}

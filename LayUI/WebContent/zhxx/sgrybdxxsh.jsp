@@ -107,6 +107,7 @@ data-type="pass">合 格</button>
 <script>
 	var dataguid = cj.queryString("dataGuid");
     var zhxxguid = cj.queryString("zhxxguid");
+    var dwbh = cj.queryString("dwbh");
     /* var shguid = cj.queryString("shguid");
     var shmc = cj.queryString("shmc"); */
 //获取图片路径以及审核项
@@ -229,7 +230,8 @@ layui.use(['form', 'layer', 'table'], function () {
                     data: {
                     	zhxxguid: zhxxguid,                    
                     	audit : auditing,
-                    	suggest : $("#SHYJ").val()
+                    	suggest : $("#SHYJ").val(),
+                    	dwbh:dwbh
                     },
                     cache: false,
                     dataType: "json",
