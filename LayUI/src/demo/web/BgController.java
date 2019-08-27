@@ -132,7 +132,7 @@ public class BgController {
 			if (type!=null) {
 				 sqlWhereZt += " AND ZT = ? ";
 			}
-			if(userGuid!=null){
+			if(userGuid!=null){//注释
 				sqlWhereZt += " AND DJSBH = ? AND ZT != '未提交'";
 			}
 			String sqlData = null;
