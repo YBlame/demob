@@ -15,7 +15,6 @@ $(document).ready(function(){
 					 guid : guid,
 					 guidBmodel :guidBmodel
 					},function(data){
-						alert(data.shyj)
 						//获取字段拼接表单
 						 $.post("doc/returnZdmList",{
 							 	guidBmodel :guidBmodel
@@ -215,11 +214,11 @@ $(document).ready(function(){
 										    	
 												fromInput += "  <div class=\"layui-form-item\">"
 												fromInput += "  	<div class=\"layui-upload\">"
-												fromInput += "  	 <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\">"+isform+result[i].zdmc+"<span style=\"font-size: 16px; float: right; color: red;\">"+data.shyj+"</span>"
+												fromInput += "  	 <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\">"+isform+result[i].zdmc+"<span class=\"shyjSpan\" style=\"font-size: 16px; float: right; color: red;\">"+data.shyj+"</span>"
 												fromInput += "  	 	<div class=\"layui-upload-list\" >"
 												fromInput += "  			<input id='"+result[i].zdm+"' name='"+result[i].zdm+"' style='display: none' value='"+dataZdm+"' lay-verify='required' lay-reqtext=\""+result[i].zdmc+"不能为空\" />"
 												fromInput += ""+img+""
-												fromInput += "  			<button type=\"button\" class=\"layui-btn\" style=\"display:block;margin:0 auto\" id=\""+result[i].zdm+"Btn\">"+result[i].zdmc+" </button>"
+												fromInput += "  			<button type=\"button\" class=\"layui-btn sgrybd\" style=\"display:block;margin:0 auto\" id=\""+result[i].zdm+"Btn\">"+result[i].zdmc+" </button>"
 												fromInput += "			</div>"
 												fromInput += "		 </blockquote>"
 												fromInput += "      </div>"
@@ -269,9 +268,8 @@ $(document).ready(function(){
 										        });
 										    }
 											if(zt=="false"){
+												$(".layui-upload-list button").prevAll(".file-iteme").children(':last-child').remove();
 												$(".layui-upload-list button").remove();
-												$("div").removeClass("file-iteme");
-												$(".file-iteme #del").remove();
 											}
 											picZdm = picZdm.substring(0,picZdm.length-1);
 											selectImg(picZdm)
@@ -335,10 +333,14 @@ $(document).ready(function(){
 									                         data:{zhxxguid : cj.getCookie('selected_expo_id') },    //参数值
 									                         type:"POST",   //请求方式
 									                         success:function(con){
+									                    	 $(".layui-upload-list button").prevAll(".file-iteme").children(':last-child').remove();
 									                    	 $(".layui-upload-list button").remove();
-															//$("div").removeClass("file-iteme");
 															$(".layui-layout-admin").remove();
 									                    	 layer.close(index);
+									                    	 
+									                    	 if($(".shyjSpan").length >0){
+					                                                $(".shyjSpan").remove();
+					                                            }
 									                     }
 									                    });
 									                       

@@ -105,10 +105,12 @@ $(document).ready(function() {
 											    success:function(data){
 													if(data.success){
 														var shyj = data.shyj;
-														var html ="<blockquote class=\"layui-elem-quote layui-text\"><span  id=\"shyjShow\" style=\"font-size: 15px; color: red;\">"+shyj+"</span></blockquote>";
+														var html ="<blockquote class=\"layui-elem-quote layui-text shyjDiv\"><span  id=\"shyjShow\" style=\"font-size: 15px; color: red;\">"+shyj+"</span></blockquote>";
 														$("#demo").before(html)
 													}
-													$("#toolbarDemo").remove();
+													if(!data.btn){
+														$("#toolbarDemo").remove();
+													}
 								                    var doclist = data.list;
 													var cols = [];
 													var types ={
@@ -253,6 +255,12 @@ $(document).ready(function() {
 																                         success:function(con){
 																                    	 	$("#toolbarDemo").remove();
 																                    	 	layer.close(index);
+																                    	 	table.reload('demo',{page:{curr:1}});
+												                                            parent.reloadExpo();
+												                                            if($(".shyjDiv").length >0){
+												                                                $(".shyjDiv").remove();
+												                                            }
+																                    	 	
 																                     	}
 																                    });
 												                		   
@@ -265,6 +273,11 @@ $(document).ready(function() {
 																                         success:function(con){
 																                    	 	$("#toolbarDemo").remove();
 																                    	 	layer.close(index);
+																                    	 	table.reload('demo',{page:{curr:1}});
+												                                            parent.reloadExpo();
+												                                            if($(".shyjDiv").length >0){
+												                                                $(".shyjDiv").remove();
+												                                            }
 																                     	}
 																                    });
 												                		   
@@ -277,6 +290,11 @@ $(document).ready(function() {
 															                         success:function(con){
 															                    	 	$("#toolbarDemo").remove();
 															                    	 	layer.close(index);
+															                    	 	table.reload('demo',{page:{curr:1}});
+											                                            parent.reloadExpo();
+											                                            if($(".shyjDiv").length >0){
+											                                                $(".shyjDiv").remove();
+											                                            }
 															                     	}
 															                    });
 												                		   
@@ -290,6 +308,11 @@ $(document).ready(function() {
 															                         success:function(con){
 															                    	 	$("#toolbarDemo").remove();
 															                    	 	layer.close(index);
+															                    	 	table.reload('demo',{page:{curr:1}});
+											                                            parent.reloadExpo();
+											                                            if($(".shyjDiv").length >0){
+											                                                $(".shyjDiv").remove();
+											                                            }
 															                     	}
 															                    });												               		   
 												                		   
@@ -302,11 +325,16 @@ $(document).ready(function() {
 																                         success:function(con){
 																                    	 	$("#toolbarDemo").remove();
 																                    	 	layer.close(index);
+																                    	 	table.reload('demo',{page:{curr:1}});
+												                                            parent.reloadExpo();
+												                                            if($(".shyjDiv").length >0){
+												                                                $(".shyjDiv").remove();
+												                                            }
 																                     	}
 																                    });
 												                		   
 												                	   }												                	   											                										              
-												                       
+												                	   
 												                   },
 												                   //btn2和cancel方法没有用到，可以不写
 												                   btn2: function (index, layero) {

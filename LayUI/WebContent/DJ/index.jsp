@@ -89,8 +89,8 @@
 	</div>
 </body>
 <script type="text/html" id="toolbarDemo">
-		 <button type="button" class="layui-btn layui-btn-normal"  lay-event="detail">新增</button>
-    <button type="button" class="layui-btn layui-btn-danger">删除</button>
+		 <button type="button" class="layui-btn layui-btn-normal"  lay-event="add">新增</button>
+    <button type="button" class="layui-btn layui-btn-danger" lay-event="delete">删除</button>
         <div class="layui-btn-container" style="float: right;">
             <i class="layui-icon layui-icon-ok-circle" style="font-size: 15px; color: #AFF42C;">
                 <span style="color: black">审核通过</span>
@@ -382,9 +382,54 @@
 							}
 						}
 					});
-						
-						
-						
+						//监听头工具栏事件
+						table.on('toolbar(test)',
+										function(obj) {
+											var checkStatus = table
+													.checkStatus(obj.config.id), data = checkStatus.data; //获取选中的数据
+											switch (obj.event) {
+											case 'add':
+												window.location.href = "DJ/BGXX.jsp";
+												
+												break;
+											case 'delete':
+												if(data.length === 0){
+											          layer.msg('请选择一行');
+											        } else {
+											        	layer.confirm('确认删除？', function(index) {
+											        		layer.msg('正在删除...', {icon: 16,shade: 0.3,time:1000});
+											        		var guid ="";
+											        		for (var i = 0; i < data.length; i++) {
+																guid +=data[i]["guid"]+","
+															}
+															var guidBmodel = $("#guid").val();
+															layer.close(index);
+															$.post("doc/deleteDoc", {
+																guid : guid,
+																guidBmodel :guidBmodel
+															}, function(result) {
+																if (result=="delFinish") {
+																	layer.msg('已删除!', {
+								                                        icon: 1, time: 800, end: function () {
+								                                        	table.reload('demo',{page:{curr:1}});
+								                                            parent.reloadExpo();
+								                                        }
+								                                    });
+																}else{
+																	layer.msg('删除失败', {
+								                                        icon: 1, time: 1000, end: function () {
+								                                           
+								                                        }
+								                                    });
+																}
+															});
+														});
+											        }
+											      break;
+											}
+											;
+										});
+
 				});
 	function toNoMsg(){
 	layer.alert('无权查看');

@@ -960,13 +960,23 @@ public class DocController {
 			}
 			map.put("parentName", parentName);
 		}
-		conn =LinkSql.getConn();
-		String sqlFindShyj ="SELECT SHYJ FROM bgshjl WHERE dwbh = '"+session.getAttribute("guid")+"' AND shxm='SGRYXX' AND zhbh='"+zhxxDj+"' ORDER BY shsj DESC  LIMIT 1";
-		ps = conn.prepareStatement(sqlFindShyj);
+		String sqlZT = "select ZT from "+tn+"";
+		ps = conn.prepareStatement(sqlZT);
 		rs = ps.executeQuery();
-		String shyj ="";
+		String shyj = "";
 		if(rs.next()){
-			shyj= rs.getObject("SHYJ").toString();
+			//当状态为true时显示按钮，未提交，未通过
+			//显示false时不显示按钮，已提交，已通过
+			String zt = rs.getObject("ZT").toString();
+			if(zt.equals("未审核")){
+				String sqlFindShyj ="SELECT SHYJ FROM bgshjl WHERE dwbh = '"+session.getAttribute("guid")+"' AND shxm='SGRYXX' AND zhbh='"+zhxxDj+"' ORDER BY shsj DESC  LIMIT 1";
+				ps = conn.prepareStatement(sqlFindShyj);
+				rs = ps.executeQuery();
+				if(rs.next()){
+					shyj= rs.getObject("SHYJ").toString();
+				}
+			}
+			
 		}
 		map.put("shyj", shyj);
 		rs.close();

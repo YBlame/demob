@@ -231,7 +231,7 @@ layui.use(['form', 'layer', 'table'], function () {
                     	zhxxguid: zhxxguid,                    
                     	audit : auditing,
                     	suggest : $("#SHYJ").val(),
-                    	dwbh:dwbh
+                    	dwbh: dwbh
                     },
                     cache: false,
                     dataType: "json",

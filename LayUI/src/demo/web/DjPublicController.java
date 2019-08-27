@@ -231,35 +231,43 @@ public class DjPublicController {
 			
 			
 			conn =LinkSql.getConn();
-			String sqlWhere ="";
-			/*switch(bmDj){
-				case "zzpz":
-					sqlWhere +=" AND ZT='已提交' or ZT='已通过'";
-					break;
-				case "hcxx":
-					sqlWhere +=" AND ZT='已提交' or ZT='已通过'";
-					break;
-				case "zzpz":
-					sqlWhere +=" AND ZT='已提交' or ZT='已通过'";
-					break;
-				case "zzpz":
-					sqlWhere +=" AND ZT='已提交' or ZT='已通过'";
-					break;
-			
-			}
-			String sqlTjzt = "";*/
-			
-			
-			String sql ="SELECT SHYJ FROM bgshjl WHERE dwbh = '"+session.getAttribute("guid")+"' AND shxm='"+bmDj+"' AND zhbh='"+zhxxDj+"' ORDER BY shsj DESC  LIMIT 1";
-			ps = conn.prepareStatement(sql);
+			String sqlZT = "select ZT from "+tn+"";
+			ps = conn.prepareStatement(sqlZT);
 			rs = ps.executeQuery();
+			boolean success = false;
+			String shyj = "";
 			if(rs.next()){
-				String shyj = rs.getObject("SHYJ").toString();
-				json.put("success", true);
-				json.put("shyj", shyj);
+				//当状态为true时显示按钮，未提交，未通过
+				//显示false时不显示按钮，已提交，已通过
+				boolean btnType = true;
+				String zt = rs.getObject("ZT").toString();
+				switch (zt) {
+				case "未提交":
+					btnType = true;
+					break;
+				case "未通过":
+					btnType = true;
+					String sql ="SELECT SHYJ FROM bgshjl WHERE dwbh = '"+session.getAttribute("guid")+"' AND shxm='"+bmDj+"' AND zhbh='"+zhxxDj+"' ORDER BY shsj DESC  LIMIT 1";
+					ps = conn.prepareStatement(sql);
+					rs = ps.executeQuery();
+					if(rs.next()){
+						shyj = rs.getObject("SHYJ").toString();
+						success = true;
+					}
+					break;
+				case "已提交":
+					btnType = false;
+					break;
+				case "已通过":
+					btnType = false;
+					break;
+				}
+				json.put("btn", btnType);
 			}else{
-				json.put("success", false);
+				json.put("btn", false);
 			}
+			json.put("success", success);
+			json.put("shyj", shyj);//审核意见
 			//表头
 			json.put("list", list);
 			

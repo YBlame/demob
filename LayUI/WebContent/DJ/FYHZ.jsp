@@ -57,12 +57,12 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<tr id="addTr">
 									<td></td>
-									<td colspan="2"><select id="XMMC_DATA" name="xm[0].XMMC_DATA" class="proName" lay-filter="projectNameSel">	
+									<td colspan="2"><select id="XMMC_DATA" name="xm[0].XMMC_DATA" class="proName" lay-filter="projectNameSel" >	
 
 									</select></td>
-									<td colspan="2"><select name="xm[0].XMDES_DATA" id="XMDES_DATA" class="proDescSel" lay-filter="projectDescSel">
+									<td colspan="2"><select name="xm[0].XMDES_DATA" id="XMDES_DATA" class="proDesc" lay-filter="projectDescSel">
 
 									</select></td>
 									<td colspan="1"><input type="text" name="xm[0].DJ" id="DJ0" class="layui-input " readonly="readonly"></td>
@@ -82,7 +82,7 @@
 									<td rowspan="2" colspan="2">其他</td>
 									<td colspan="2">施工押金</td>
 									<td colspan="2">
-									<select name="SGYJ_DATA" class="SGYJ" lay-filter="sgyjFilter">
+									<select name="SGYJ_DATA" id="SGYJ_DATA" class="SGYJ"  lay-filter="sgyjFilter">
 
 									</select>
 									</td>
@@ -106,7 +106,7 @@
 								</tr>
 							</tbody>
 						</table>
-						<button type="button" class="layui-btn layui-btn-normal" lay-submit=""  style="float:right;" lay-filter="fyhz_submit_btn">提交</button>
+						<button type="button" class="layui-btn layui-btn-normal" lay-submit="" id="fyhzBtn"  style="float:right;" lay-filter="fyhz_submit_btn">提交</button>
 					</f>
 				</div>
 			</div>
@@ -120,6 +120,7 @@
 			layui.use(['form', 'laydate', 'layer', 'table'], function () {
                         var form = layui.form, laydate = layui.laydate, laypage = layui.laypage, layer = layui.layer, table = layui.table;
                         var iNums = "";
+                        var isEdit = "";
                         var asyncBool = "";
                         function getRandomNum() {
                             return parseInt(Math.random() * 50);
@@ -136,7 +137,7 @@
                     	$("[name=zhxx]").val(selected);
                     	$("[name=zgh]").val(zgh);
                     	$("[name=zwh]").val(zwh);
-                        //加载项目名称
+                    	 //加载项目名称
                         var xmmc_select = function (isadd) {
                             asyncBool = isadd === true ? false : true;
                	             $.ajax({
@@ -168,7 +169,6 @@
                                         	 xmID = d[i].ID;
                                              xmmc += '<option value="' + xmName + '" id="' + xmID + '">' + xmName + '</option>';
                                         }
-                                       
                                     }
                                     if (isadd) {
                                         $("[id='XMMC_DATA_" + iNums + "']").html(xmmc);
@@ -180,8 +180,9 @@
                                 }
                             });
                         };
-                        //加载项目描述
+                      //加载项目描述
                         var xmms_select = function (isadd, elemId) {
+                        	asyncBool = isadd === true ? false : true;
                             var xmmc = "";
                             if (isadd) {
                                 xmmc = $("[id=XMMC_DATA_" + elemId + "] option:selected").val();
@@ -194,6 +195,7 @@
                                 url: 'dj/GetXmDesByName',
                                 data: { "xmmc": xmmc },
                                 cache: false,
+                                async: asyncBool,
                                 dataType: 'JSON',
                                 success: function (d) {
                                     var xmms = '<option value="" >请选择</option>';
@@ -213,9 +215,9 @@
                                 }
                             });
                         };
-                        
                         //项目施工押金
                         var sgyj_select = function (isadd, elemId) {
+                        	asyncBool = isadd === true ? false : true;
                             var xmmc = "";
                             if (isadd) {
                                 xmmc = $("[name=SGYJ_DATA_" + elemId + "] option:selected").val();
@@ -228,6 +230,7 @@
                                 url: 'dj/GetFybzSgyj',
                                 data: { },
                                 cache: false,
+                                async: false,
                                 dataType: 'JSON',
                                 success: function (d) {
                                 	var sgmc= '<option value="" >请选择</option>' ;
@@ -237,7 +240,7 @@
                                         var sgID = d[i].id;
                                         var sgFY = d[i].fy;
                                         var sgMS = d[i].XMMS;
-                                        sgmc += '<option value="' + sgFY + '" id="' + sgID + '">' + sgMS + '</option>';
+                                        sgmc += '<option value="' + sgMS+","+sgFY + '" id="' + sgID + '">' + sgMS+","+sgFY + '</option>';
                                     }
                                     if (isadd) {
                                         $("[name='SGYJ_DATA_" + iNums + "']").html(sgmc);
@@ -248,13 +251,92 @@
                                 }
                             });
                         };
-                        xmmc_select(false);
-                        sgyj_select(false);
+                        
+                    	//查询是否为编辑
+           	             $.ajax({
+                            type: 'POST',
+                            url: 'bg/findEdit',
+                            data :{
+                            	"zgh" : zgh,
+                            	"zwh" : zwh,
+                            	"zhxx":selected
+                            },
+                            cache: false,
+                            async :false,
+                            success: function (data) {
+                                if(data.success){
+                                	isEdit = "true";
+                                	$("#addTr").remove();
+                                	var fy = data.fyList;
+            						
+            						for (var i = 0; i < fy.length; i++) {
+            							var tr = "";
+            							 iNums = getRandomNum();
+            							 var strs= new Array(); //定义一数组 
+            							 strs=fy[i].XMDES_DATA.split(","); //字符分割 
+            							 tr += "<tr>";
+            							 tr += "<td><input type=\"checkbox\" name=\"checks\" cnum=" + iNums + " lay-skin=\"primary\" lay-filter=\"allChoose\" class=\"checks\"></td>";
+            							 tr += "<td colspan=\"2\"><select id=\"XMMC_DATA_" + iNums + "\" name=\"xm["+i+"].XMMC_DATA\" value='"+fy[i].XMMC_DATA+"' class=\"proName\"  lay-filter=\"editNameSel\" ></select></td>";
+            							 tr += "<td colspan=\"2\"><select name=\"xm["+i+"].XMDES_DATA\" id=\"XMDES_DATA_" + iNums + "\" value='"+fy[i].XMMC_DATA+"' class=\"proDesc\" lay-filter=\"editDescSel\"></select></td>";
+            							 tr += "<td colspan=\"1\"><input type=\"text\" name=\"xm["+i+"].DJ\" id=\"DJ_" + iNums + "\" value='"+fy[i].DJ+"' class=\"layui-input\" readonly=\"readonly\"></td>";
+            							 tr += "<td><input type=\"text\" name=\"xm["+i+"].SL\" id=\"SL_" + iNums + "\" value='"+fy[i].SL+"' class=\"layui-input binputs\"></td>"
+            							 tr += "<td><input type=\"text\" name=\"xm["+i+"].HXJ\" id=\"XJ_" + iNums + "\" value='"+fy[i].HXJ+"' class=\"layui-input XJ_value\" readonly=\"readonly\"></td>"
+            							 tr += "</tr>";
+            							 $(".addlists").before(tr);
+            							 xmmc_select(true);
+            							 $("#XMMC_DATA_" + iNums + "").val(fy[i].XMMC_DATA);
+            							 form.render("select");
+            							 xmms_select(true,iNums);
+            							 $("#XMDES_DATA_" + iNums + "").val(fy[i].XMDES_DATA);
+            							 form.render("select");
+            							 
+            							 
+            							
+            						}
+            						
+            						var xm = data.xmList;	
+            						for (var a = 0; a < xm.length; a++) {
+            							$("[name=SGYJJE]").val(xm[a].SGYJ);
+            							$("[name=XJ]").val(xm[a].XJ);
+            							$("[name=ZNJ]").val(xm[a].ZNJ);
+            							$("[name=ZJ]").val(xm[a].ZJ);
+            							sgyj_select(false);
+            							$("#SGYJ_DATA option[value='" + xm[a].SGYJ_DATA + "']").attr("selected", true);
+            							form.render("select");
+            							
+            						}
+            						
+                                	$("#fyhzBtn").attr("lay-filter","fyhz_edit_btn");
+                                	
+                                }else{
+                                	isEdit = "false";
+                                	$("#addTr").show();
+                                }
+                                form.render();
+                            }
+                            
+                        });
+                    	
+                       
+                        
+                       
+                        if(isEdit=="false"){
+                        	xmmc_select(false);
+                        	sgyj_select(false);
+                        }
+                        
                         //项目名称监听事件
                         form.on('select(projectNameSel)',
                                 function () {
                                     $("[id=DJ0]").val("");
                                     xmms_select(false);
+                                });
+                        //项目名称编辑监听事件
+                        form.on('select(editNameSel)',
+                                function (index) {
+                                    var elemId = index.elem.id.split('_')[2];
+                                    $("[id=DJ_" + elemId + "]").val("");
+                                    xmms_select(true, elemId);
                                 });
                         //新增项目名称监听事件
                         form.on('select(addNameSel)',
@@ -263,6 +345,42 @@
                                     $("[id=DJ_" + elemId + "]").val("");
                                     xmms_select(true, elemId);
                                 });
+                        //项目描述修改监听事件
+                         form.on('select(editDescSel)',
+                         function (index) {
+                             var sums = 0;
+                             var elemId = index.elem.id.split('_')[2];
+                             var dj = index.value;
+                             var strs= new Array(); //定义一数组 
+                             strs=dj.split(","); //字符分割 
+                             $('[id=DJ_' + elemId + ']').val(strs[1]);
+                             if ($('[id=SL_' + elemId + ']').val() != '') {
+                                 var sl = Number($('[id=SL_' + elemId + ']').val());
+                                 var xj = strs[1] * sl;
+
+                                 $("[id=XJ_" + elemId + "]").val(xj);
+
+                                 $(".XJ_value").each(function () {
+                                     var cid = $(this).attr("id");
+
+                                     sums += Number($("[id='" + cid + "']").val());
+                                 });
+                                 $("[name=XJ]").val(sums);//总金额
+                                 var sgyj = Number($('[name=SGYJJE]').val());
+     							var znj;
+     							var znjzt = $("#znjzt").val()
+     							if(znjzt=="true"){
+     								znj= xj / 2;
+     								Number(znj);
+     							}
+     							$('[name=ZNJ]').val(znj)
+     							var zj = xj+sgyj+znj
+                                 $("[name=ZJ]").val(zj);//小计
+                                 
+                                 
+                             }
+                         });
+                        
                         //项目描述监听事件
                         form.on('select(projectDescSel)', function (index) {
                             var sums = 0;
@@ -273,7 +391,21 @@
 
                             if ($('[id=SL0]').val() != '') {
                                 var sl = Number($('[id=SL0]').val());
-                                var xj = strs[1] * sl;
+                                
+                                var xj="";
+                                if(strs[1]!=undefined)
+                                	{
+                                	xj=strs[1]*s1;
+                                	
+                                
+                                	}
+                                else
+                                	{
+                               	 var zj= $('[name=ZJ]').val();
+                                 $('[name=ZJ]').val(zj-$('#XJ0').val());
+                                	 xj =0 * sl;
+                                	}
+                               
 
                                 $("[id=XJ0]").val(xj);
 
@@ -284,6 +416,7 @@
                                 });
                                 $("[name=XJ]").val(sums);//小计
                                 
+                              
                             }
                         });
                         //新增项目描述监听事件
@@ -297,7 +430,16 @@
                                             $('[id=DJ_' + elemId + ']').val(strs[1]);
                                             if ($('[id=SL_' + elemId + ']').val() != '') {
                                                 var sl = Number($('[id=SL_' + elemId + ']').val());
-                                                var xj = strs[1] * sl;
+                                                var xj="";
+                                                if(strs[1]!=undefined)
+                                                	{
+                                                	xj=strs[1]*s1;
+                                                	}
+                                                else
+                                                	{
+                                                	 xj =0 * sl;
+                                                	}
+                                               
 
                                                 $("[id=XJ_" + elemId + "]").val(xj);
 
@@ -326,7 +468,9 @@
                         form.on('select(sgyjFilter)', function (index) {
                             var sums = 0;
                            var dj  = index.value;
-                            $('[name=SGYJJE]').val(dj);
+                           var strs= new Array(); //定义一数组 
+                           strs=dj.split(","); //字符分割 
+                            $('[name=SGYJJE]').val(strs[1]);
                                 var xj = Number($('[name=XJ]').val());
 								var sgyj = Number($('[name=SGYJJE]').val());
 								var zj = xj+sgyj
@@ -376,7 +520,7 @@
                                     + '	<input type="checkbox" name="checks" cnum="' + iNums + '" lay-skin="primary" lay-filter="allChoose" class="checks">\n'
                                     + ' </td>\n'
                                     + '<td colspan="2">\n'
-                                    + '<select id="XMMC_DATA_' + iNums + '" name="xm[' + indexCount +'].XMMC_DATA" class="proName" lay-filter="addNameSel">\n'
+                                    + '<select id="XMMC_DATA_' + iNums + '" name="xm[' + indexCount +'].XMMC_DATA" class="proName"  lay-filter="addNameSel">\n'
                                     +'</select>\n'
                                     + '</td>\n'
                                     + '<td colspan="2">\n'
@@ -440,9 +584,46 @@
 							var zj = xj+sgyj+znj
                             $("[name=ZJ]").val(zj);//小计
                         });
-                        
-                        /* 监听提交 */
+                     var countName = 0;
+                   	 var countDesc=0;
+                   	 var countNum=0;
+                     var formValidate=function()
+                      {
+                    	  $('.proName').each(function(d){
+                     		 if ($(this).val() == "") {
+                     			 countName++;
+                     			 layer.alert('请选择项目名称') ;return false;
+                     	        }
+                     	});
+                     	if(countName==0)
+                     		{
+                     		$('.proDesc').each(function(d)
+                                   	{
+                                  		 if ($(this).val() == "")
+                                  		 {
+                                  			 countDesc++;
+                                  			 layer.alert('请选择项目描述') ;return false;
+                                  	     }
+                                  	});
+                     		}
+                     	if(countName==0&& countDesc==0)
+                     		{
+	                     	$('.binputs').each(function(d)
+	                     	{
+	                     		if($(this).val()=="")
+	                     			{
+	                     			countNum++;
+	                     			layer.alert('请填写数量');return false;
+	                     			}
+	                     	});
+                     		}
+                      }
+                        /* 监听提交保存按钮 */
                         form.on('submit(fyhz_submit_btn)', function (data) {
+                        	formValidate();
+                        	
+                        	if (countName === 0&&countDesc===0&&countNum===0)
+                        		{
                         	var fy =$("form").serialize();
                         	$.ajax({
                        		        type:"POST",
@@ -462,9 +643,33 @@
                        		           alert("发生错误："+ jqXHR.status);
                        		        }
                         		});
-
+                        		}
                             return false;
                         });
+                        /* 监听提交保存按钮 */
+                        form.on('submit(fyhz_edit_btn)', function (data) {
+                        	var fy =$("form").serialize();
+                        	$.ajax({
+                       		        type:"POST",
+                       		        url:"bg/updateFyhz",
+                       		      	data: fy,
+		                            dataType:"json",
+                       		        success:function(data){
+                       					var bgGuid = $("#bgGuid").val();
+                       		           if(data.success){
+                       						layer.alert(data.msg);
+                       						window.location.href = "DJ/BGXX_SHOW.jsp?bgGuid="+bgGuid
+                       		           }else{
+                       					  layer.alert(data.msg);
+                       		           }
+                       		        },
+                       		        error:function(jqXHR){
+                       		           alert("发生错误："+ jqXHR.status);
+                       		        }
+                        		});
+                            return false;
+                        });
+                        
                         
                     });
 
