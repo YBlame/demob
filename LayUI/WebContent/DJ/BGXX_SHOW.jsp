@@ -308,7 +308,7 @@ cursor:pointer;
 									<td rowspan="2" colspan="2">其他</td>
 									<td colspan="2">施工押金</td>
 									<td colspan="2">
-									<span style="text-align: center;"></span>
+									<input type="text" name="SGYJ_DATA" id="SGYJ_DATA" class="layui-input" readonly="readonly">
 									</td>
 									<td><input type="text" name="SGYJJE" class="layui-input" readonly="readonly"></td>
 								</tr>
@@ -507,9 +507,8 @@ cursor:pointer;
 								case "pic":
 									fromInput += "<div class=\"layui-form-item\"> <div class=\"layui-upload\"> <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\"><font color=red>*</font>"
 										+ result[i].zdmc
-										+ "： <div class=\"layui-upload-list\" id=\"div\"><input id='" + result[i].zdm + "' name='" + result[i].zdm + "' style='display: none' lay-verify=\"required\"  lay-reqtext=\"" + result[i].zdmc + "不能为空\" /><button type=\"button\" class=\"layui-btn append\" style=\"display:block;margin:0 auto\" lay-filter=\"" + result[i].zdm + "\" id=\"" + result[i].zdm + "Btn\"> "
-										+ result[i].zdmc
-										+ "</button></div> </blockquote> </div> </div>";
+										+ "： <div class=\"layui-upload-list\" id=\"div\"><input id='" + result[i].zdm + "' name='" + result[i].zdm + "' style='display: none' lay-verify=\"required\"  lay-reqtext=\"" + result[i].zdmc + "不能为空\" /><input type=\"hidden\" id=\"" + result[i].zdm + "Btn\" /> "
+										+ "</div> </blockquote> </div> </div>";
 									break;
 								case "date":
 									fromInput += "<div class=\"layui-inline\"> <label class=\"layui-form-label\">"
@@ -522,7 +521,7 @@ cursor:pointer;
 										+ "</label> <div class=\"layui-input-inline\"> <input type=\"text\" name=\"" + result[i].zdm + "\" id=\"date\" lay-verify=\"date\" placeholder=\"yyyy-MM-dd\" autocomplete=\"off\" class=\"layui-input date\"> </div> </div>";
 									break;
 							}
-							$(".layui-layout-admin").before(fromInput);
+							$(".layui-form-pane").append(fromInput);
 							selectImg(result[i].zdm)
 						}
 					}
@@ -615,6 +614,7 @@ cursor:pointer;
 							$("[name=XJ]").val(xm[i].XJ);
 							$("[name=ZNJ]").val(xm[i].ZNJ);
 							$("[name=ZJ]").val(xm[i].ZJ);
+							$("[name=SGYJ_DATA]").val(xm[i].SGYJ_DATA)
 						}
 						
 			        },

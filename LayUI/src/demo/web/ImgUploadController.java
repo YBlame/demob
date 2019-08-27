@@ -33,7 +33,8 @@ public class ImgUploadController {
 	@ResponseBody
 	public ImgResult uploadPic(MultipartFile file, HttpServletRequest request) throws Exception {
 		HttpSession session =request.getSession();
-		String userPhone = (String) session.getAttribute("SJ");
+		String user = (String) session.getAttribute("guid");
+		String zhxxDj = (String) session.getAttribute("zhxxDj");
 		String oriName = "";
 		ImgResult result = new ImgResult();
 		Map<String, String> dataMap = new HashMap<>();
@@ -51,8 +52,12 @@ public class ImgUploadController {
 			System.out.println("fileName：" + file.getOriginalFilename());
 			
 			String url = ReadXml.urlPath(request);
-			String fileUrl =url+userPhone+"\\";
+			String fileUrl =url+zhxxDj+"\\";
 			File dir = new File(fileUrl);
+			FileUtils.judeDirExists(dir);
+			
+			fileUrl =fileUrl+user+"\\";
+			dir = new File(fileUrl);
 			FileUtils.judeDirExists(dir);
 			
 			String path = fileUrl + newName;
@@ -64,7 +69,7 @@ public class ImgUploadController {
 			// 6.返回保存结果信息
 			result.setCode(0);
 			dataMap = new HashMap<>();
-			dataMap.put("src", "/kh/"+userPhone+"/"+newName);
+			dataMap.put("src", "/kh/"+zhxxDj+"/"+user+"/"+newName);
 			String picName = newName.substring(0, newName.indexOf("."));
 			result.setData(dataMap);
 			result.setName(picName);
