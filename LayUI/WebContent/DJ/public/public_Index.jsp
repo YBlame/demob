@@ -37,7 +37,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					</div>
 				</div>
 			</form>
-			
 			<table class="layui-hide"  id="demo" lay-filter="test"></table>
 				</div>
 			<script type="text/html" id="barDemo">
@@ -49,10 +48,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="update">编辑</button>
 					<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">删除</button>
 					<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="tijiao">提交审核</button>
-					
-					<div class="layui-btn-container" style="float: right;"> 				
-					<span  id="shyy" style="font-size: 15px; color: red;"></span> 				
-					</div>
 				</div>
 			</script>
 		<script src="statics/layui/layui.js"></script>

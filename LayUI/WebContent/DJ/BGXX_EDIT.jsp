@@ -272,7 +272,7 @@ cursor:pointer;
 							</div>
 						</div>
 					</div>
-
+					</div>
 					<div class="layui-form-item layui-layout-admin">
 						<div class="layui-input-block">
 							<div class="layui-footer" style="left: 0;">
@@ -334,11 +334,20 @@ cursor:pointer;
 								
 								
 								if (n.indexOf("_ZT")!=-1) {
+<<<<<<< HEAD
+									if (v == '已通过'||v=='待审核') {
+=======
 									if (v == '通过') {
+>>>>>>> branch 'master' of https://github.com/YBlame/demob.git
 										var btn = n.substring(0,n.length-3);
 										btn = btn.toLocaleLowerCase();
+<<<<<<< HEAD
+										$("#"+btn+"Btn").prevAll(".file-iteme").children(':last-child').remove();
+										$("#"+btn+"Btn").remove();
+=======
 										$("#"+btn+"Btn").hide();
 										$("#"+btn+"Btn").prevAll().removeClass("file-iteme")
+>>>>>>> branch 'master' of https://github.com/YBlame/demob.git
 									}else{
 										if(btn="ZWTZ"){
 											$("#zwtzBtn").show();

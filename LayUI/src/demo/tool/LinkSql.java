@@ -18,13 +18,8 @@ public class LinkSql {
 	private static String driver = "com.mysql.jdbc.Driver";
 	
 	private static String url = "jdbc:mysql://localhost/layui?characterEncoding=UTF-8";
-	private static String username = "root";
-	private static String password = "sa";
-	
-	/*private static String url = "jdbc:mysql://101.37.160.115/layui?characterEncoding=UTF-8";
-	private static String username = "djsxt";
-	private static String password = "DJSXT!@#";*/
-
+	private static String username = "y";
+	private static String password = "xing";
 	private static Connection conn = null;
 	private static PreparedStatement ps = null;	
 

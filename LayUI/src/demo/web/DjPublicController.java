@@ -166,8 +166,7 @@ public class DjPublicController {
 		return list;
 	}
 
-	@RequestMapping(value = "findDoc")
-	@ResponseBody
+	
 	/**
 	 * 获取表头
 	 * 
@@ -180,9 +179,14 @@ public class DjPublicController {
 	 * @return
 	 * @throws Exception
 	 */
+	@RequestMapping(value = "findDoc")
+	@ResponseBody
 	public Object findDoc(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid, Integer num,
 			Integer limit) throws Exception {
+		JSONObject json = new JSONObject();
 		try {
+			
+			
 			HttpSession session = request.getSession();
 			final String user = (String) session.getAttribute("user");
 			final String role = (String) session.getAttribute("role");
@@ -190,6 +194,7 @@ public class DjPublicController {
 			String bmDj = (String) session.getAttribute("bmDj");
 			String typeDj = (String) session.getAttribute("typeDj");
 			list = new ArrayList<Map<String, Object>>();
+			List<Map<String, Object>> shlist = new ArrayList<Map<String, Object>>();
 			String tn = null;
 			ResultSetMetaData md = null;
 			int columnCount = 0;
@@ -222,12 +227,28 @@ public class DjPublicController {
 				}
 				list.add(rowData);
 			}
+			
+			conn =LinkSql.getConn();
+			String sql ="SELECT SHYJ FROM bgshjl WHERE dwbh = '"+session.getAttribute("guid")+"' AND shxm='"+bmDj+"' AND zhbh='"+zhxxDj+"' ORDER BY shsj DESC  LIMIT 1";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				String shyj = rs.getObject("SHYJ").toString();
+				json.put("success", true);
+				json.put("shyj", shyj);
+			}else{
+				json.put("success", false);
+			}
+			
+			//表头
+			json.put("list", list);
+			
 		} finally {
 			ps.close();
 			rs.close();
 			conn.close();
 		}
-		return list;
+		return json;
 	}
 
 	/**

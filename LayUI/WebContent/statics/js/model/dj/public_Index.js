@@ -103,7 +103,16 @@ $(document).ready(function() {
 											    data:{guid:guid,num:num},    //参数值
 											    type:"POST",   //请求方式
 											    success:function(data){
-								                    var doclist = data;
+													if(data.success){
+														var shyj = data.shyj;
+														var html ="<blockquote class=\"layui-elem-quote layui-text\"><span  id=\"shyjShow\" style=\"font-size: 15px; color: red;\">"+shyj+"</span></blockquote>";
+														$("#demo").before(	)
+													}
+												
+												
+												
+												
+								                    var doclist = data.list;
 													var cols = [];
 													var types ={
 															type : 'checkbox',
