@@ -587,12 +587,13 @@
                      var countName = 0;
                    	 var countDesc=0;
                    	 var countNum=0;
-                     var formValidate=function()
-                      {
+                     var formValidate=function(){
                     	  $('.proName').each(function(d){
                      		 if ($(this).val() == "") {
                      			 countName++;
                      			 layer.alert('请选择项目名称') ;return false;
+                     	        }else{
+                     	        	countName=0;
                      	        }
                      	});
                      	if(countName==0)
@@ -603,6 +604,8 @@
                                   		 {
                                   			 countDesc++;
                                   			 layer.alert('请选择项目描述') ;return false;
+                                  	     }else{
+                                  	    	countDesc=0;
                                   	     }
                                   	});
                      		}
@@ -614,6 +617,8 @@
 	                     			{
 	                     			countNum++;
 	                     			layer.alert('请填写数量');return false;
+	                     			}else{
+	                     				countNum=0;
 	                     			}
 	                     	});
                      		}
@@ -621,9 +626,8 @@
                         /* 监听提交保存按钮 */
                         form.on('submit(fyhz_submit_btn)', function (data) {
                         	formValidate();
-                        	
                         	if (countName === 0&&countDesc===0&&countNum===0)
-                        		{
+                        	{
                         	var fy =$("form").serialize();
                         	$.ajax({
                        		        type:"POST",

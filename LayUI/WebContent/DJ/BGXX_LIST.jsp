@@ -230,8 +230,25 @@
 	  //监听行单击事件（单击事件为：rowDouble）
 	  table.on('row(Table1)', function(obj){
 	    	var data = obj.data;		
+	    	var zhxx = cj.getCookie('selected_expo_id');
 	    	var guid = data['guid'];
-		    window.location.href = "DJ/BGXX_EDIT.jsp?bgGuid="+guid;
+	    	$.ajax({
+           		        type:"POST",
+           		        url:"bg/findAllZt",
+           		      	data: {"zhxx":zhxx,"bgGuid":guid},
+                        dataType:"json",
+           		        success:function(data){
+           		           	if(data.msg){
+           						window.location.href = "DJ/FYHZ.jsp?bgGuid="+guid;
+           		           }else{
+           						window.location.href = "DJ/BGXX_EDIT_JJ.jsp?bgGuid="+guid;
+           		           }
+           		        },
+           		        error:function(jqXHR){
+           		           alert("发生错误："+ jqXHR.status);
+           		        }
+            });
+		    
 	  });
 	  
 	  table.on('row(Table2)', function(obj){

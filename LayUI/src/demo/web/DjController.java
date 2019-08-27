@@ -549,7 +549,28 @@ public class DjController {
 		}
 		return desList;
 	}
-
+	// 获取展位是否被选中
+	@RequestMapping(value = "findZwhSelected")
+	@ResponseBody
+	public JSONObject findZwhSelected(HttpServletRequest request, String ghbh,String zwh,String zhxx) throws Exception {
+		conn = LinkSql.getConn();
+		HttpSession session = request.getSession();
+		JSONObject json = new JSONObject();
+		List<Map<String, Object>> desList = new ArrayList<Map<String, Object>>();
+		String sql = "select * from bgxx_"+zhxx+" where DJSBH=? and ZGH=? and ZWH=?";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, session.getAttribute("guid").toString().trim());
+		ps.setString(2, ghbh);
+		ps.setString(3, zwh);
+		rs = ps.executeQuery();
+		if(rs.next()){
+			json.put("success", false);
+			json.put("msg", "展位已被占用");
+		}else{
+			json.put("success", true);
+		}
+		return json;
+	}
 	/**
 	 * 查看当前搭建商是否存在报馆信息
 	 * 

@@ -104,7 +104,7 @@ cursor:pointer;
 								<font color=red>*</font>展馆号
 							</label>
 							<div class="layui-input-inline">
-								<select disabled="disabled" lay-filter="ZGH" name="ZGH" placeholder="请选择展馆号"  s lay-verify="required" value=""
+								<select  lay-filter="ZGH" name="ZGH" disabled="disabled"  placeholder="请选择展馆号"   lay-verify="required" value=""
 									lay-reqtext="展馆号不能为空">
 
 								</select>
@@ -115,7 +115,7 @@ cursor:pointer;
 								<font color=red>*</font>展位号
 							</label>
 							<div class="layui-input-inline" style="width:182px">
-								<select lay-filter="ZWH" name="ZWH" disabled="disabled" placeholder="请选择展位号" lay-verify="required" value=""
+								<select lay-filter="ZWH" name="ZWH"  disabled="disabled" placeholder="请选择展位号" lay-verify="required" value=""
 									lay-reqtext="展位号不能为空">
 
 								</select>
@@ -128,7 +128,7 @@ cursor:pointer;
 						</label>
 						<div class="layui-input-inline" style="width: 504px">
 							<input type="text" id="CZQYGSQC" name="CZQYGSQC" lay-verify="required" placeholder="请输入参展公司"
-								lay-reqtext="参展公司不能为空"  disabled="disabled" autocomplete="off" class="layui-input">
+								lay-reqtext="参展公司不能为空"   autocomplete="off" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-form-item">
@@ -138,7 +138,7 @@ cursor:pointer;
 							</label>
 							<div class="layui-input-inline">
 								<input type="text" id="CZSZSXCFZR" name="CZSZSXCFZR" lay-verify="required"
-									placeholder="请输入现场负责人" disabled="disabled" lay-reqtext="现场负责人不能为空" autocomplete="off"
+									placeholder="请输入现场负责人"  lay-reqtext="现场负责人不能为空" autocomplete="off"
 									class="layui-input">
 							</div>
 						</div>
@@ -148,7 +148,7 @@ cursor:pointer;
 							</label>
 							<div class="layui-input-block">
 								<input type="text" id="CZSSJ" name="CZSSJ" lay-verify="required|phone|number"
-									placeholder="请输入手机号" disabled="disabled" lay-reqtext="负责人手机号不能为空" autocomplete="off"
+									placeholder="请输入手机号"  lay-reqtext="负责人手机号不能为空" autocomplete="off"
 									class="layui-input">
 							</div>
 						</div>
@@ -165,7 +165,7 @@ cursor:pointer;
 							</label>
 							<div class="layui-input-block">
 								<input type="text" id="DJSXCAQFZR" name="DJSXCAQFZR" lay-verify="required"
-									placeholder="请输入安全负责人" disabled="disabled" lay-reqtext="安全负责人不能为空" autocomplete="off"
+									placeholder="请输入安全负责人"  lay-reqtext="安全负责人不能为空" autocomplete="off"
 									class="layui-input">
 							</div>
 						</div>
@@ -175,7 +175,7 @@ cursor:pointer;
 							</label>
 							<div class="layui-input-block">
 								<input type="text" id="DJSSJ" name="DJSSJ" lay-verify="required|phone|number"
-									placeholder="请输入手机号" disabled="disabled" lay-reqtext="安全负责人手机号不能为空" autocomplete="off"
+									placeholder="请输入手机号"  lay-reqtext="安全负责人手机号不能为空" autocomplete="off"
 									class="layui-input">
 							</div>
 						</div>
@@ -312,10 +312,6 @@ cursor:pointer;
 					},
 					success: function (data) {
 						if (data != null) {
-							$("#fyxxzt").val(data.fyxxzt);
-							if(data.fyxxzt=="未审核"||data.fyxxzt=="已通过"){
-								$("#submitBtn").html("保存");
-							}
 							shzt = data.desList[0].ZT;
 							$.each(data.desList[0], function (n, v) {
 								$('#' + n + '').html(v);
@@ -338,13 +334,6 @@ cursor:pointer;
 								}
 								
 								if (n.indexOf("_ZT")!=-1) {
-									if (v == '已通过'||v=='未审核') {
-										var btn = n.substring(0,n.length-3);
-										btn = btn.toLocaleLowerCase();
-										
-										$("#"+btn+"Btn").prevAll(".file-iteme").children(':last-child').remove();
-										$("#"+btn+"Btn").remove();
-									}else{
 										if(btn="ZWTZ"){
 											$("#zwtzBtn").show();
 											$("#zwjgtBtn").show();
@@ -354,7 +343,6 @@ cursor:pointer;
 											$("#gcszzzsBtn").prevAll().attr("class","file-iteme")
 											
 										}
-									}
 								}
 								if (v.indexOf("/kh/")!=-1) {
 									if (v != "") {
@@ -372,38 +360,8 @@ cursor:pointer;
 										$("#"+ btn+ "Btn").removeAttr("style");
 									}
 								}
-
 								form.render();
 							});
-
-							if (shzt == '拒绝') {
-								var zgh = $("[name='ZGH']").val();
-								var zwh = $("[name='ZWH']").val();
-								var zhxx = cj.getCookie('selected_expo_id');
-								$.ajax({
-									type: "POST",
-									url: "bg/GetShjlByGuid",
-									data: {
-										"bgGuid": bgGuid,
-										"zgh" : zgh,
-										"zwh" :zwh,
-										"zhxx" :zhxx
-									},
-									success: function (result) {
-										if (result.length > 0) {
-											for (var i = 0; i < result.length; i++) {
-												var shdx = $("#djsshdx").val();
-												alert(result[i].SHXM)
-												shdx +=result[i].SHXM+",";
-												$("#djsshdx").val(shdx);
-												$("#"+result[i].SHXM.toLowerCase()+"").parent().before("<span style=\"font-size: 19px; float: right; color: red;\">"+ result[i].SHYJ +"</span>");
-											}
-										}
-									}
-								});
-							}
-
-
 						}
 					}
 				});
@@ -593,8 +551,7 @@ cursor:pointer;
 							.getCookie('selected_expo_id');
 						$("#zhxxGuid").val(selected);
 						var bgGuid =$("#bgGuid").val();
-						var formList = $('.layui-form-pane')
-							.serialize()
+						var formList = $('.layui-form-pane').serialize()
 							
 							
 						$.ajax({
@@ -613,7 +570,6 @@ cursor:pointer;
 									    cj.setCookie('bgxx_zwh', zwh, 365); 
 									    window.location.href = "DJ/FYHZ.jsp?bgGuid="+bgGuid;
 									}
-									
 								} else {
 									layer.alert(data.msg);
 								}
@@ -628,8 +584,7 @@ cursor:pointer;
 
 				//获取展位信息
 				var zhguid = cj.getCookie('selected_expo_id');
-				$
-					.ajax({
+				$.ajax({
 						type: 'GET',
 						url: 'dj/findZgh',
 						cache: false,
@@ -654,6 +609,29 @@ cursor:pointer;
 
 				form.on('select(ZGH)', function (data) {
 					findZwh(data.value);
+				});
+
+				form.on('select(ZWH)', function (data) {
+					var zhxx = cj.getCookie('selected_expo_id');
+					var zgh = $("[name=ZGH]").val();
+					var zwh =data.value;
+					$.ajax({
+				        type: 'POST',
+				        url: 'dj/findZwhSelected',
+				        cache: false,
+				        data: { "ghbh": zgh,"zwh":zwh,"zhxx":zhxx },
+				        dataType: 'JSON',
+				        success: function (d) {
+				        	if(d.success){
+				        	}else{
+				        		$("[name=ZWH]").val("");
+				        		$("[name=ZWH]").empty();
+				        	    form.render("select");
+				        	    findZwh(zgh);  
+				        		layer.alert(d.msg);
+				        	}
+				        }
+				    });        
 				});
 
 				var findZwh = function (zgh) {

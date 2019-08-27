@@ -89,6 +89,7 @@ cursor:pointer;
 	<div class="layui-fluid">
 		<div class="layui-card">
 			<div class="layui-card-header">报馆详情信息</div>
+			<input id="fyxxzt" name="fyxxzt" style="display: none" >
 			<div class="layui-card-body" style="padding: 15px;">
 				<form class="layui-form layui-form-pane" action="" lay-filter="component-form-group">
 				<input id="djsshdx" name="djsshdx" style="display: none" >
@@ -197,31 +198,33 @@ cursor:pointer;
 					<div id='sndc'>
 						<div class="layui-form-item">
 							<div class="layui-upload">
-								<blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
-									<font color=red>*</font> 展位图纸预览图：
-									<div class="layui-upload-list" id="zwtzDiv">
-										<input id='ZWTZ' name='zwtz' style='display: none' lay-verify="required"
-											lay-reqtext="展位图纸不能为空" />
-											
-											<input type="hidden" id="zwtzBtn"/>
-											
-									</div>
-								</blockquote>
-							</div>
+	                            <blockquote class="layui-elem-quote layui-quote-nm"
+	                                        style="margin-top: 10px;">
+	                               <font color=red>*</font> 展位图纸预览图：
+	                                <div class="layui-upload-list" id="zwtzDiv">
+	                                <input id='zwtz' name='zwtz' style='display: none' lay-verify="required" lay-reqtext="展位图纸不能为空"  />
+	                                    <button type="button" class="layui-btn" style="display:block;margin:0 auto"
+	                                            id="zwtzBtn">展位图纸
+	                                    </button>
+	                                </div>
+	                            </blockquote>
+                        </div>
 						</div>
 					</div>
 					<div id='snsc' style="display: none">
 						<div class="layui-form-item">
 							<div class="layui-upload">
-								<blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
-									<font color=red>*</font>展位细部结构图及审核报告： 
-									<div class="layui-upload-list" id="xbjgtjshbgDiv">
-										<input id='ZWJGT' name='zwjgt' style='display: none'
-											lay-reqtext="展位细部结构图及审核报告不能为空" />
-											<input type="hidden" id="zwjgtBtn"/>
-									</div>
-								</blockquote>
-							</div>
+	                            <blockquote class="layui-elem-quote layui-quote-nm"
+	                                        style="margin-top: 10px;">
+	                                <font color=red>*</font>展位结构图及审核报告：
+	                                <div class="layui-upload-list" id="xbjgtjshbgDiv">
+	                                 <input id='zwjgt' name='zwjgt' style='display: none' lay-reqtext="展位细部结构图及审核报告不能为空"/>
+	                                    <button type="button" class="layui-btn" style="display:block;margin:0 auto"
+	                                            id="zwjgtBtn">展位结构图及审核报告
+	                                    </button>
+	                                </div>
+	                            </blockquote>
+                        </div>
 						</div>
 						<div class="layui-form-item">
 							<div class="layui-inline">
@@ -255,16 +258,30 @@ cursor:pointer;
 								</div>
 							</div>
 						</div>
-						<div class="layui-form-item">
-							<div class="layui-upload">
-								<blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
-									<font color=red>*</font>出图工程师资质证书：
-									<div class="layui-upload-list" id="ctgcszzzsDiv">
-										<input id='GCSZZZS' name='gcszzzs' style='display: none'
-											lay-reqtext="出图工程师资质证不能为空" />
-											<input type="hidden" id="gcszzzsBtn"/>
-									</div>
-								</blockquote>
+					<div class="layui-form-item">
+                     <p class="details-component-line-margin"
+								style="margin-bottom: 0px;font-size: 12px;">注意：请上传工程师资质证书，单个图片不超过1M。
+						</p>
+						<div class="layui-upload">
+                            <blockquote class="layui-elem-quote layui-quote-nm"
+                                        style="margin-top: 10px;">
+                                <font color=red>*</font>出图工程师资质证书：
+                                <div class="layui-upload-list" id="ctgcszzzsDiv">
+                                 <input id='gcszzzs' name='gcszzzs' style='display: none' lay-reqtext="出图工程师资质证不能为空" />
+                                    <button type="button" class="layui-btn" style="display:block;margin:0 auto"
+                                            id="gcszzzsBtn">工程师资质证书
+                                    </button>
+                                </div>
+                            </blockquote>
+                        </div>
+					</div>
+				</div>
+					<div class="layui-form-item layui-layout-admin">
+						<div class="layui-input-block">
+							<div class="layui-footer" style="left: 0;">
+								<button class="layui-btn" id="submitBtn" lay-submit="" lay-filter="component-form-demo1">下一步</button>
+								<button type="button" class="layui-btn layui-btn-primary"
+									onclick="history.go(-1);">返回</button>
 							</div>
 						</div>
 					</div>
@@ -272,73 +289,11 @@ cursor:pointer;
 			</div>
 		</div>
 	</div>
-	<div class="layui-fluid">
-		<div class="layui-card">
-			<div class="layui-card-header">费用信息</div>
-			<div class="layui-card-body" style="padding: 15px;">
-				<div class="layui-row">
-					<form class="layui-form fyhzForm" id="vform" lay-filter="fyhzform">
-						<table class="layui-table" lay-filter="test" id="test_table">
-							<colgroup>
-								<col width="200">
-								<col width="200">
-								<col width="200">
-								<col width="200">
-								<col width="200">
-								<col width="200">
-							</colgroup>
-							<thead>
-								<tr>
-									<th colspan="2">项目名称</th>
-									<th colspan="2">项目描述</th>
-									<th>单价（元）</th>
-									<th>数量</th>
-									<th>金额（元）</th>
-								</tr>
-							</thead>
-							<tbody >
 
-								<tr class="addlists">
-									<td colspan="2">小计</td>
-									<td colspan=4></td>
-									<td><input type="text" name="XJ" id="XJ" class="layui-input" readonly="readonly"></td>
-								</tr>
-
-								<tr>
-									<td rowspan="2" colspan="2">其他</td>
-									<td colspan="2">施工押金</td>
-									<td colspan="2">
-									<input type="text" name="SGYJ_DATA" id="SGYJ_DATA" class="layui-input" readonly="readonly">
-									</td>
-									<td><input type="text" name="SGYJJE" class="layui-input" readonly="readonly"></td>
-								</tr>
-
-								<tr>
-									<td colspan="2">滞纳金</td>
-									<td colspan="2" id="ZNJMS"></td><input type="text" id="znjzt" style="display:none;" >
-									<td><input type="text" name="ZNJ" class="layui-input" readonly="readonly"></td>
-								</tr>
-								<tr >
-									<td colspan="2">费用总计</td>
-									<td colspan=4></td>
-									<td><input type="text" name="ZJ" class="layui-input" readonly="readonly">
-										<input type="text" name="zhxx" style="display:none;" >
-										<input type="text" name="zgh" style="display:none;" >
-										<input type="text" name="zwh" style="display:none;" >	
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<script src="statics/layui/layui.js"></script>
 	<script src="statics/js/concisejs.js"></script>
 	<script type="text/javascript" src="statics/js/jquery-1.8.0.js"></script>
-	<!-- <script src="statics/js/model/DGXX/BGXX_SHOW.js"></script> -->
 	<script>
 		layui.use(["jquery", "upload", "form", "layer", "element"],
 			function () {
@@ -348,7 +303,6 @@ cursor:pointer;
 				var bgGuid = $("#bgGuid").val();
 				var zhxx = cj.getCookie('selected_expo_id');
 				var shzt;
-				
 				$.ajax({
 					type: "POST",
 					url: "bg/findBgxxInfo",
@@ -358,6 +312,10 @@ cursor:pointer;
 					},
 					success: function (data) {
 						if (data != null) {
+							$("#fyxxzt").val(data.fyxxzt);
+							if(data.fyxxzt=="已通过"||data.fyxxzt=="未审核"){
+								$("#submitBtn").html("保存");
+							}
 							shzt = data.desList[0].ZT;
 							$.each(data.desList[0], function (n, v) {
 								$('#' + n + '').html(v);
@@ -366,31 +324,25 @@ cursor:pointer;
 									$("option[value=" + v + "]").attr("selected", true);
 									form.render('select');
 									findZwh(v);
-									
 								}
 								if (n == 'ZWH') {
 									$("option[value=" + v + "]").attr("selected", true);
-									var zgh = $("[name=ZGH]").val();
-									findFYXXINFO(zgh,v);
 								}
 								if (n == 'ZTJG') {
 									$('[name=ztjg][value=' + v + ']').prop("checked", true);
 									if (v.trim() == '室外钢木结构' || v.trim() == "室内双层") {
-										$("#zwtz").attr("lay-verify", "required");
-										$("#zwtz").attr("lay-verify", "required");
+										$("#zwjgt").attr("lay-verify", "required");
+										$("#gcszzzs").attr("lay-verify", "required");
 										$("#snsc").show();
 									}
 								}
 								
-								
-								
-								
 								if (n.indexOf("_ZT")!=-1) {
-									if (v == '通过') {
+									if (v == '已通过'||v == '未审核') {
 										var btn = n.substring(0,n.length-3);
 										btn = btn.toLocaleLowerCase();
-										$("#"+btn+"Btn").hide();
-										$("#"+btn+"Btn").prevAll().removeClass("file-iteme")
+										$("#"+btn+"Btn").prevAll(".file-iteme").children(':last-child').remove();
+										$("#"+btn+"Btn").remove();
 									}else{
 										if(btn="ZWTZ"){
 											$("#zwtzBtn").show();
@@ -405,36 +357,44 @@ cursor:pointer;
 								}
 								if (v.indexOf("/kh/")!=-1) {
 									if (v != "") {
+										var btn = n.toLowerCase();
+										$("#"+btn+"").val(v)
 										v = v.substring(0,v.length-1);
 										var picture = v.split(',');
-										var btn = n.toLowerCase();
+										
 										if (picture.length >= 1) {
+											
 											for (var i = 0; i < picture.length; i++) {
-												$("#"+ btn+ "Btn").before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='" + picture[i] + "' id='' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='" + picture[i] + "' target='_blank'><image src='statics/login/prew.png'></image></a></span></div>")
+												$("#"+ btn+ "Btn").before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='" + picture[i] + "' id='' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='" + picture[i] + "' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>")
 											}
 										}
 										$("#"+ btn+ "Btn").removeAttr("style");
 									}
 								}
-								
+
 								form.render();
 							});
-							/* var radio = data[0].ZTJG; 
-							$("input[name='ztjg'][value=室外钢木结构]").attr("checked",true); */
 
 							if (shzt == '拒绝') {
+								var zgh = $("[name='ZGH']").val();
+								var zwh = $("[name='ZWH']").val();
+								var zhxx = cj.getCookie('selected_expo_id');
 								$.ajax({
 									type: "POST",
 									url: "bg/GetShjlByGuid",
 									data: {
-										"bgGuid": bgGuid
+										"bgGuid": bgGuid,
+										"zgh" : zgh,
+										"zwh" :zwh,
+										"zhxx" :zhxx
 									},
 									success: function (result) {
 										if (result.length > 0) {
 											for (var i = 0; i < result.length; i++) {
 												var shdx = $("#djsshdx").val();
 												shdx +=result[i].SHXM+",";
-												$("#"+result[i].SHXM+"").parent().before("<span style=\"font-size: 19px; float: right; color: red;\">"+ result[i].SHYJ +"</span>");
+												$("#djsshdx").val(shdx);
+												$("#"+result[i].SHXM.toLowerCase()+"Btn").parent().before("<span style=\"font-size: 19px; float: right; color: red;\">"+ result[i].SHYJ +"</span>");
 											}
 										}
 									}
@@ -446,8 +406,6 @@ cursor:pointer;
 					}
 				});
 
-
-				
 				var selectImg = function(d){
 		       		upload.render({
 		                elem: '#'+d+'Btn'
@@ -465,7 +423,7 @@ cursor:pointer;
 		            		var dData = $("#"+d+"").val();
 		            		dData +=imgData+","
 		            		$("#"+d+"").val(dData);
-		           	  		$('#'+d+'Btn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span></div>");
+		           	  		$('#'+d+'Btn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn'  style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
 
 		                }
 		            });
@@ -507,8 +465,9 @@ cursor:pointer;
 								case "pic":
 									fromInput += "<div class=\"layui-form-item\"> <div class=\"layui-upload\"> <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\"><font color=red>*</font>"
 										+ result[i].zdmc
-										+ "： <div class=\"layui-upload-list\" id=\"div\"><input id='" + result[i].zdm + "' name='" + result[i].zdm + "' style='display: none' lay-verify=\"required\"  lay-reqtext=\"" + result[i].zdmc + "不能为空\" /><input type=\"hidden\" id=\"" + result[i].zdm + "Btn\" /> "
-										+ "</div> </blockquote> </div> </div>";
+										+ "： <div class=\"layui-upload-list\" id=\"div\"><input id='" + result[i].zdm + "' name='" + result[i].zdm + "' style='display: none' lay-verify=\"required\"  lay-reqtext=\"" + result[i].zdmc + "不能为空\" /><button type=\"button\" class=\"layui-btn append\" style=\"display:block;margin:0 auto\" lay-filter=\"" + result[i].zdm + "\" id=\"" + result[i].zdm + "Btn\"> "
+										+ result[i].zdmc
+										+ "</button></div> </blockquote> </div> </div>";
 									break;
 								case "date":
 									fromInput += "<div class=\"layui-inline\"> <label class=\"layui-form-label\">"
@@ -521,109 +480,207 @@ cursor:pointer;
 										+ "</label> <div class=\"layui-input-inline\"> <input type=\"text\" name=\"" + result[i].zdm + "\" id=\"date\" lay-verify=\"date\" placeholder=\"yyyy-MM-dd\" autocomplete=\"off\" class=\"layui-input date\"> </div> </div>";
 									break;
 							}
-							$(".layui-form-pane").append(fromInput);
+							$(".layui-layout-admin").before(fromInput);
 							selectImg(result[i].zdm)
 						}
 					}
 				});
-			//获取展位信息
-			var zhguid = cj.getCookie('selected_expo_id');
-			$
-				.ajax({
-					type: 'GET',
-					url: 'dj/findZgh',
-					cache: false,
-					data: {
-						"zhguid": zhguid
-					},
-					dataType: 'JSON',
-					success: function (d) {
-						var city = '<option value="" >请选择展馆号</option>';
-						var zgName = "";
-						var zgVal = "";
-						for (var i = 0; i < d.length; i++) {
-							zgName = d[i].GH;
-							zgVal = d[i].id;
-							city += '<option name="' + zgName + '" value="' + zgName + '">'
-								+ zgName + '</option>';
-						}
-						$("[name='ZGH']").html(city);
-						form.render('select');
+
+				//多图片上传
+				/*展位图纸预览图*/
+				//多图片上传
+        /*展位图纸预览图*/
+        upload.render({
+            elem: '#zwtzBtn'
+            , url: 'uploadPic'
+            , multiple: true
+            ,size: 1024 //限制文件大小，单位 KB
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $("#zwtzBtn").removeAttr("style");
+                });
+            }
+            , done: function (res) {
+            	var imgData = res.data.src
+            	var zwtzData = $('#zwtz').val();
+            	zwtzData +=imgData+","
+            	$("#zwtz").val(zwtzData);
+          	  	$('#zwtzBtn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
+            }
+        });
+
+        /*展位细部结构图及审核报告*/
+        upload.render({
+            elem: '#zwjgtBtn'
+            , url: 'uploadPic'
+            , multiple: true
+            ,size: 1024 //限制文件大小，单位 KB
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $("#zwjgtBtn").removeAttr("style");
+                });
+            }
+            , done: function (res) {
+            		var imgData = res.data.src
+            		var zwjgtData = $('#zwjgt').val();
+            		zwjgtData +=imgData+","
+                	$("#zwjgt").val(zwjgtData);
+            	  $('#zwjgtBtn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
+					
+            }
+        });
+        /*出图工程师资质证书*/
+        upload.render({
+            elem: '#gcszzzsBtn'
+            , url: 'uploadPic'
+            , multiple: true
+            ,size: 1024 //限制文件大小，单位 KB
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $("#gcszzzsBtn").removeAttr("style");
+                });
+            }
+            , done: function (res) {
+            	var imgData = res.data.src
+        		var gcszzzsData = $('#gcszzzs').val();
+        		gcszzzsData +=imgData+","
+            	$("#gcszzzs").val(gcszzzsData);
+           	  		$('#gcszzzsBtn').before("<div class='file-iteme' style='width: 92px;height: 92px;display:inline-block;margin-right: 10px;'><img src='"+ res.data.src +"' id='"+res.name+"' alt=''  style='margin-bottom: 5px;position:relative;' class='layui-upload-img uploader-list'>  <span class='info showBtn' style='position:absolute;z-index:10;display:none'><a href='"+res.data.src+"' target='_blank'><image src='statics/login/prew.png'></image></a></span><span class='info delBtn' style='position:absolute;z-index:10;display:none' onclick='del(this)'><image src='statics/login/del.png'></image></span></div>");
+
+            }
+        });
+				/*监听单选框切换表单*/
+				form.on("radio(ztjg)", function (data) {
+					var ztjg = data.value;
+					switch (ztjg) {
+						case "室内单层":
+		                    $("#sndc").show();
+		                    $("#snsc").hide();
+		                    $("#gcszzzs").attr("lay-verify","");
+		                    $("#zwjgt").attr("lay-verify","");
+		                    break;
+		                case "室内双层":
+		                    $("#zwjgt").attr("lay-verify","required");
+		                    $("#gcszzzs").attr("lay-verify","required");
+		                    $("#snsc").show();
+		                  
+		                    break;
+		                case "室外钢木结构":
+		                    $("#zwjgt").attr("lay-verify","required");
+		                    $("#gcszzzs").attr("lay-verify","required");
+		                    $("#snsc").show();
+		                    break;
+		                case "室外简易结构":
+		                    $("#sndc").show();
+		                    $("#snsc").hide();
+		                    $("#gcszzzs").attr("lay-verify","");
+		                    $("#zwjgt").attr("lay-verify","");
+		                    $("#snsc input").val("");
+		                    break;
 					}
+					form.render();
 				});
 
-			form.on('select(ZGH)', function (data) {
-				findZwh(data.value);
-			});
+				/* 监听提交 */
+				form.on('submit(component-form-demo1)',
+					function (data) {
+						var selected = cj
+							.getCookie('selected_expo_id');
+						$("#zhxxGuid").val(selected);
+						var bgGuid =$("#bgGuid").val();
+						var formList = $('.layui-form-pane').serialize()
+							
+							
+						$.ajax({
+							type: "POST",
+							url: "bg/updateBgxx",
+							data: formList,
+							success: function (data) {
+								if (data.success) {
+									var fyxxzt = $("#fyxxzt").val();
+									if(fyxxzt=="未审核"||fyxxzt=="已通过"){
+										window.location.href = "DJ/BGXX_LIST.jsp";
+									}else{
+										var zgh = $("[name=ZGH]").val();
+										var zwh = $("[name=ZWH]").val();
+										cj.setCookie('bgxx_zgh', zgh, 365);
+									    cj.setCookie('bgxx_zwh', zwh, 365); 
+									    window.location.href = "DJ/FYHZ.jsp?bgGuid="+bgGuid;
+									}
+									
+								} else {
+									layer.alert(data.msg);
+								}
+							},
+							error: function (jqXHR) {
+								alert("发生错误：" + jqXHR.status);
+							}
+						});
 
-			var findZwh = function (zgh) {
-				$.ajax({
+						return false;
+					});
+
+				//获取展位信息
+				var zhguid = cj.getCookie('selected_expo_id');
+				$
+					.ajax({
 						type: 'GET',
-						url: 'dj/findZwh',
+						url: 'dj/findZgh',
 						cache: false,
 						data: {
-							"ghbh": zgh
+							"zhguid": zhguid
 						},
 						dataType: 'JSON',
 						success: function (d) {
-							var city = '<option value="" >请选择展位号</option>';
+							var city = '<option value="" >请选择展馆号</option>';
 							var zgName = "";
 							var zgVal = "";
 							for (var i = 0; i < d.length; i++) {
-								zgName = d[i].ZWH;
-								zgVal = d[i].GHBH;
+								zgName = d[i].GH;
+								zgVal = d[i].id;
 								city += '<option name="' + zgName + '" value="' + zgName + '">'
-									+ zgName
-									+ '</option>';
+									+ zgName + '</option>';
 							}
-							$("[name='ZWH']").html(city);
+							$("[name='ZGH']").html(city);
 							form.render('select');
-							
 						}
 					});
-			}
+
+				form.on('select(ZGH)', function (data) {
+					findZwh(data.value);
+				});
+				var zhxx = cj.getCookie('selected_expo_id');
+				var findZwh = function (zgh) {
+					$.ajax({
+							type: 'GET',
+							url: 'dj/findZwh',
+							cache: false,
+							data: {
+								"ghbh": zgh
+							},
+							dataType: 'JSON',
+							success: function (d) {
+								var city = '<option value="" >请选择展位号</option>';
+								var zgName = "";
+								var zgVal = "";
+								for (var i = 0; i < d.length; i++) {
+									zgName = d[i].ZWH;
+									zgVal = d[i].GHBH;
+									city += '<option name="' + zgName + '" value="' + zgName + '">'
+										+ zgName
+										+ '</option>';
+								}
+								$("[name='ZWH']").html(city);
+								form.render('select');
+							}
+						});
+				}
+
 
 			});
-		
-		function findFYXXINFO(v,ve){
-			var zgh =v;
-			var zwh = ve;
-			var zhxx = cj.getCookie('selected_expo_id');
-			$.ajax({
-			        type:"POST",
-			        url:"bg/findFyxxInfo",
-			      	data: {"zgh":zgh,"zwh":zwh,"zhxx":zhxx},
-			        success:function(data){
-						var fy = data.fyList;
-						var tr = "";
-						for (var i = 0; i < fy.length; i++) {
-							 var strs= new Array(); //定义一数组 
-							 strs=fy[i].XMDES_DATA.split(","); //字符分割 
-							 tr += "<tr>";
-							 tr += "<td colspan=\"2\"><input type=\"text\" value='"+fy[i].XMMC_DATA+"' lay-verify=\"required\"  readonly=\"readonly\" class=\"layui-input\">";
-							 tr += "<td colspan=\"2\"><input type=\"text\" value='"+strs[0]+"' lay-verify=\"required\"  readonly=\"readonly\" class=\"layui-input\">";
-							 tr += "<td colspan=\"1\"><input type=\"text\" value='"+fy[i].DJ+"' lay-verify=\"required\"  readonly=\"readonly\" class=\"layui-input\">";
-							 tr += "<td><input type=\"text\" value='"+fy[i].SL+"' class=\"layui-input\"  readonly=\"readonly\"></td>"
-							 tr += "<td><input type=\"text\" value='"+fy[i].HXJ+"' class=\"layui-input\" readonly=\"readonly\"></td>"
-							 tr += "</tr>";
-						}
-						$(".addlists").before(tr);
-						var xm = data.xmList;	
-						for (var i = 0; i < xm.length; i++) {
-							$("[name=SGYJJE]").val(xm[i].SGYJ);
-							$("[name=XJ]").val(xm[i].XJ);
-							$("[name=ZNJ]").val(xm[i].ZNJ);
-							$("[name=ZJ]").val(xm[i].ZJ);
-							$("[name=SGYJ_DATA]").val(xm[i].SGYJ_DATA)
-						}
-						
-			        },
-			        error:function(jqXHR){
-			           alert("发生错误："+ jqXHR.status);
-			        }
-		    });
-
-		}
 	</script>
 	<script>
 		$(document).on(
@@ -635,7 +692,7 @@ cursor:pointer;
 					var top = $(this).offset().top;
 					var left = $(this).offset().left;
 					$(this).children().first().next().css("top", top - 23)
-						.css("left", left + 24).show();
+						.css("left", left + 10).show();
 					$(this).children().first().next().next().css("top",
 						top - 23).css("left", left + 40).show();
 					$(this).css("background-color", "rgba(0,0,0,0.5)");
@@ -650,6 +707,21 @@ cursor:pointer;
 				}
 			});
 
+		function del(event){
+			var img  = $(event).parent().find("img").attr("src");//拿到删除的图片路径
+			var input = $(event).parent().parent().find("input").attr("id");//拿到全局input
+			var btn = $(event).parent().parent().find("button").attr("id");
+			var inputVal  = $("#"+input+"").val();
+			var imgDel = img+",",
+			inputVal = inputVal.replace(imgDel, '');
+			$("#"+input+"").val(inputVal)
+			inputVal =$("#"+input+"").val();
+			if(inputVal == "" || inputVal == null || inputVal == undefined){
+				$("#"+btn+"").css({margin:"auto",display:"block"}) 
+			}
+			$(event).parent().remove();		
+			
+		}
 	</script>
 </body>
 

@@ -459,6 +459,7 @@ public class GzryController {
 			String postData, Integer num, Integer limit) throws Exception {
 		HttpSession session = request.getSession();
 		final String role = (String) session.getAttribute("role");
+		String user = session.getAttribute("guid").toString();
 		String roleid = (String) session.getAttribute("roleid");
 		String zhxxDj = (String) session.getAttribute("zhxxDj");
 		String bmDj = (String) session.getAttribute("bmDj");
@@ -529,7 +530,7 @@ public class GzryController {
 				}
 			}
 			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZc
-					+ " and ZT !='未提交' order by id desc ";
+					+ " AND (ZGH IN (SELECT gh FROM zggl WHERE FZRDWBH LIKE '%"+user+"%') )  and ZT !='未提交' order by id desc ";
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
 			rs = ps.executeQuery();
 			md = rs.getMetaData();

@@ -521,7 +521,7 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 					        var jsdmData = result || new Array();
 					        var toColString = froms.toString();
 					        for (var i = 0, len = jsdmData.length; i < len; i++) {
-					            html += "<li><input type='checkbox' name='jsdmData'  value='" +jsdmData[i].name+','+  jsdmData[i].id + "' data_col = '" + toColString + "' data_txt='" + jsdmData[i].name +','+ jsdmData[i].id+ "'>" + jsdmData[i].name +','+jsdmData[i].id + "</li>";
+					            html += "<li><input type='checkbox' name='jsdmData'  value='" +jsdmData[i].name+','+  jsdmData[i].guid + "' data_col = '" + toColString + "' data_txt='" + jsdmData[i].name +','+ jsdmData[i].guid+ "'>" + jsdmData[i].name +','+jsdmData[i].guid + "</li>";
 					        }
 					       
 						}
@@ -534,7 +534,6 @@ layui.use([ 'form','laydate','layer','upload' ],function() {
 			                    "display": "none",
 			                    "top": e.pageY,
 			                    "left": e.pageX + 120,
-			                    "width": "100px",
 				    	    	"line-height": "30px",
 				    	    	"text-align": "center",
 			                });

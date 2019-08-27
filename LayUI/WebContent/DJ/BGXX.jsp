@@ -486,6 +486,28 @@
 			findZwh(data.value);  
 		});
 		
+		form.on('select(ZWH)', function (data) {
+			var zhxx = cj.getCookie('selected_expo_id');
+			var zgh = $("[name=ZGH]").val();
+			var zwh =data.value;
+			$.ajax({
+		        type: 'POST',
+		        url: 'dj/findZwhSelected',
+		        cache: false,
+		        data: { "ghbh": zgh,"zwh":zwh,"zhxx":zhxx },
+		        dataType: 'JSON',
+		        success: function (d) {
+		        	if(d.success){
+		        	}else{
+		        		$("[name=ZWH]").val("");
+		        		$("[name=ZWH]").empty();
+		        	    form.render("select");
+		        	    findZwh(zgh);  
+		        		layer.alert(d.msg);
+		        	}
+		        }
+		    });        
+		});
 		var findZwh=function(zgh){
 			$.ajax({
 		        type: 'GET',

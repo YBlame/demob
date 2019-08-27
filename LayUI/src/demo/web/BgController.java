@@ -64,13 +64,13 @@ public class BgController {
 	@ResponseBody
 	// 获取表头、表数据
 	public Object findBgTable(PageUtils page, HttpServletRequest request, HttpServletResponse res, String guid,
-			String postData, Integer num, Integer limit, String type,String bm) throws Exception {
+			String postData, Integer num, Integer limit, String type, String bm) throws Exception {
 		HttpSession session = request.getSession();
 		final String userGuid = (String) session.getAttribute("guid");
 		final String role = (String) session.getAttribute("role");
 		String roleid = (String) session.getAttribute("roleid");
 		String zhxxDj = (String) session.getAttribute("zhxxDj");
-		
+
 		String bmDj = (String) session.getAttribute("bmDj");
 		String typeDj = (String) session.getAttribute("typeDj");
 		list = new ArrayList<Map<String, Object>>();
@@ -78,17 +78,17 @@ public class BgController {
 		ResultSetMetaData md = null;
 		int columnCount = 0;
 		String destn = null;
-		
+
 		if (typeDj.equals("true")) {
-			if (bm!=null) {
+			if (bm != null) {
 				tn = bm + "_" + zhxxDj;
 				destn = bm + "_des_" + zhxxDj;
 				session.setAttribute("bmDj", bm);
-			}else{
+			} else {
 				tn = bmDj + "_" + zhxxDj;
 				destn = bmDj + "_des_" + zhxxDj;
 			}
-			
+
 		} else {
 			tn = Bmodel.findBmByGuId(guid);// 描述表
 			destn = tn + "_des";
@@ -100,7 +100,7 @@ public class BgController {
 		list = new ArrayList<Map<String, Object>>();
 		String sqlZdmc = " ";
 		conn = LinkSql.getConn();
-		String sqlzdm = "select zdm from " + destn +"  order by id desc";
+		String sqlzdm = "select zdm from " + destn + "  order by id desc";
 		ps = LinkSql.Execute(conn, sqlzdm, role, destn);
 		rs = ps.executeQuery();
 		md = rs.getMetaData(); // 获得结果集结构信息,元数据
@@ -129,128 +129,137 @@ public class BgController {
 				}
 			}
 			String sqlWhereZt = "";
-			if (type!=null) {
-				 sqlWhereZt += " AND ZT = ? ";
+			if (type != null) {
+				sqlWhereZt += " AND ZT = ? ";
 			}
-			if(userGuid!=null){
-				sqlWhereZt += " AND DJSBH = ? ";
+			if (userGuid != null) {
+				sqlWhereZt += " AND DJSBH = ? AND ZT != '未提交' ";
 			}
 			String sqlData = null;
-			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere+ sqlWhereZt  +"    order by id desc";
+			sqlData = "select " + sqlZdmc + ",guid from " + tn + " where 1=1 " + sqlWhere + sqlWhereZt
+					+ "    order by id desc";
 			ps = null;
 			ps = LinkSql.Execute(conn, sqlData, role, tn);
-			if (type!=null) {
-				 ps.setString(1, type.trim());
-				 ps.setString(2, userGuid.trim());
-			}else{
+			if (type != null) {
+				ps.setString(1, type.trim());
+				ps.setString(2, userGuid.trim());
+			} else {
 				ps.setString(1, userGuid.trim());
 			}
-			
+
 			rs = ps.executeQuery();
 			md = rs.getMetaData();
 			columnCount = md.getColumnCount();
 			while (rs.next()) {
 				Map<String, Object> rowData = new HashMap<String, Object>();
 				List listSh = new ArrayList();
-				
+
 				Integer index = 0;
-				for(int j = 1; j <= columnCount; j++){
-					if(md.getColumnName(j).contains("_ZT")){
+				for (int j = 1; j <= columnCount; j++) {
+					if (md.getColumnName(j).contains("_ZT")) {
 						listSh.add(index, md.getColumnName(j));
 						index++;
-					}					
+					}
 				}
-				
-				//获取guid
-				String guids="";
+
+				// 获取guid
+				String guids = "";
 				for (int i = 1; i <= columnCount; i++) {
 					if (rs.getObject(i) != null) {
-						if(md.getColumnName(i).equals("guid")){
-							guids=rs.getObject(i).toString();							
+						if (md.getColumnName(i).equals("guid")) {
+							guids = rs.getObject(i).toString();
 						}
-					} 
+					}
 				}
 				for (int i = 1; i <= columnCount; i++) {
 					if (rs.getObject(i) == null) {
-						
-						
-							rowData.put(md.getColumnName(i), rs.getObject(i));
-						
-						
+
+						rowData.put(md.getColumnName(i), rs.getObject(i));
+
 					} else {
 						System.out.println(md.getColumnName(i));
 						System.out.println(md.getColumnName(i).equals(guid));
-												
-						String flag="false";
-						String ztStr ="";
-						String zt="";
+
+						String flag = "false";
+						String ztStr = "";
+						String zt = "";
 						for (int k = 0; k < listSh.size(); k++) {
 							ztStr = listSh.get(k).toString();
 							zt = rs.getObject(listSh.get(k).toString()).toString();
-							if(md.getColumnName(i).equals(ztStr.substring(0,ztStr.length()-3))){								
-								flag="true";
+							if (md.getColumnName(i).equals(ztStr.substring(0, ztStr.length() - 3))) {
+								flag = "true";
 								break;
-							}																																				
+							}
 						}
-						
-						if(flag.equals("true")){
+
+						if (flag.equals("true")) {
 							System.out.println(rs.getObject(i).toString());
-							String mc=md.getColumnName(i);
+							String mc = md.getColumnName(i);
 							System.out.println(mc);
-							// statics/imgs/1565593168033.jpg 
-							///DJ/BGXX_EDIT.jsp?bgGuid=59262794cd964e74a8ed80865baab801
-							String wtg="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
-							String wsh="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
-							String tg="<div><div style='text-align: center;'><a    href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
-							
-							if(zt.equals("未通过")){//未通过
-							
-								rowData.put(ztStr.substring(0, ztStr.length()-3), wtg);
-																
-							}else if(zt.equals("未审核")){//未审核
-								
-								rowData.put(ztStr.substring(0, ztStr.length()-3), wsh);
-								
-							}else if(zt.equals("通过")){//通过
-								
-								rowData.put(ztStr.substring(0, ztStr.length()-3), tg);									
+							// statics/imgs/1565593168033.jpg
+							/// DJ/BGXX_EDIT.jsp?bgGuid=59262794cd964e74a8ed80865baab801
+							String wtg = "<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="
+									+ guids
+									+ "' class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
+							String wsh = "<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="
+									+ guids
+									+ "' class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
+							String tg = "<div><div style='text-align: center;'><a    href='DJ/BGXX_EDIT.jsp?bgGuid="
+									+ guids
+									+ "' class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
+
+							if (zt.equals("未通过")) {// 未通过
+
+								rowData.put(ztStr.substring(0, ztStr.length() - 3), wtg);
+
+							} else if (zt.equals("未审核")) {// 未审核
+
+								rowData.put(ztStr.substring(0, ztStr.length() - 3), wsh);
+
+							} else if (zt.equals("通过")) {// 通过
+
+								rowData.put(ztStr.substring(0, ztStr.length() - 3), tg);
 							}
-							
-						}else{
-							if(md.getColumnName(i).equals("FYXXZT")){
-								String wtg="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
-								String wsh="<div><div style='text-align: center;'><img src='statics/icon/yt.png' style='margin-top:4px;'></div><div>";
-								String tg="<div><div style='text-align: center;'><img src='statics/icon/dh.png' style='margin-top:4px;'></div><div>";
-								String wtj="<div><div style='text-align: center;'><img src='statics/icon/wtj.png' style='margin-top:4px;'></div><div>";
-								if(rs.getObject(i).equals("未通过")){//未通过
-								
+
+						} else {
+							if (md.getColumnName(i).equals("FYXXZT")) {
+								String wtg = "<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="
+										+ guids
+										+ "' class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
+								String wsh = "<div><div style='text-align: center;'><img src='statics/icon/yt.png' style='margin-top:4px;'></div><div>";
+								String tg = "<div><div style='text-align: center;'><img src='statics/icon/dh.png' style='margin-top:4px;'></div><div>";
+								String wtj = "<div><div style='text-align: center;'><img src='statics/icon/wtj.png' style='margin-top:4px;'></div><div>";
+								if (rs.getObject(i).equals("未通过")) {// 未通过
+
 									rowData.put(md.getColumnName(i), wtg);
-																	
-								}else if(rs.getObject(i).equals("未审核")){//未审核
-									
+
+								} else if (rs.getObject(i).equals("未审核")) {// 未审核
+
 									rowData.put(md.getColumnName(i), wsh);
-									
-								}else if(rs.getObject(i).equals("通过")){//通过
-									
-									rowData.put(md.getColumnName(i), tg);									
-								}else if(rs.getObject(i).equals("未提交")){
+
+								} else if (rs.getObject(i).equals("通过")) {// 通过
+
+									rowData.put(md.getColumnName(i), tg);
+								} else if (rs.getObject(i).equals("未提交")) {
 									rowData.put(md.getColumnName(i), wtj);
-								}															
-							}else if(md.getColumnName(i).equals("FKTZDZT")){								
-								String wtj="<div><div style='text-align: center;'><img src='statics/icon/ffwtj.jpg' style='margin-top:4px;'></div><div>";
-								String yfs="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/ffyfs.jpg' style='margin-top:4px;'></a></div><div>";
-								String wfs="<div><div style='text-align: center;'><img src='statics/icon/ffwfs' style='margin-top:4px;'></div><div>";
-								if(rs.getObject(i).equals("未提交")){//未通过								
-									rowData.put(md.getColumnName(i), wtj);																	
-								}else if(rs.getObject(i).equals("已发送")){//未审核									
-									rowData.put(md.getColumnName(i), yfs);									
-								}else if(rs.getObject(i).equals("未发送")){//通过									
-									rowData.put(md.getColumnName(i), wfs);									
-								}								
-							}else{
-							rowData.put(md.getColumnName(i), rs.getObject(i).toString());
+								}
+							} else if (md.getColumnName(i).equals("FKTZDZT")) {
+								String wtj = "<div><div style='text-align: center;'><img src='statics/icon/ffwtj.jpg' style='margin-top:4px;'></div><div>";
+								String yfs = "<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="
+										+ guids
+										+ "' class='layui-table-link'><img src='statics/icon/ffyfs.jpg' style='margin-top:4px;'></a></div><div>";
+								String wfs = "<div><div style='text-align: center;'><img src='statics/icon/ffwfs' style='margin-top:4px;'></div><div>";
+								if (rs.getObject(i).equals("未提交")) {// 未通过
+									rowData.put(md.getColumnName(i), wtj);
+								} else if (rs.getObject(i).equals("已发送")) {// 未审核
+									rowData.put(md.getColumnName(i), yfs);
+								} else if (rs.getObject(i).equals("未发送")) {// 通过
+									rowData.put(md.getColumnName(i), wfs);
+								}
+							} else {
+								rowData.put(md.getColumnName(i), rs.getObject(i).toString());
 							}
-						}							
+						}
 					}
 				}
 				list.add(rowData);
@@ -278,7 +287,7 @@ public class BgController {
 		}
 
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -356,8 +365,8 @@ public class BgController {
 		ResultSetMetaData md = null;
 		int columnCount = 0;
 		conn = LinkSql.getConn();
-		String sqlSelect = "SELECT zdm,zdmc,isform,isedit,xs,width,tips,beizhu,formtypes,initval,jsdm,api,guid FROM " + bmDes
-				+ " WHERE  xs = 1 and id>23  AND  zdm NOT LIKE '%_ZT'  ORDER BY lisnum asc , id asc";
+		String sqlSelect = "SELECT zdm,zdmc,isform,isedit,xs,width,tips,beizhu,formtypes,initval,jsdm,api,guid FROM "
+				+ bmDes + " WHERE  xs = 1 and id>23  AND  zdm NOT LIKE '%_ZT'  ORDER BY lisnum asc , id asc";
 		ps = conn.prepareStatement(sqlSelect);
 		rs = ps.executeQuery();
 		md = rs.getMetaData(); // 获得结果集结构信息,元数据
@@ -438,18 +447,20 @@ public class BgController {
 		}
 		return json;
 	}
-	
+
 	/**
 	 * 费用汇总提交
+	 * 
 	 * @param model
 	 * @param request
 	 * @param res
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="submitFyhz",method = RequestMethod.POST)
+	@RequestMapping(value = "submitFyhz", method = RequestMethod.POST)
 	@ResponseBody
-	public Object submitFyhz(Model model, HttpServletRequest request, HttpServletResponse res, FyInfo fy) throws Exception {
+	public Object submitFyhz(Model model, HttpServletRequest request, HttpServletResponse res, FyInfo fy)
+			throws Exception {
 		// 获取描述表字段
 		HttpSession session = request.getSession();
 		String userGuid = (String) session.getAttribute("guid");
@@ -460,67 +471,71 @@ public class BgController {
 		String zhxxGuid = null;
 		System.out.println(fy.getZgh());
 		System.out.println(fy.xm);
-		Integer xj = 0;//小计
-		Integer sum =0;//总计
-		
-		if(fy.SGYJJE!=null&&!fy.SGYJJE.equals("")){
+		Integer xj = 0;// 小计
+		Integer sum = 0;// 总计
+
+		if (fy.SGYJJE != null && !fy.SGYJJE.equals("")) {
 			for (XmInfo x : fy.xm) {
-				if(x.XMMC_DATA!=null&&!x.XMMC_DATA.equals("")){
-					if(!x.DJ.equals("")&&!x.SL.equals("")){
+				if (x.XMMC_DATA != null && !x.XMMC_DATA.equals("")) {
+					if (!x.DJ.equals("") && !x.SL.equals("")) {
 						x.HXJ = x.DJ * x.SL;
-						xj+=x.HXJ;
+						xj += x.HXJ;
 					}
 				}
 			}
-			sum =fy.SGYJJE+xj;
-		}else{
+			sum = fy.SGYJJE + xj;
+		} else {
 			json.put("success", false);
 			json.put("msg", "请填写施工押金");
 			return json;
 		}
-		//滞纳金
-		conn=LinkSql.getConn();
+		// 滞纳金
+		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
-		ps= conn.prepareStatement("SELECT RQ FROM fybz WHERE xmmc='滞纳金'");
+		ps = conn.prepareStatement("SELECT RQ FROM fybz WHERE xmmc='滞纳金'");
 		rs = ps.executeQuery();
 		rs.next();
 		String rq = rs.getString("RQ").toString();
-		
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Date a=sdf.parse(sdf.format(new Date()));//当前时间
-		Date b=sdf.parse(rq);//
-		Integer znj =0;
-		if(a.before(b)){//b时间早于a
-			sum +=znj;
-		}else{
-			znj = xj/2;
-			sum +=znj;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date a = sdf.parse(sdf.format(new Date()));// 当前时间
+		Date b = sdf.parse(rq);//
+		Integer znj = 0;
+		if (a.before(b)) {// b时间早于a
+			sum += znj;
+		} else {
+			znj = xj / 2;
+			sum += znj;
 		}
 		fy.ZJ = sum;
 		fy.ZNJ = znj;
 		fy.XJ = xj;
-			
+
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 		JSONArray j = JSONArray.fromObject(fy.xm, jsonConfig);
 		String result = j.toString();
 		fy.FYXX = result;
-		String sql ="insert into fyxx_"+fy.zhxx+" (guid,ZGH, ZWH, FYXX, RQ, SGYJ_DATA, YHBH, XJ, SGYJ, ZNJ, ZJ) "
-					+ "	values('"+UUIDUtil.getUUID()+"','"+fy.zgh+"','"+fy.zwh+"','"+fy.FYXX+"',NOW(),'"+fy.SGYJ_DATA+"','"+userGuid+"','"+fy.XJ+"','"+fy.SGYJJE+"','"+fy.ZNJ+"','"+fy.ZJ+"')";
-		ps= conn.prepareStatement(sql);
+		String sql = "insert into fyxx_" + fy.zhxx + " (guid,ZGH, ZWH, FYXX, RQ, SGYJ_DATA, YHBH, XJ, SGYJ, ZNJ, ZJ) "
+				+ "	values('" + UUIDUtil.getUUID() + "','" + fy.zgh + "','" + fy.zwh + "','" + fy.FYXX + "',NOW(),'"
+				+ fy.SGYJ_DATA + "','" + userGuid + "','" + fy.XJ + "','" + fy.SGYJJE + "','" + fy.ZNJ + "','" + fy.ZJ
+				+ "')";
+		ps = conn.prepareStatement(sql);
 		try {
 			ps.executeUpdate();
 			conn.commit();
-			//1报馆基本信息费用汇总状态更新已提交
-			//2报馆基本信息总状态
-			String sqlUpdate="UPDATE bgxx_"+fy.zhxx+" SET ZT='待审核' ,FYXXZT='未审核' where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
+			// 1报馆基本信息费用汇总状态更新已提交
+			// 2报馆基本信息总状态
+			String sqlUpdate = "UPDATE bgxx_" + fy.zhxx + " SET ZT='待审核' ,FYXXZT='未审核' where DJSBH='" + userGuid
+					+ "' and ZGH ='" + fy.zgh + "' and ZWH='" + fy.zwh + "' ";
 			ps = conn.prepareStatement(sqlUpdate);
 			ps.executeUpdate();
 			conn.commit();
 			json.put("success", true);
 			json.put("msg", "报馆成功，请等待审核");
-			
-			String sqlFindGuid ="select guid from bgxx_"+fy.zhxx+" where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"'  ";
+
+			String sqlFindGuid = "select guid from bgxx_" + fy.zhxx + " where DJSBH='" + userGuid + "' and ZGH ='"
+					+ fy.zgh + "' and ZWH='" + fy.zwh + "'  ";
 			ps = conn.prepareStatement(sqlFindGuid);
 			rs = ps.executeQuery();
 			rs.next();
@@ -535,18 +550,20 @@ public class BgController {
 		}
 		return json;
 	}
-	
+
 	/**
 	 * 费用汇总提交
+	 * 
 	 * @param model
 	 * @param request
 	 * @param res
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="updateFyhz",method = RequestMethod.POST)
+	@RequestMapping(value = "updateFyhz", method = RequestMethod.POST)
 	@ResponseBody
-	public Object updateFyhz(Model model, HttpServletRequest request, HttpServletResponse res, FyInfo fy) throws Exception {
+	public Object updateFyhz(Model model, HttpServletRequest request, HttpServletResponse res, FyInfo fy)
+			throws Exception {
 		// 获取描述表字段
 		HttpSession session = request.getSession();
 		String userGuid = (String) session.getAttribute("guid");
@@ -557,61 +574,63 @@ public class BgController {
 		String zhxxGuid = null;
 		System.out.println(fy.getZgh());
 		System.out.println(fy.xm);
-		Integer xj = 0;//小计
-		Integer sum =0;//总计
-		
-		if(fy.SGYJJE!=null&&!fy.SGYJJE.equals("")){
+		Integer xj = 0;// 小计
+		Integer sum = 0;// 总计
+
+		if (fy.SGYJJE != null && !fy.SGYJJE.equals("")) {
 			for (XmInfo x : fy.xm) {
-				if(x.XMMC_DATA!=null&&!x.XMMC_DATA.equals("")){
-					if(!x.DJ.equals("")&&!x.SL.equals("")){
+				if (x.XMMC_DATA != null && !x.XMMC_DATA.equals("")) {
+					if (!x.DJ.equals("") && !x.SL.equals("")) {
 						x.HXJ = x.DJ * x.SL;
-						xj+=x.HXJ;
+						xj += x.HXJ;
 					}
 				}
 			}
-			sum =fy.SGYJJE+xj;
-		}else{
+			sum = fy.SGYJJE + xj;
+		} else {
 			json.put("success", false);
 			json.put("msg", "请填写施工押金");
 			return json;
 		}
-		//滞纳金
-		conn=LinkSql.getConn();
+		// 滞纳金
+		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
-		ps= conn.prepareStatement("SELECT RQ FROM fybz WHERE xmmc='滞纳金'");
+		ps = conn.prepareStatement("SELECT RQ FROM fybz WHERE xmmc='滞纳金'");
 		rs = ps.executeQuery();
 		rs.next();
 		String rq = rs.getString("RQ").toString();
-		
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Date a=sdf.parse(sdf.format(new Date()));//当前时间
-		Date b=sdf.parse(rq);//
-		Integer znj =0;
-		if(a.before(b)){//b时间早于a
-			sum +=znj;
-		}else{
-			znj = xj/2;
-			sum +=znj;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date a = sdf.parse(sdf.format(new Date()));// 当前时间
+		Date b = sdf.parse(rq);//
+		Integer znj = 0;
+		if (a.before(b)) {// b时间早于a
+			sum += znj;
+		} else {
+			znj = xj / 2;
+			sum += znj;
 		}
 		fy.ZJ = sum;
 		fy.ZNJ = znj;
 		fy.XJ = xj;
-			
+
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 		JSONArray j = JSONArray.fromObject(fy.xm, jsonConfig);
 		String result = j.toString();
 		fy.FYXX = result;
-		String sql ="UPDATE fyxx_"+fy.zhxx+" SET  FYXX = '"+fy.FYXX+"'  , XJ = '"+fy.XJ+"' , SGYJ = '"+fy.SGYJJE+"' , ZNJ = '"+fy.ZNJ+"' , ZJ = '"+fy.ZJ+"' , SGYJ_DATA = '"+fy.SGYJ_DATA+"' where YHBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
-		
-		
-		ps= conn.prepareStatement(sql);
+		String sql = "UPDATE fyxx_" + fy.zhxx + " SET  FYXX = '" + fy.FYXX + "'  , XJ = '" + fy.XJ + "' , SGYJ = '"
+				+ fy.SGYJJE + "' , ZNJ = '" + fy.ZNJ + "' , ZJ = '" + fy.ZJ + "' , SGYJ_DATA = '" + fy.SGYJ_DATA
+				+ "' where YHBH='" + userGuid + "' and ZGH ='" + fy.zgh + "' and ZWH='" + fy.zwh + "' ";
+
+		ps = conn.prepareStatement(sql);
 		try {
 			ps.executeUpdate();
 			conn.commit();
-			//1报馆基本信息费用汇总状态更新已提交
-			//2报馆基本信息总状态
-			String sqlUpdate="UPDATE bgxx_"+fy.zhxx+" SET ZT='待审核' ,FYXXZT='未审核' where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
+			// 1报馆基本信息费用汇总状态更新已提交
+			// 2报馆基本信息总状态
+			String sqlUpdate = "UPDATE bgxx_" + fy.zhxx + " SET ZT='待审核' ,FYXXZT='未审核' where DJSBH='" + userGuid
+					+ "' and ZGH ='" + fy.zgh + "' and ZWH='" + fy.zwh + "' ";
 			ps = conn.prepareStatement(sqlUpdate);
 			ps.executeUpdate();
 			conn.commit();
@@ -626,31 +645,27 @@ public class BgController {
 		}
 		return json;
 	}
-	
-	
-	
-	
-	
+
 	@RequestMapping("findBgxxInfo")
 	@ResponseBody
-	public JSONObject  findBgxxInfo(HttpServletRequest request, HttpServletResponse res, String zhxxGuid,String bgGuid)
+	public JSONObject findBgxxInfo(HttpServletRequest request, HttpServletResponse res, String zhxxGuid, String bgGuid)
 			throws Exception {
 		JSONObject json = new JSONObject();
 		List<Map<String, Object>> desList = new ArrayList<Map<String, Object>>();
 		conn = LinkSql.getConn();
-		String tn = "BGXX_"+zhxxGuid;
-		String sql = "select * from "+tn+" where guid= ? order by id desc";
+		String tn = "BGXX_" + zhxxGuid;
+		String sql = "select * from " + tn + " where guid= ? order by id desc";
 		conn = LinkSql.getConn();
 		ps = LinkSql.Execute(conn, sql, "1", tn);
 		ps.setString(1, bgGuid.trim());
 		rs = ps.executeQuery();
 		ResultSetMetaData md = rs.getMetaData();
 		int columnCount = md.getColumnCount();
-		String fyxxzt= "";
+		String fyxxzt = "";
 		while (rs.next()) {
 			Map<String, Object> rowData = new HashMap<String, Object>();
 			for (int i = 1; i <= columnCount; i++) {
-				if(md.getColumnName(i).equals("FYXXZT")){
+				if (md.getColumnName(i).equals("FYXXZT")) {
 					fyxxzt = rs.getString(i);
 				}
 				rowData.put(md.getColumnName(i), rs.getString(i));
@@ -658,20 +673,24 @@ public class BgController {
 			desList.add(rowData);
 		}
 		json.put("fyxxzt", fyxxzt);
-		//查询费用状态，若为已提交，已通过不进入下一页
+		// 查询费用状态，若为已提交，已通过不进入下一页
 		json.put("desList", desList);
 		return json;
 	}
+
 	@RequestMapping("GetShjlByGuid")
 	@ResponseBody
-	public List<Map<String, Object>> GetShjlByGuid(HttpServletRequest request, HttpServletResponse res,String bgGuid,String zgh,String zwh,String zhxx)
-			throws Exception {
+	public List<Map<String, Object>> GetShjlByGuid(HttpServletRequest request, HttpServletResponse res, String bgGuid,
+			String zgh, String zwh, String zhxx) throws Exception {
 		HttpSession session = request.getSession();
 		String dwbh = (String) session.getAttribute("guid");
 		List<Map<String, Object>> desList = new ArrayList<Map<String, Object>>();
 		conn = LinkSql.getConn();
-		String	tn="BGSHJL";
-		String sql = "SELECT * FROM bgshjl WHERE dwbh=? AND zhbh=? AND shdxbh=?  AND gh=? AND zwh=? order by shsj desc";
+		String tn = "BGSHJL";
+		
+		
+		
+		String sql = "SELECT * FROM bgshjl WHERE shsj IN (SELECT MAX(shsj) AS shsj FROM bgshjl WHERE dwbh=? AND zhbh=? AND shdxbh=?  AND gh=? AND zwh=? GROUP BY SHXM)";
 		conn = LinkSql.getConn();
 		ps = LinkSql.Execute(conn, sql, "1", tn);
 		ps.setString(1, dwbh);
@@ -691,6 +710,7 @@ public class BgController {
 		}
 		return desList;
 	}
+
 	/**
 	 * 提交报馆信息
 	 * 
@@ -721,56 +741,55 @@ public class BgController {
 			name = (String) pNames.nextElement();
 			if (name.equals("zhxxGuid")) {
 				zhxxGuid = request.getParameter(name).trim();
-			}else if(name.equals("bgGuid")){
-				bgGuid =request.getParameter(name);
-			}else if(name.equals("djsshdx")){//拿到审核失败之后修改的状态名称
+			} else if (name.equals("bgGuid")) {
+				bgGuid = request.getParameter(name);
+			} else if (name.equals("djsshdx")) {// 拿到审核失败之后修改的状态名称
 				djsshdx = request.getParameter(name);
 			} else {
-				sqlSet += name.trim() + "='"+request.getParameter(name).trim()+"',";
+				sqlSet += name.trim() + "='" + request.getParameter(name).trim() + "',";
 			}
 		}
-		sqlSet = sqlSet.substring(0, sqlSet.length()-1);
+		sqlSet = sqlSet.substring(0, sqlSet.length() - 1);
 		String sql = "";
 		Integer len = 0;
 		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
-		
+
 		/**
-		 * 判断费用，已提交，大状态修改成未审核
-		 * 		     已通过，大状态改为未审核
-		 * 		    未提交，未通过不变
+		 * 判断费用，已提交，大状态修改成未审核 已通过，大状态改为未审核 未提交，未通过不变
 		 */
-		String sqlZt= "";
+		String sqlZt = "";
 		String tn = "bgxx_" + zhxxGuid;
-		String sqlFy="select FYXXZT from "+tn+" where guid = ?";
+		String sqlFy = "select FYXXZT from " + tn + " where guid = ?";
 		ps = conn.prepareStatement(sqlFy);
 		ps.setString(1, bgGuid);
 		rs = ps.executeQuery();
 		rs.next();
 		String fyzt = rs.getString("FYXXZT");
-		if(fyzt.equals("未提交")||fyzt.equals("未通过")){
+		if (fyzt.equals("未提交") || fyzt.equals("未通过")) {
 			sqlZt = "";
-		}else{
+		} else {
 			sqlZt = ",ZT='待审核' ";
 		}
-		if (djsshdx!=null) {
-			djsshdx = djsshdx.substring(0,djsshdx.length()-1);
-			String[] shdx =null;
-			shdx =djsshdx.split(",");
-			len = shdx.length;
-			for (int i = 0; i < shdx.length; i++) {
-				sql +=" ,"+shdx[i]+"_ZT=? ";
+		if (djsshdx != null) {
+			if(!djsshdx.equals("")){
+				djsshdx = djsshdx.substring(0, djsshdx.length() - 1);
+				String[] shdx = null;
+				shdx = djsshdx.split(",");
+				len = shdx.length;
+				for (int i = 0; i < shdx.length; i++) {
+					sql += " ," + shdx[i] + "_ZT=? ";
+				}
+				sql.substring(0, sql.length() - 1);
 			}
-			sql.substring(0, sql.length()-1);
 		}
-		
-		
-		String sqlSelect = "UPDATE "+tn+" SET "+sqlSet+sql+sqlZt+" where guid = ?";
+
+		String sqlSelect = "UPDATE " + tn + " SET " + sqlSet + sql + sqlZt + " where guid = ?";
 		ps = conn.prepareStatement(sqlSelect);
 		for (int j = 1; j <= len; j++) {
 			ps.setString(j, "未审核");
 		}
-		ps.setString(len+1, bgGuid);
+		ps.setString(len + 1, bgGuid);
 		try {
 			ps.executeUpdate();
 			conn.commit();
@@ -788,63 +807,70 @@ public class BgController {
 		}
 		return json;
 	}
+
 	@RequestMapping("findFyxxInfo")
 	@ResponseBody
-	public Object findFyxxInfo(Model model, HttpServletRequest request,String zgh,String zwh,String zhxx,String dwbh) throws Exception {
-		HttpSession session  = request.getSession();
+	public Object findFyxxInfo(Model model, HttpServletRequest request, String zgh, String zwh, String zhxx,
+			String dwbh) throws Exception {
+		HttpSession session = request.getSession();
 		JSONObject json = new JSONObject();
 		List<Map<String, Object>> fyList = new ArrayList<>();
-		String yhbh= "";
-		if(session.getAttribute("roleid").equals("1")){
+		String yhbh = "";
+		if (session.getAttribute("roleid").equals("1")) {
 			yhbh = session.getAttribute("guid").toString();
-		}else{
+		} else {
 			yhbh = dwbh;
 		}
 		conn = LinkSql.getConn();
-		String sql="select fyxx,xj,sgyj,znj,zj,SGYJ_DATA from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+yhbh+"'   ";
+		String sql = "select fyxx,xj,sgyj,znj,zj,SGYJ_DATA from FYXX_" + zhxx + " where zgh='" + zgh + "' AND zwh='"
+				+ zwh + "' and yhbh='" + yhbh + "'   ";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
-		String fyxx= "";
+		String fyxx = "";
 		List<Map<String, Object>> xmList = new ArrayList<>();
 		Map<String, Object> row = new HashMap<String, Object>();
-		while(rs.next()){
+		while (rs.next()) {
 			fyxx = rs.getObject("fyxx").toString();
 			row.put("ZJ", rs.getObject("zj").toString());
 			row.put("XJ", rs.getObject("xj").toString());
 			row.put("SGYJ", rs.getObject("sgyj").toString());
 			row.put("ZNJ", rs.getObject("znj").toString());
-			row.put("SGYJ_DATA",  rs.getObject("SGYJ_DATA").toString());
+			row.put("SGYJ_DATA", rs.getObject("SGYJ_DATA").toString());
 		}
 		xmList.add(row);
-        List<Map<String,String>> listObjectFir = (List<Map<String,String>>) com.alibaba.fastjson.JSONArray.parse(fyxx);
-        for(Map<String,String> mapList : listObjectFir){
-        	Map<String, Object> rowData = new HashMap<String, Object>();
-            for (Map.Entry entry : mapList.entrySet()){
-            	rowData.put((String) entry.getKey(),entry.getValue());
-            }
-            fyList.add(rowData);
-        }
-        json.put("fyList", fyList);
-        json.put("xmList", xmList);
+		List<Map<String, String>> listObjectFir = (List<Map<String, String>>) com.alibaba.fastjson.JSONArray
+				.parse(fyxx);
+		for (Map<String, String> mapList : listObjectFir) {
+			Map<String, Object> rowData = new HashMap<String, Object>();
+			for (Map.Entry entry : mapList.entrySet()) {
+				rowData.put((String) entry.getKey(), entry.getValue());
+			}
+			fyList.add(rowData);
+		}
+		json.put("fyList", fyList);
+		json.put("xmList", xmList);
 		return json;
-		
+
 	}
+
 	@RequestMapping("findEdit")
 	@ResponseBody
-	public Object findEdit(Model model, HttpServletRequest request,String zgh,String zwh,String zhxx) throws Exception {
-		HttpSession session  = request.getSession();
+	public Object findEdit(Model model, HttpServletRequest request, String zgh, String zwh, String zhxx)
+			throws Exception {
+		HttpSession session = request.getSession();
 		JSONObject json = new JSONObject();
 		List<Map<String, Object>> fyList = new ArrayList<>();
 		conn = LinkSql.getConn();
-		String sql="select fyxx,xj,sgyj,znj,zj,SGYJ_DATA from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+session.getAttribute("guid").toString()+"'   ";
+		String sql = "select fyxx,xj,sgyj,znj,zj,SGYJ_DATA from FYXX_" + zhxx + " where zgh='" + zgh + "' AND zwh='"
+				+ zwh + "' and yhbh='" + session.getAttribute("guid").toString() + "'   ";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
-		String fyxx= "";
+		String fyxx = "";
 		List<Map<String, Object>> xmList = new ArrayList<>();
 		Map<String, Object> row = new HashMap<String, Object>();
-		if(rs.next()){
+		if (rs.next()) {
 			rs.beforeFirst();
-			while(rs.next()){
+			while (rs.next()) {
 				fyxx = rs.getObject("fyxx").toString();
 				row.put("ZJ", rs.getObject("zj").toString());
 				row.put("XJ", rs.getObject("xj").toString());
@@ -853,23 +879,62 @@ public class BgController {
 				row.put("SGYJ_DATA", rs.getObject("SGYJ_DATA").toString());
 			}
 			xmList.add(row);
-	        List<Map<String,String>> listObjectFir = (List<Map<String,String>>) com.alibaba.fastjson.JSONArray.parse(fyxx);
-	        for(Map<String,String> mapList : listObjectFir){
-	        	Map<String, Object> rowData = new HashMap<String, Object>();
-	            for (Map.Entry entry : mapList.entrySet()){
-	            	rowData.put((String) entry.getKey(),entry.getValue());
-	            }
-	            fyList.add(rowData);
-	        }
-	        json.put("fyList", fyList);
-	        json.put("xmList", xmList);
-	        json.put("success", true);
-		}else{
-			 json.put("success", false);
+			List<Map<String, String>> listObjectFir = (List<Map<String, String>>) com.alibaba.fastjson.JSONArray
+					.parse(fyxx);
+			for (Map<String, String> mapList : listObjectFir) {
+				Map<String, Object> rowData = new HashMap<String, Object>();
+				for (Map.Entry entry : mapList.entrySet()) {
+					rowData.put((String) entry.getKey(), entry.getValue());
+				}
+				fyList.add(rowData);
+			}
+			json.put("fyList", fyList);
+			json.put("xmList", xmList);
+			json.put("success", true);
+		} else {
+			json.put("success", false);
 		}
 		return json;
-		
+
 	}
-	
-	 
+
+	// 查询全部状态
+	@RequestMapping("findAllZt")
+	@ResponseBody
+	public Object findAllZt(Model model, HttpServletRequest request, String zhxx,String bgGuid) throws Exception {
+		HttpSession session = request.getSession();
+		JSONObject json = new JSONObject();
+		conn = LinkSql.getConn();
+		String sql = "SELECT zdm FROM bgxx_des_" + zhxx.trim() + "  WHERE  zdm LIKE '%\\_ZT'";
+		ps = conn.prepareStatement(sql);
+		rs = ps.executeQuery();
+		String ztArray = "";
+		rs.beforeFirst();
+		while (rs.next()) {
+			ztArray += rs.getString("zdm").toString().trim() + ",";
+		}
+		ztArray = ztArray.substring(0, ztArray.length() - 1);
+		String sqlZt =" select "+ztArray+" from bgxx_"+zhxx+" where guid = ?";
+		ps = conn.prepareStatement(sqlZt);
+		ps.setString(1, bgGuid);
+		rs = ps.executeQuery();
+		if(rs.next()){
+			rs.beforeFirst();
+			while(rs.next()){
+				String[] strArr = ztArray.split(",");
+		        for (int i = 0; i < strArr.length; ++i){
+		        	if(rs.getObject(strArr[i]).equals("未通过")){
+		        		json.put("msg", false);
+		        		break;
+		        	}else{
+		        		json.put("msg", true);
+		        	}
+		        }
+			}
+			
+		}
+		return json;
+
+	}
+
 }
