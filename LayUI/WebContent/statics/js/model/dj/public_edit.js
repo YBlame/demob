@@ -15,6 +15,7 @@ $(document).ready(function(){
 					 guid : guid,
 					 guidBmodel :guidBmodel
 					},function(data){
+						alert(data.shyj)
 						//获取字段拼接表单
 						 $.post("doc/returnZdmList",{
 							 	guidBmodel :guidBmodel
@@ -214,7 +215,7 @@ $(document).ready(function(){
 										    	
 												fromInput += "  <div class=\"layui-form-item\">"
 												fromInput += "  	<div class=\"layui-upload\">"
-												fromInput += "  	 <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\">"+isform+result[i].zdmc
+												fromInput += "  	 <blockquote class=\"layui-elem-quote layui-quote-nm\" style=\"margin-top: 10px;\">"+isform+result[i].zdmc+"<span style=\"font-size: 16px; float: right; color: red;\">"+data.shyj+"</span>"
 												fromInput += "  	 	<div class=\"layui-upload-list\" >"
 												fromInput += "  			<input id='"+result[i].zdm+"' name='"+result[i].zdm+"' style='display: none' value='"+dataZdm+"' lay-verify='required' lay-reqtext=\""+result[i].zdmc+"不能为空\" />"
 												fromInput += ""+img+""

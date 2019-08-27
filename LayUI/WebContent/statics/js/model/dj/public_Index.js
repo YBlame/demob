@@ -106,12 +106,9 @@ $(document).ready(function() {
 													if(data.success){
 														var shyj = data.shyj;
 														var html ="<blockquote class=\"layui-elem-quote layui-text\"><span  id=\"shyjShow\" style=\"font-size: 15px; color: red;\">"+shyj+"</span></blockquote>";
-														$("#demo").before(	)
+														$("#demo").before(html)
 													}
-												
-												
-												
-												
+													$("#toolbarDemo").remove();
 								                    var doclist = data.list;
 													var cols = [];
 													var types ={

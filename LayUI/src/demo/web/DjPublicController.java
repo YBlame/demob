@@ -228,7 +228,28 @@ public class DjPublicController {
 				list.add(rowData);
 			}
 			
+			
+			
 			conn =LinkSql.getConn();
+			String sqlWhere ="";
+			/*switch(bmDj){
+				case "zzpz":
+					sqlWhere +=" AND ZT='已提交' or ZT='已通过'";
+					break;
+				case "hcxx":
+					sqlWhere +=" AND ZT='已提交' or ZT='已通过'";
+					break;
+				case "zzpz":
+					sqlWhere +=" AND ZT='已提交' or ZT='已通过'";
+					break;
+				case "zzpz":
+					sqlWhere +=" AND ZT='已提交' or ZT='已通过'";
+					break;
+			
+			}
+			String sqlTjzt = "";*/
+			
+			
 			String sql ="SELECT SHYJ FROM bgshjl WHERE dwbh = '"+session.getAttribute("guid")+"' AND shxm='"+bmDj+"' AND zhbh='"+zhxxDj+"' ORDER BY shsj DESC  LIMIT 1";
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
@@ -239,7 +260,6 @@ public class DjPublicController {
 			}else{
 				json.put("success", false);
 			}
-			
 			//表头
 			json.put("list", list);
 			
@@ -856,6 +876,9 @@ public class DjPublicController {
 					ztStr = "false";
 					break;
 				}
+				
+				
+				
 				request.getRequestDispatcher(
 						"/DJ/public/public_edit.jsp?guid=" + guid + "&bmc=" + bmc+"&zt="+ztStr)
 						.forward(request, res);
