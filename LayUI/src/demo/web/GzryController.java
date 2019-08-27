@@ -2289,11 +2289,10 @@ public class GzryController {
 					String tn = "bgxx_" + zhxxguid;// 数据表表名，根据guid获取
 					String desTn = "bgxx_des_" + zhxxguid;// 描述表表名
 					
-					String sql = "UPDATE "+tn+" SET FYXXZT='已通过'  WHERE ZHBH=? and dwbh=?";					
+					String sql = "UPDATE "+tn+" SET FYXXZT='已通过'  WHERE  DJSBH=?";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sql);				
-					ps.setString(1, zhxxguid);
-					ps.setString(2, dwbh);
+					ps.setString(1, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2308,11 +2307,10 @@ public class GzryController {
 					String tn = "bgxx_" + zhxxguid;// 数据表表名，根据guid获取
 					String desTn = "bgxx_des_" + zhxxguid;// 描述表表名
 					
-					String sql = "UPDATE "+tn+" SET FYXXZT='未通过'  WHERE ZHBH=? and dwbh=?";					
+					String sql = "UPDATE "+tn+" SET FYXXZT='未通过'  WHERE  DJSBH=?";					
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sql);				
-					ps.setString(1, zhxxguid);
-					ps.setString(2, dwbh);
+					ps = conn.prepareStatement(sql);									
+					ps.setString(1, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();

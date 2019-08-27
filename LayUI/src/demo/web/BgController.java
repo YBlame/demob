@@ -790,12 +790,18 @@ public class BgController {
 	}
 	@RequestMapping("findFyxxInfo")
 	@ResponseBody
-	public Object findFyxxInfo(Model model, HttpServletRequest request,String zgh,String zwh,String zhxx) throws Exception {
+	public Object findFyxxInfo(Model model, HttpServletRequest request,String zgh,String zwh,String zhxx,String dwbh) throws Exception {
 		HttpSession session  = request.getSession();
 		JSONObject json = new JSONObject();
 		List<Map<String, Object>> fyList = new ArrayList<>();
+		String yhbh= "";
+		if(session.getAttribute("roleid").equals("1")){
+			yhbh = session.getAttribute("guid").toString();
+		}else{
+			yhbh = dwbh;
+		}
 		conn = LinkSql.getConn();
-		String sql="select fyxx,xj,sgyj,znj,zj,SGYJ_DATA from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+session.getAttribute("guid").toString()+"'   ";
+		String sql="select fyxx,xj,sgyj,znj,zj,SGYJ_DATA from FYXX_"+zhxx+" where zgh='"+zgh+"' AND zwh='"+zwh+"' and yhbh='"+yhbh+"'   ";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 		String fyxx= "";
