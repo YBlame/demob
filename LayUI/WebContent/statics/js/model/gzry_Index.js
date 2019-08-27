@@ -74,8 +74,9 @@ $(document).ready(function () {
 function chakan(shmc, shguid) {
     layer.open({
         type: 2,
-        area: ["1000px", "560px"],
+        area: ["80%", "80%"],
         title: '审核',
+        maxmin: true,
         content: 'zhxx/bgxxsh.jsp?shmc=' + shmc+'&shguid='+shguid+'&zhxxguid='+zhxx //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
     });
 

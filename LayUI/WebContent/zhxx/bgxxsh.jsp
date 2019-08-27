@@ -126,7 +126,7 @@ layui.use(['form', 'layer', 'table'], function () {
             		if(data.ZTJG.trim()=="室内单层"||data.ZTJG.trim()=="室外简易结构"){//不变
             			var sfzsmj = data.tp.split(',');
                     	if (sfzsmj.length >= 1) {
-        					for (var i = 0; i < sfzsmj.length; i++) {
+        					for (var i = 0; i < sfzsmj.length-1; i++) {
         						$("#mc").after('<div class="layui-input-inline" style="width: 170px; height: 100px;margin-right: 10px;"><div style="display:inline-block;"><a	 href="'+sfzsmj[i]+'"	target="_blank"> <img  width="170px" height="100px" src="'+sfzsmj[i]+'" name="sfzsmj_upload" alt="" style="position: relative;" class="">  </a></div></div>');
         					}
         				}            			            			
@@ -135,7 +135,7 @@ layui.use(['form', 'layer', 'table'], function () {
                     	if (zwtz.length >= 1) {
                     		$("#mc").after('<div id="zwtz" style="margin-bottom:8px"></div>');
                     		var a="";
-        					for (var i = 0; i < zwtz.length; i++) {        			
+        					for (var i = 0; i < zwtz.length-1; i++) {        			
         							a+='<div class="layui-input-inline" style="width: 170px; height: 100px;margin-right: 10px;"><div style="display:inline-block;"><a	 href="'+zwtz[i]+'"	target="_blank"><img  width="170px" height="100px" src="'+zwtz[i]+'" name="sfzsmj_upload" alt="" style="position: relative;" class="">   </a></div></div>';       							        					       						
         					}
         					$("#zwtz").html(a);
@@ -145,7 +145,7 @@ layui.use(['form', 'layer', 'table'], function () {
                     	if (zwjgt.length >= 1) {
                     		$("#zwtz").after('<label id="mc2" class="layui-form-label" style="margin-left: 25px;margin-top:10px">展位细部结构图:</label><div id="zwjgt" style="margin-bottom:8px"></div>');
                     		var b="";
-        					for (var i = 0; i < zwjgt.length; i++) {       					
+        					for (var i = 0; i < zwjgt.length-1; i++) {       					
         							b+='<div class="layui-input-inline" style="width: 170px; height: 100px;margin-right: 10px;"><div style="display:inline-block;"><a	 href="'+zwjgt[i]+'"	target="_blank"><img  width="170px" height="100px" src="'+zwjgt[i]+'" name="sfzsmj_upload" alt="" style="position: relative;" class=""> </a>	</span></div></div>';	        				        						
         					}
         					$("#zwjgt").html(b);
@@ -155,7 +155,7 @@ layui.use(['form', 'layer', 'table'], function () {
                     	if (gcszzzs.length >= 1) {
                     		$("#zwjgt").after('<label id="mc3" class="layui-form-label" style="margin-left: 25px;margin-top:10px">工程师资质证书:</label><div id="gcszzzs" ></div>');
         					var c="";
-                    		for (var i = 0; i < gcszzzs.length; i++) {        					
+                    		for (var i = 0; i < gcszzzs.length-1; i++) {        					
         							c+='<div class="layui-input-inline" style="width: 170px; height: 100px;margin-right: 10px;"><div style="display:inline-block;"><a	 href="'+gcszzzs[i]+'"	target="_blank"> <img  width="170px" height="100px" src="'+gcszzzs[i]+'" name="sfzsmj_upload" alt="" style="position: relative;" class="">  </a>	</span></div></div>';        					        						
         					}
                     		$("#gcszzzs").html(c);                    		
@@ -165,7 +165,7 @@ layui.use(['form', 'layer', 'table'], function () {
             	}else{
             		var sfzsmj = data.tp.split(',');
                 	if (sfzsmj.length >= 1) {
-    					for (var i = 0; i < sfzsmj.length; i++) {
+    					for (var i = 0; i < sfzsmj.length-1; i++) {
     						$("#mc").after('<div class="layui-input-inline" style="width: 170px; height: 100px"><div style="display:inline-block;margin-right: 10px;"><a	 href="'+sfzsmj[i]+'"	target="_blank"> <img  width="170px" height="100px" src="'+sfzsmj[i]+'" name="sfzsmj_upload" alt="" style="position: relative;" class=""></a></span></div></div>')
     					}
     				}            		

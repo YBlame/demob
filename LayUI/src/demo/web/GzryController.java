@@ -117,7 +117,7 @@ public class GzryController {
 		String roleId = session.getAttribute("roleid").toString();
 		String[] menuGuid = GzryMenu.findSelectMenu(session, roleId, zhxxGuid);
 		String tn = Bmodel.findBmByGuId("76a4ade487a246978a26ebead1aa05b5");
-		String sql = "select guid,id,name,zhxx_menu,bmc,bm from " + tn + " ";
+		String sql = "select guid,id,name,bmc,bm from " + tn + " ";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 		ResultSetMetaData md = rs.getMetaData();
@@ -147,7 +147,7 @@ public class GzryController {
 		conn = LinkSql.getConn();
 		List<Map<String, Object>> desList = new ArrayList<Map<String, Object>>();
 		String tn = Bmodel.findBmByGuId("73c2efa3c34f4904ae0eee4ab31dfa79");
-		String sql = "select id,guid,name,bmc,bm,zhxx_menu from " + tn + " where  parentMenu = ?";
+		String sql = "select id,guid,name,bmc,bm from " + tn + " where  parentMenu = ?";
 		ps = conn.prepareStatement(sql);
 		ps.setInt(1, parentMenu);
 		rs = ps.executeQuery();
@@ -601,7 +601,40 @@ public class GzryController {
 							}
 
 						} else {
+							if(md.getColumnName(i).equals("FYXXZT")){
+								String wtg="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
+								String wsh="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
+								String tg="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
+								String wtj="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/wtj.png' style='margin-top:4px;'></a></div><div>";
+								if(rs.getObject(i).equals("未通过")){//未通过
+								
+									rowData.put(md.getColumnName(i), wtg);
+																	
+								}else if(rs.getObject(i).equals("已提交")){//未审核
+									
+									rowData.put(md.getColumnName(i), wsh);
+									
+								}else if(rs.getObject(i).equals("通过")){//通过
+									
+									rowData.put(md.getColumnName(i), tg);									
+								}else if(rs.getObject(i).equals("未提交")){
+									rowData.put(md.getColumnName(i), wtj);
+								}
+															
+							}else if(md.getColumnName(i).equals("FKTZDZT")){								
+								String wtj="<div><div style='text-align: center;'><img src='statics/icon/ffwtj.jpg' style='margin-top:4px;'></div><div>";
+								String yfs="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/ffyfs.jpg' style='margin-top:4px;'></a></div><div>";
+								String wfs="<div><div style='text-align: center;'><img src='statics/icon/ffwfs' style='margin-top:4px;'></div><div>";
+								if(rs.getObject(i).equals("未提交")){//未通过								
+									rowData.put(md.getColumnName(i), wtj);																	
+								}else if(rs.getObject(i).equals("已发送")){//未审核									
+									rowData.put(md.getColumnName(i), yfs);									
+								}else if(rs.getObject(i).equals("未发送")){//通过									
+									rowData.put(md.getColumnName(i), wfs);									
+								}								
+							}else{
 							rowData.put(md.getColumnName(i), rs.getObject(i).toString());
+							}
 						}
 					}
 				}
@@ -1472,6 +1505,7 @@ public class GzryController {
 					// 查询是不是全部都是通过 先查描述表所有带状态的字段
 					String flagzt = "false";
 					String flagwsh = "false";
+					String flagfy="false";
 					int columnCount = 0;
 					ResultSetMetaData md = null;
 					String sql = "select * from  " + tn + " WHERE GUID='" + shguid + "'";
@@ -1494,6 +1528,13 @@ public class GzryController {
 								flagzt = "trun";
 								break;
 							}
+							
+							//费用状态
+							if (md.getColumnName(i).equals("FYXXZT") && rs.getObject(i) == "已通过") {
+								flagfy = "trun";
+								break;
+							}
+							
 						}
 					}
 
@@ -1539,6 +1580,22 @@ public class GzryController {
 								// TODO 自动生成的 catch 块
 								conn.rollback();
 							}
+							
+							
+							if(flagfy.equals("true")){
+								String sqlfy = "UPDATE " + tn + " SET FKTZDZT='未发送'  WHERE GUID=?";
+
+								conn.setAutoCommit(false);
+								ps = conn.prepareStatement(sqlfy);
+								ps.setString(1, shguid);
+								try {
+									flag = ps.executeUpdate();
+									conn.commit();
+								} catch (Exception e) {
+									// TODO 自动生成的 catch 块
+									conn.rollback();
+								}								
+							}
 						}
 					}
 
@@ -1565,6 +1622,18 @@ public class GzryController {
 
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlAudits);
+					ps.setString(1, shguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}
+					
+					String sqlFktzdzt = "UPDATE " + tn + " SET FKTZDZT='未提交'  WHERE GUID=?";
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sqlFktzdzt);
 					ps.setString(1, shguid);
 					try {
 						flag = ps.executeUpdate();
@@ -2826,4 +2895,55 @@ public class GzryController {
 		}
 	}
 	
+	
+	//根据状态显示不合格内容
+	@RequestMapping("getshjlByGuid")
+	@ResponseBody
+	public int getshjlByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String bm) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;		
+			String gsmc = session.getAttribute("GSMC").toString();
+			String names = session.getAttribute("NAME").toString();
+			String sjDJ = session.getAttribute("SJ").toString();
+			String guiddwbh = session.getAttribute("guid").toString();
+			
+			String tn = bm+"_" + zhxxguid;
+			String desTn = bm+"_des_" + zhxxguid;
+			try {								
+				//根据展会编号查找项目状态
+				String sqlzhbh = "select ZT from "+tn+"where DWBH='"+guiddwbh+"'";
+				ps = conn.prepareStatement(sqlzhbh);
+				rs = ps.executeQuery();
+				String zt="";
+				while (rs.next()) {
+					zt = rs.getString("ZT");
+				}
+				
+				if(zt.equals("未通过")){
+					sqlzhbh = "select SHYJ from bgshjl where zhbh='"+zhxxguid+"' and SHXM='"+bm+"'";
+					ps = conn.prepareStatement(sqlzhbh);
+					rs = ps.executeQuery();
+					String yy="";
+					while (rs.next()) {
+						yy = rs.getString("SHYJ");
+					}
+					
+					
+				}
+				conn.setAutoCommit(false);								
+				try {
+					flag = ps.executeUpdate();
+					conn.commit();
+				} catch (Exception e) {
+					// TODO 自动生成的 catch 块
+					conn.rollback();
+				}																																							
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}						
 }

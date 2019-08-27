@@ -234,8 +234,18 @@ public class BgController {
 									rowData.put(md.getColumnName(i), tg);									
 								}else if(rs.getObject(i).equals("未提交")){
 									rowData.put(md.getColumnName(i), wtj);
-								}
-															
+								}															
+							}else if(md.getColumnName(i).equals("FKTZDZT")){								
+								String wtj="<div><div style='text-align: center;'><img src='statics/icon/ffwtj.jpg' style='margin-top:4px;'></div><div>";
+								String yfs="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/ffyfs.jpg' style='margin-top:4px;'></a></div><div>";
+								String wfs="<div><div style='text-align: center;'><img src='statics/icon/ffwfs' style='margin-top:4px;'></div><div>";
+								if(rs.getObject(i).equals("未提交")){//未通过								
+									rowData.put(md.getColumnName(i), wtj);																	
+								}else if(rs.getObject(i).equals("已发送")){//未审核									
+									rowData.put(md.getColumnName(i), yfs);									
+								}else if(rs.getObject(i).equals("未发送")){//通过									
+									rowData.put(md.getColumnName(i), wfs);									
+								}								
 							}else{
 							rowData.put(md.getColumnName(i), rs.getObject(i).toString());
 							}

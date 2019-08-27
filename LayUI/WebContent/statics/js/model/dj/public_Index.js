@@ -67,7 +67,7 @@ $(document).ready(function() {
 					document.getElementById("button").style.display='block';
 				}											    
 			}
-		});
+		});	
 			});
 				layui.config({
 					version : '1554901097999' //为了更新 js 缓存，可忽略
@@ -354,4 +354,18 @@ $(document).ready(function() {
 										var type = $(this).data('type');
 							            active[type] ? active[type].call(this) : '';
 							        });
+									
+									//显示审核原因
+							/*		var bm = $("#bm").val();
+		                		    $.ajax({
+				                         url:"gzry/getshjlByGuid",//请求的url地址
+				                         dataType:"json",   //返回格式为json                                      
+				                         data:{zhxxguid : cj.getCookie('selected_expo_id'),bm : bm},    //参数值
+				                         type:"POST",   //请求方式
+				                         success:function(con){
+				                    	 	$("#toolbarDemo").remove();
+				                    	 	layer.close(index);
+				                    	 	$("#shyy").html("审核不通过原因：");
+				                     	}
+						             });*/			                		   			                	   																		
 								});

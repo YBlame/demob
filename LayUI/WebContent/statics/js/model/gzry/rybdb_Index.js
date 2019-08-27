@@ -256,8 +256,9 @@ $(document).ready(function() {
 				function chakan(zhxxguid,dataGuid) {
 				    layer.open({
 				        type: 2,
-				        area: ["1000px", "560px"],
+				        area: ["80%", "80%"],
 				        title: '审核',
+				        maxmin: true,
 				        content: 'zhxx/sgrybdxxsh.jsp?zhxxguid=' + zhxxguid+'&dataGuid='+dataGuid, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
 				    });
 
