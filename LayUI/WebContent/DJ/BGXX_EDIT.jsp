@@ -92,7 +92,7 @@ cursor:pointer;
 			<input id="fyxxzt" name="fyxxzt" style="display: none" >
 			<div class="layui-card-body" style="padding: 15px;">
 				<form class="layui-form layui-form-pane" action="" lay-filter="component-form-group">
-				
+				<input id="djsshdx" name="djsshdx" style="display: none" >
 					<input id="bgGuid" name="bgGuid" style="display: none" value="<%=request.getParameter("bgGuid")%>">
 					<input type="text" id="zhxxGuid" name="zhxxGuid" style="display: none" />
 					<fieldset class="layui-elem-field layui-field-title">
@@ -313,7 +313,7 @@ cursor:pointer;
 					success: function (data) {
 						if (data != null) {
 							$("#fyxxzt").val(data.fyxxzt);
-							if(data.fyxxzt=="已提交"||data.fyxxzt=="已通过"){
+							if(data.fyxxzt=="未审核"||data.fyxxzt=="已通过"){
 								$("#submitBtn").html("保存");
 							}
 							shzt = data.desList[0].ZT;
@@ -338,7 +338,7 @@ cursor:pointer;
 								}
 								
 								if (n.indexOf("_ZT")!=-1) {
-									if (v == '已通过'||v=='待审核') {
+									if (v == '已通过'||v=='未审核') {
 										var btn = n.substring(0,n.length-3);
 										btn = btn.toLocaleLowerCase();
 										
@@ -377,16 +377,23 @@ cursor:pointer;
 							});
 
 							if (shzt == '拒绝') {
+								var zgh = $("[name='ZGH']").val();
+								var zwh = $("[name='ZWH']").val();
+								var zhxx = cj.getCookie('selected_expo_id');
 								$.ajax({
 									type: "POST",
 									url: "bg/GetShjlByGuid",
 									data: {
-										"bgGuid": bgGuid
+										"bgGuid": bgGuid,
+										"zgh" : zgh,
+										"zwh" :zwh,
+										"zhxx" :zhxx
 									},
 									success: function (result) {
 										if (result.length > 0) {
 											for (var i = 0; i < result.length; i++) {
 												var shdx = $("#djsshdx").val();
+												alert(result[i].SHXM)
 												shdx +=result[i].SHXM+",";
 												$("#djsshdx").val(shdx);
 												$("#"+result[i].SHXM.toLowerCase()+"").parent().before("<span style=\"font-size: 19px; float: right; color: red;\">"+ result[i].SHYJ +"</span>");
@@ -588,6 +595,8 @@ cursor:pointer;
 						var bgGuid =$("#bgGuid").val();
 						var formList = $('.layui-form-pane')
 							.serialize()
+							
+							
 						$.ajax({
 							type: "POST",
 							url: "bg/updateBgxx",
@@ -595,7 +604,7 @@ cursor:pointer;
 							success: function (data) {
 								if (data.success) {
 									var fyxxzt = $("#fyxxzt").val();
-									if(fyxxzt=="已提交"||fyxxzt=="已通过"){
+									if(fyxxzt=="未审核"||fyxxzt=="已通过"){
 										window.location.href = "DJ/BGXX_LIST.jsp";
 									}else{
 										var zgh = $("[name=ZGH]").val();

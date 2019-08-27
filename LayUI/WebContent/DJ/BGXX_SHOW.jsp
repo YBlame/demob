@@ -358,8 +358,8 @@ cursor:pointer;
 					},
 					success: function (data) {
 						if (data != null) {
-							shzt = data[0].ZT;
-							$.each(data[0], function (n, v) {
+							shzt = data.desList[0].ZT;
+							$.each(data.desList[0], function (n, v) {
 								$('#' + n + '').html(v);
 								$('#' + n + '').val(v);
 								if (n === 'ZGH') {

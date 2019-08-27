@@ -413,13 +413,14 @@ public class BgController {
 		conn = LinkSql.getConn();
 		conn.setAutoCommit(false);
 		String tn = "bgxx_" + zhxxGuid;
-		String sqlSelect = "INSERT INTO " + tn + " (guid, ZWTZ_ZT, ZT,QYZT,RQ," + sqlSet
-				+ ") values (?,?,?,?,now()," + sqlVal + ") ";
+		String sqlSelect = "INSERT INTO " + tn + " (guid, ZWTZ_ZT, ZT,QYZT,RQ,FKTZDZT," + sqlSet
+				+ ") values (?,?,?,?,now(),?," + sqlVal + ") ";
 		ps = conn.prepareStatement(sqlSelect);
 		ps.setString(1, UUIDUtil.getUUID());
 		ps.setString(2, "未审核");
 		ps.setString(3, "未提交");
 		ps.setString(4, "1");
+		ps.setString(5, "未审核");
 		try {
 			ps.executeUpdate();
 			conn.commit();
@@ -512,12 +513,19 @@ public class BgController {
 			conn.commit();
 			//1报馆基本信息费用汇总状态更新已提交
 			//2报馆基本信息总状态
-			String sqlUpdate="UPDATE bgxx_"+fy.zhxx+" SET ZT='待审核' ,FYXXZT='已提交' where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
+			String sqlUpdate="UPDATE bgxx_"+fy.zhxx+" SET ZT='待审核' ,FYXXZT='未审核' where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
 			ps = conn.prepareStatement(sqlUpdate);
 			ps.executeUpdate();
 			conn.commit();
 			json.put("success", true);
 			json.put("msg", "报馆成功，请等待审核");
+			
+			String sqlFindGuid ="select guid from bgxx_"+fy.zhxx+" where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"'  ";
+			ps = conn.prepareStatement(sqlFindGuid);
+			rs = ps.executeQuery();
+			rs.next();
+			String guid = rs.getString("guid");
+			json.put("guid", guid);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// TODO Auto-generated catch block
@@ -603,7 +611,7 @@ public class BgController {
 			conn.commit();
 			//1报馆基本信息费用汇总状态更新已提交
 			//2报馆基本信息总状态
-			String sqlUpdate="UPDATE bgxx_"+fy.zhxx+" SET ZT='待审核' ,FYXXZT='已提交' where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
+			String sqlUpdate="UPDATE bgxx_"+fy.zhxx+" SET ZT='待审核' ,FYXXZT='未审核' where DJSBH='"+userGuid+"' and ZGH ='"+fy.zgh+"' and ZWH='"+fy.zwh+"' ";
 			ps = conn.prepareStatement(sqlUpdate);
 			ps.executeUpdate();
 			conn.commit();
@@ -649,7 +657,6 @@ public class BgController {
 			}
 			desList.add(rowData);
 		}
-		System.out.println(fyxxzt);
 		json.put("fyxxzt", fyxxzt);
 		//查询费用状态，若为已提交，已通过不进入下一页
 		json.put("desList", desList);
@@ -657,15 +664,21 @@ public class BgController {
 	}
 	@RequestMapping("GetShjlByGuid")
 	@ResponseBody
-	public List<Map<String, Object>> GetShjlByGuid(HttpServletRequest request, HttpServletResponse res,String bgGuid)
+	public List<Map<String, Object>> GetShjlByGuid(HttpServletRequest request, HttpServletResponse res,String bgGuid,String zgh,String zwh,String zhxx)
 			throws Exception {
+		HttpSession session = request.getSession();
+		String dwbh = (String) session.getAttribute("guid");
 		List<Map<String, Object>> desList = new ArrayList<Map<String, Object>>();
 		conn = LinkSql.getConn();
 		String	tn="BGSHJL";
-		String sql = "select SHYJ,MAX( SHSJ) AS SHSJ,SHXM from BGSHJL where SHDXBH= ? GROUP BY shxm ";
+		String sql = "SELECT * FROM bgshjl WHERE dwbh=? AND zhbh=? AND shdxbh=?  AND gh=? AND zwh=? order by shsj desc";
 		conn = LinkSql.getConn();
 		ps = LinkSql.Execute(conn, sql, "1", tn);
-		ps.setString(1, bgGuid);
+		ps.setString(1, dwbh);
+		ps.setString(2, zhxx);
+		ps.setString(3, bgGuid);
+		ps.setString(4, zgh);
+		ps.setString(5, zwh);
 		rs = ps.executeQuery();
 		ResultSetMetaData md = rs.getMetaData();
 		int columnCount = md.getColumnCount();
@@ -738,7 +751,7 @@ public class BgController {
 		if(fyzt.equals("未提交")||fyzt.equals("未通过")){
 			sqlZt = "";
 		}else{
-			sqlZt = ",ZT='已提交' ";
+			sqlZt = ",ZT='待审核' ";
 		}
 		if (djsshdx!=null) {
 			djsshdx = djsshdx.substring(0,djsshdx.length()-1);
@@ -752,7 +765,7 @@ public class BgController {
 		}
 		
 		
-		String sqlSelect = "UPDATE "+tn+" SET "+sqlSet+sql+" where guid = ?";
+		String sqlSelect = "UPDATE "+tn+" SET "+sqlSet+sql+sqlZt+" where guid = ?";
 		ps = conn.prepareStatement(sqlSelect);
 		for (int j = 1; j <= len; j++) {
 			ps.setString(j, "未审核");

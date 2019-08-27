@@ -631,10 +631,9 @@
                        		      	data: fy,
 		                            dataType:"json",
                        		        success:function(data){
-                       					var bgGuid = $("#bgGuid").val();
-                       		           if(data.success){
+                       		           	if(data.success){
                        						layer.alert(data.msg);
-                       						window.location.href = "DJ/BGXX_SHOW.jsp?bgGuid="+bgGuid
+                       						window.location.href = "DJ/BGXX_SHOW.jsp?bgGuid="+data.guid
                        		           }else{
                        					  layer.alert(data.msg);
                        		           }
