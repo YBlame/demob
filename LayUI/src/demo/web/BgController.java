@@ -226,7 +226,7 @@ public class BgController {
 								
 									rowData.put(md.getColumnName(i), wtg);
 																	
-								}else if(rs.getObject(i).equals("已提交")){//未审核
+								}else if(rs.getObject(i).equals("未审核")){//未审核
 									
 									rowData.put(md.getColumnName(i), wsh);
 									

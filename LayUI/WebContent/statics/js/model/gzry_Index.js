@@ -84,13 +84,13 @@ function chakan(shmc, shguid,dwbh) {
              + guid;*/
 }
 
-function chakanfy(shmc, shguid) {
+function chakanfy(shguid,zgh,zwh,dwbh) {
     layer.open({
         type: 2,
         area: ["80%", "80%"],
         title: '审核',
         maxmin: true,
-        content: 'zhxx/fyhzsh.jsp?shmc=' + shmc+'&shguid='+shguid+'&zhxxguid='+zhxx //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+        content: 'zhxx/fyhzsh.jsp?shguid='+shguid+'&zhxxguid='+zhxx+'&dwbh='+dwbh+'&zgh='+zgh+'&zwh='+zwh  //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
     });
 
     /* window.location = "zhxx/bgxxsh.jsp?guid="

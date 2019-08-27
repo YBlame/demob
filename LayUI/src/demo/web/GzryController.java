@@ -550,12 +550,18 @@ public class GzryController {
 				// 获取guid
 				String guids = "";
 				String dwbh = "";
+				String zgh="";
+				String zwh="";
 				for (int i = 1; i <= columnCount; i++) {
 					if (rs.getObject(i) != null) {
 						if (md.getColumnName(i).equals("guid")) {
 							guids = rs.getObject(i).toString();
 						}else if (md.getColumnName(i).equals("DJSBH")) {
 							dwbh = rs.getObject(i).toString();
+						}if (md.getColumnName(i).equals("ZGH")) {
+							zgh = rs.getObject(i).toString();
+						}if (md.getColumnName(i).equals("ZWH")) {
+							zwh = rs.getObject(i).toString();
 						}
 					}
 				}
@@ -605,23 +611,24 @@ public class GzryController {
 
 						} else {
 							if(md.getColumnName(i).equals("FYXXZT")){
-								String wtg="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
-								String wsh="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
-								String tg="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
-								String wtj="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/wtj.png' style='margin-top:4px;'></a></div><div>";
-								if(rs.getObject(i).equals("未通过")){//未通过
-								
+								String wtg = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakanfy('"  + guids + "','"  + zgh + "','"  + zwh + "','" + dwbh 
+										+ "')\"  class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
+								String wsh = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakanfy('"  + guids + "','"  + zgh + "','"  + zwh + "','" + dwbh 
+										+ "')\"  class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
+								String tg = "<div><div id=\"sh\" style='text-align: center;'><a   onclick=\"chakanfy('"  + guids + "','"  + zgh + "','"  + zwh + "','" + dwbh 
+										+ "')\"  class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
+							/*	String wtj="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/wtj.png' style='margin-top:4px;'></a></div><div>";*/
+								if (rs.getObject(i).equals("未通过")) {// 未通过
+
 									rowData.put(md.getColumnName(i), wtg);
-																	
-								}else if(rs.getObject(i).equals("已提交")){//未审核
-									
+
+								} else if (rs.getObject(i).equals("未审核")) {// 未审核
+
 									rowData.put(md.getColumnName(i), wsh);
-									
-								}else if(rs.getObject(i).equals("通过")){//通过
-									
-									rowData.put(md.getColumnName(i), tg);									
-								}else if(rs.getObject(i).equals("未提交")){
-									rowData.put(md.getColumnName(i), wtj);
+
+								} else if (rs.getObject(i).equals("已通过")) {// 通过
+
+									rowData.put(md.getColumnName(i), tg);
 								}
 															
 							}else if(md.getColumnName(i).equals("FKTZDZT")){								
@@ -2248,6 +2255,85 @@ public class GzryController {
 					ps.setString(3, shry);
 					ps.setString(4, shrybh);		
 					ps.setString(5, "HCXX");
+					ps.setString(6, zhxxguid);
+					ps.setString(7, dwbh);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+						conn.rollback();
+					}				   					
+					
+				}else{
+					return flag;
+				}		
+
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	
+	@RequestMapping("updfyStateByGuid")
+	@ResponseBody
+	public int updfyStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest,String dwbh) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;
+			try {
+				if(audit.equals("pass")){
+					String tn = "bgxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "bgxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE "+tn+" SET FYXXZT='已通过'  WHERE ZHBH=? and dwbh=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+						flag=1;
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}																																													
+										
+				}else if(audit.equals("NoPass")){
+					//修改报馆信息状态
+					String tn = "bgxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "bgxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE "+tn+" SET FYXXZT='未通过'  WHERE ZHBH=? and dwbh=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}											
+					
+					//向审核记录表中插入数据
+					// SHYJ, SHRY, SHRYBH, SHDXBH, SHSJ, SHXM,ZHBH, GH, ZWH
+					String shry=(String)session.getAttribute("NAME");
+				    String shrybh=(String)session.getAttribute("guid");
+				    String guid=UUIDUtil.getUUID();
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH,DWBH) VALUES(?,?,?,?,now(),?,?,?)";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sqlinsert);				
+					ps.setString(1, guid);
+					ps.setString(2, suggest);
+					ps.setString(3, shry);
+					ps.setString(4, shrybh);		
+					ps.setString(5, "FYXX");
 					ps.setString(6, zhxxguid);
 					ps.setString(7, dwbh);
 					try {
