@@ -753,7 +753,7 @@ public class GzryController {
 						System.out.println(md.getColumnName(i));
 						String dataGuid = (String) rs.getObject("guid");
 						String dwbh = (String) rs.getObject("DWBH");
-						if (md.getColumnName(i).equals("BDZT") || md.getColumnName(i).equals("RYZT")) { // onclick=\"chakan('"+mc+"','"+guids+"','"+mc+"','"+mc+"')\"
+						if (md.getColumnName(i).equals("BDZT") || md.getColumnName(i).equals("RYZT")) {
 							String wtg = "<div><div id=\"sh\" style='text-align: center;'><a onclick=\"chakan('"
 									+ zhxxDj + "','" + dataGuid+ "','" + dwbh
 									+ "')\"  class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
