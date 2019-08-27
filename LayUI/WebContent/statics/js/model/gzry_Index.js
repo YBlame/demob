@@ -97,6 +97,20 @@ function chakanfy(shguid,zgh,zwh,dwbh) {
              + guid;*/
 }
 
+
+function chakanfktzd(shguid,zgh,zwh,dwbh) {
+    layer.open({
+        type: 2,
+        area: ["80%", "80%"],
+        title: '付款通知单',
+        maxmin: true,
+        content: 'zhxx/fktzdsh.jsp?shguid='+shguid+'&zhxxguid='+zhxx+'&dwbh='+dwbh+'&zgh='+zgh+'&zwh='+zwh  //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+    });
+
+    /* window.location = "zhxx/bgxxsh.jsp?guid="
+             + guid;*/
+}
+
 layui.config({
     version: '1554901097999' //为了更新 js 缓存，可忽略
 });

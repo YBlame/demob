@@ -18,14 +18,60 @@
 </head>
 <body>
 	<div class="layui-fluid">
+		<table width="950" border="0" align="center" cellpadding="0" cellspacing="0" class="__web-inspector-hide-shortcut__">
+                        <tbody><tr>
+                            <td colspan="6" align="center" style="padding: 20px 0;"><span style="text-align: center; font-size: 28px; height: 30px; line-height: 30px; font-weight: bold;" id="zhmc"></span><br>
+                                <br>
+                                <span style="font-size: 33px; font-weight: bold;">付款通知单</span></td>
+                        </tr>
+                        <tr>
+                            <td height="30" width="190" class="auto-style2">展馆号：</td>
+                            <td width="360" height="30">
+                                <label id="ZGH"></label>
+
+                            </td>
+                            <td width="180" height="30" style="text-align: right;padding-right: 3px">展位号：</td>
+                            <td width="200" height="30"><label id="ZWH"></label></td>
+                            <td width="100" height="30">&nbsp;</td>
+                            <td width="" height="30">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td height="30" class="auto-style2">参展商公司名称：</td>
+                            <td height="30">
+                                <label id="CZQYGSQC">参展企业公司全称</label>
+                            </td>
+                            <td height="30" style="text-align: right;padding-right: 3px">现场负责人：</td>
+                            <td height="30">
+                                <label id="CZSZSXCFZR">参展商驻守现场负责人</label>
+                            </td>
+                            <td height="30" style="text-align: right;padding-right: 3px">手机：</td>
+                            <td height="30">
+                                <label id="CZSSJ">13312345678</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="30" class="auto-style2">搭建商公司名称：</td>
+                            <td height="30">
+                                <label id="dw">北京教育888</label>
+                            </td>
+                            <td height="30" style="text-align: right;padding-right: 3px">现场负责人：</td>
+                            <td height="30">
+                                <label id="DJSXCAQFZR">搭建商现场安全负责人</label>
+                            </td>
+                            <td height="30" style="text-align: right;padding-right: 3px">手机：</td>
+                            <td height="30">
+                                <label id="DJSSJ">13312345678</label>
+
+                                <!--  <label id="sjglf"></label>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="40" colspan="6">兹确认贵公司预定的服务项目如下：</td>
+                        </tr>
+                    </tbody></table>
 		<div class="layui-card">
-			<div class="layui-card-header">费用汇总审核</div>
 			<div class="layui-card-body" style="padding: 15px;">
-				<div class="layui-row">							
-				<blockquote class="layui-elem-quote" style="display: inline-block; float: right;">展馆号：<p id="zgh" style="display: inline-block;"></p>&nbsp;&nbsp;&nbsp;展位号：<p style="display: inline-block;" id="zwh"></p></blockquote>
-				</div>
-				<div class="layui-row">
-				
+				<div class="layui-row">				
 					<input id="bgGuid" name="bgGuid" style="display: none" value="<%=request.getParameter("bgGuid")%>">
 						<table class="layui-table" lay-filter="test" id="test_table">
 							<colgroup>
@@ -77,30 +123,13 @@
 									</td>
 								</tr>
 							</tbody>
-						</table>
-								<hr>
-						<form class="layui-form" action="" style="margin-top: 15px; width: 950px;" onsubmit="return false;">
-							<div class="layui-form-item ">
-								<label class="layui-form-label" style="margin-left: 25px;">审核意见：</label>
-								<div class="layui-input-inline" style="width: 750px">
-									<textarea name="desc" placeholder="请输入内容（合格可不填）"
-										class="layui-textarea " id="SHYJ"></textarea>
-
-								</div>
-							</div>
+						</table>												
 							<div class="layui-row" style="text-align: center">
 								<div class="layui-btn-group">
 									<button class="layui-btn layui-btn-normal" lay-submit
-										data-type="pass">合 格</button>
-
-									<button class="layui-btn layui-btn-danger" data-type="NoPass">不合格</button>
+										data-type="pass">发送</button>									
 								</div>
-							</div>
-							<div class="layui-form-item">
-								<div class="layui-input-block"></div>
-							</div>
-						</form>
-					</form>
+							</div>																				
 				</div>
 			</div>
 	</div>
@@ -121,7 +150,9 @@
                         var zgh = cj.queryString("zgh");
                         var zwh = cj.queryString("zwh"); 
                         var dwbh = cj.queryString("dwbh");
-                        var shguid= cj.queryString("shguid");
+                        var shguid=cj.queryString("shguid");
+                        
+                        
                         
                         
                       /*   var zgh = cj.getCookie('bgxx_zgh');
@@ -133,6 +164,29 @@
                     	$("[name=zhxx]").val(selected);
                     	$("[name=zgh]").val(zgh);
                     	$("[name=zwh]").val(zwh);
+                    	
+                    	$.ajax({
+        					type: "POST",
+        					url: "bg/findBgxxInfo",
+        					data: {
+        						"bgGuid": shguid,
+        						"zhxxGuid": selected
+        					},
+        					success: function (data) {
+        						if (data != null) {
+        							shzt = data.desList[0].ZT;
+        							$.each(data.desList[0], function (n, v) {
+        								$('#' + n + '').html(v);
+        								$('#' + n + '').val(v);
+        								
+        								form.render();
+        							});
+        							
+
+        						}
+        					}
+        				});
+
                         
                     	function findFYXXINFO(v,ve){
                 			var zgh =v;
@@ -197,9 +251,10 @@
                         		});
 
                             return false;
-                        }); */
-                        //审核
-                        var active = {
+                        }); */   
+                        
+                        
+                    	var active = {
                                 pass: function () {
                                     //修改guid的状态 通过
                                     if ($("#ZT").val() === '通过') {
@@ -227,7 +282,7 @@
                             var audit = function (auditing) {
                                 $.ajax({
                                             type: "POST",
-                                            url: "gzry/updfyStateByGuid?time="+ new Date().getMilliseconds(),
+                                            url: "gzry/updfktzdStateByGuid?time="+ new Date().getMilliseconds(),
                                             data: {
                                             	zhxxguid: selected,                    
                                             	audit : auditing,
@@ -239,7 +294,7 @@
                                             dataType: "json",
                                             success: function (data) {
                                                 if (data === 1) {
-                                                    layer.alert("审核成功", function () {
+                                                    layer.alert("发送成功", function () {
                                                         var index = parent.layer.getFrameIndex(window.name);//关闭iframe页面
                                                         
                                                         parent.layui.table.reload('demo');
@@ -248,7 +303,7 @@
                                                     });
 
                                                 } else {
-                                                    layer.alert("审核失败");
+                                                    layer.alert("发送失败");
                                                 }
                                             }
                                         });

@@ -634,14 +634,16 @@ public class GzryController {
 															
 							}else if(md.getColumnName(i).equals("FKTZDZT")){								
 								String wtj="<div><div style='text-align: center;'><img src='statics/icon/ffwtj.jpg' style='margin-top:4px;'></div><div>";
-								String yfs="<div><div style='text-align: center;'><a  href='DJ/BGXX_EDIT.jsp?bgGuid="+guids+"' class='layui-table-link'><img src='statics/icon/ffyfs.jpg' style='margin-top:4px;'></a></div><div>";
-								String wfs="<div><div style='text-align: center;'><img src='statics/icon/ffwfs' style='margin-top:4px;'></div><div>";
+								String wfs="<div><div style='text-align: center;'><a  onclick=\"chakanfktzd('"  + guids + "','"  + zgh + "','"  + zwh + "','" + dwbh 
+										+ "')\"  class='layui-table-link'><img src='statics/icon/ffwfs.jpg' style='margin-top:4px;'></a></div><div>";
+								String yfs="<div><div style='text-align: center;'><a  onclick=\"chakanfktzd('"  + guids + "','"  + zgh + "','"  + zwh + "','" + dwbh 
+										+ "')\"  class='layui-table-link'><img src='statics/icon/ffyfs.jpg' style='margin-top:4px;'></a></div><div>";																							
 								if(rs.getObject(i).equals("未提交")){//未通过								
 									rowData.put(md.getColumnName(i), wtj);																	
+								}else if(rs.getObject(i).equals("未发送")){//未审核									
+									rowData.put(md.getColumnName(i), wfs);									
 								}else if(rs.getObject(i).equals("已发送")){//未审核									
 									rowData.put(md.getColumnName(i), yfs);									
-								}else if(rs.getObject(i).equals("未发送")){//通过									
-									rowData.put(md.getColumnName(i), wfs);									
 								}								
 							}else{
 							rowData.put(md.getColumnName(i), rs.getObject(i).toString());
@@ -2280,7 +2282,7 @@ public class GzryController {
 	
 	@RequestMapping("updfyStateByGuid")
 	@ResponseBody
-	public int updfyStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest,String dwbh) throws Exception {
+	public int updfyStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest,String dwbh,String shguid) throws Exception {
 		{
 			HttpSession session = request.getSession();
 			conn = LinkSql.getConn();
@@ -2290,10 +2292,10 @@ public class GzryController {
 					String tn = "bgxx_" + zhxxguid;// 数据表表名，根据guid获取
 					String desTn = "bgxx_des_" + zhxxguid;// 描述表表名
 					
-					String sql = "UPDATE "+tn+" SET FYXXZT='已通过'  WHERE  DJSBH=?";					
+					String sql = "UPDATE "+tn+" SET FYXXZT='已通过'  WHERE  guid=?";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sql);				
-					ps.setString(1, dwbh);
+					ps.setString(1, shguid);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2308,10 +2310,10 @@ public class GzryController {
 					String tn = "bgxx_" + zhxxguid;// 数据表表名，根据guid获取
 					String desTn = "bgxx_des_" + zhxxguid;// 描述表表名
 					
-					String sql = "UPDATE "+tn+" SET FYXXZT='未通过'  WHERE  DJSBH=?";					
+					String sql = "UPDATE "+tn+" SET FYXXZT='未通过'  WHERE  guid=?";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sql);									
-					ps.setString(1, dwbh);
+					ps.setString(1, shguid);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2344,6 +2346,44 @@ public class GzryController {
 						conn.rollback();
 					}				   					
 					
+				}else{
+					return flag;
+				}		
+
+			} catch (Exception e) {
+				conn.rollback();
+			}
+			return flag;
+		}
+	}
+	
+	
+	//发送付款通知单
+	@RequestMapping("updfktzdStateByGuid")
+	@ResponseBody
+	public int updfktzdStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid,String audit,String suggest,String dwbh,String shguid) throws Exception {
+		{
+			HttpSession session = request.getSession();
+			conn = LinkSql.getConn();
+			int flag = 0;
+			try {
+				if(audit.equals("pass")){
+					String tn = "bgxx_" + zhxxguid;// 数据表表名，根据guid获取
+					String desTn = "bgxx_des_" + zhxxguid;// 描述表表名
+					
+					String sql = "UPDATE "+tn+" SET FKTZDZT='已发送'  WHERE  guid=?";					
+					conn.setAutoCommit(false);
+					ps = conn.prepareStatement(sql);				
+					ps.setString(1, shguid);
+					try {
+						flag = ps.executeUpdate();
+						conn.commit();
+						flag=1;
+					} catch (Exception e) {
+						// TODO 自动生成的 catch 块
+						conn.rollback();
+					}																																													
+										
 				}else{
 					return flag;
 				}		
