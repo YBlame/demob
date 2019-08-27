@@ -111,6 +111,7 @@ data-type="pass">合 格</button>
     var zhxxguid = cj.queryString("zhxxguid");
     var shguid = cj.queryString("shguid");
     var shmc = cj.queryString("shmc");
+    var dwbh = cj.queryString("dwbh");
 //获取图片路径以及审核项
 layui.use(['form', 'layer', 'table'], function () {
     var form = layui.form, layer = layui.layer, table = layui.table;
@@ -238,7 +239,8 @@ layui.use(['form', 'layer', 'table'], function () {
                     	shguid: shguid,
                     	shmc: shmc,
                     	audit : auditing,
-                    	suggest : $("#SHYJ").val()
+                    	suggest : $("#SHYJ").val(),
+                    	dwbh: dwbh
                     },
                     cache: false,
                     dataType: "json",

@@ -549,10 +549,13 @@ public class GzryController {
 
 				// 获取guid
 				String guids = "";
+				String dwbh = "";
 				for (int i = 1; i <= columnCount; i++) {
 					if (rs.getObject(i) != null) {
 						if (md.getColumnName(i).equals("guid")) {
 							guids = rs.getObject(i).toString();
+						}else if (md.getColumnName(i).equals("DJSBH")) {
+							dwbh = rs.getObject(i).toString();
 						}
 					}
 				}
@@ -578,13 +581,13 @@ public class GzryController {
 							System.out.println(mc);
 							// statics/imgs/1565593168033.jpg
 							String wtg = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakan('" + mc
-									+ "','" + guids + "','" + mc + "','" + mc
+									+ "','" + guids + "','" + dwbh 
 									+ "')\"  class='layui-table-link'><img src='statics/icon/ch.png' style='margin-top:4px;'></a></div><div>";
 							String wsh = "<div><div id=\"sh\" style='text-align: center;'><a  onclick=\"chakan('" + mc
-									+ "','" + guids + "','" + mc + "','" + mc
+									+ "','" + guids + "','" + dwbh 
 									+ "')\"  class='layui-table-link'><img src='statics/icon/yt.png' style='margin-top:4px;'></a></div><div>";
 							String tg = "<div><div id=\"sh\" style='text-align: center;'><a   onclick=\"chakan('" + mc
-									+ "','" + guids + "','" + mc + "','" + mc
+									+ "','" + guids + "','" + dwbh 
 									+ "')\"  class='layui-table-link'><img src='statics/icon/dh.png' style='margin-top:4px;'></a></div><div>";
 
 							if (zt.equals("未通过")) {// 未通过
@@ -1480,7 +1483,7 @@ public class GzryController {
 	@RequestMapping("updStateByGuid")
 	@ResponseBody
 	public int updStateByGuid(HttpServletRequest request, HttpServletResponse res, String zhxxguid, String shguid,
-			String shmc, String audit, String suggest) throws Exception {
+			String shmc, String audit, String suggest,String dwbh) throws Exception {
 		{
 			HttpSession session = request.getSession();
 			conn = LinkSql.getConn();
@@ -1490,11 +1493,12 @@ public class GzryController {
 					String tn = "bgxx_" + zhxxguid;// 数据表表名，根据guid获取
 					String desTn = "bgxx_des_" + zhxxguid;// 描述表表名
 					shmc = shmc + "_ZT";
-					String sqlAudit = "UPDATE " + tn + " SET " + shmc + "='通过'  WHERE GUID=?";
+					String sqlAudit = "UPDATE " + tn + " SET " + shmc + "='通过'  WHERE GUID=? and djsbh=?";
 
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlAudit);
 					ps.setString(1, shguid);
+					ps.setString(2, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -1509,7 +1513,7 @@ public class GzryController {
 					String flagfy="false";
 					int columnCount = 0;
 					ResultSetMetaData md = null;
-					String sql = "select * from  " + tn + " WHERE GUID='" + shguid + "'";
+					String sql = "select * from  " + tn + " WHERE GUID='" + shguid + "' and djsbh='"+dwbh+"'";
 					conn = LinkSql.getConn();// 创建对象
 					ps = LinkSql.Execute(conn, sql, "5", tn);
 					rs = ps.executeQuery();
@@ -1540,11 +1544,12 @@ public class GzryController {
 					}
 
 					if (flagzt.equals("true")) {// 不通过
-						String sqlAudits = "UPDATE " + tn + " SET ZT='拒绝'  WHERE GUID=?";
+						String sqlAudits = "UPDATE " + tn + " SET ZT='拒绝'  WHERE GUID=? and djsbh=?";
 
 						conn.setAutoCommit(false);
 						ps = conn.prepareStatement(sqlAudits);
 						ps.setString(1, shguid);
+						ps.setString(2, dwbh);
 						try {
 							flag = ps.executeUpdate();
 							conn.commit();
@@ -1555,11 +1560,12 @@ public class GzryController {
 
 					} else {
 						if (flagwsh.equals("true")) {// 未审核
-							String sqlAudits = "UPDATE " + tn + " SET ZT='待审核'  WHERE GUID=?";
+							String sqlAudits = "UPDATE " + tn + " SET ZT='待审核'  WHERE GUID=? and djsbh=?";
 
 							conn.setAutoCommit(false);
 							ps = conn.prepareStatement(sqlAudits);
 							ps.setString(1, shguid);
+							ps.setString(2, dwbh);
 							try {
 								flag = ps.executeUpdate();
 								conn.commit();
@@ -1569,11 +1575,12 @@ public class GzryController {
 							}
 
 						} else {
-							String sqlAudits = "UPDATE " + tn + " SET ZT='通过'  WHERE GUID=?";
+							String sqlAudits = "UPDATE " + tn + " SET ZT='通过'  WHERE GUID=? and djsbh=?";
 
 							conn.setAutoCommit(false);
 							ps = conn.prepareStatement(sqlAudits);
 							ps.setString(1, shguid);
+							ps.setString(2, dwbh);
 							try {
 								flag = ps.executeUpdate();
 								conn.commit();
@@ -1584,11 +1591,12 @@ public class GzryController {
 							
 							
 							if(flagfy.equals("true")){
-								String sqlfy = "UPDATE " + tn + " SET FKTZDZT='未发送'  WHERE GUID=?";
+								String sqlfy = "UPDATE " + tn + " SET FKTZDZT='未发送'  WHERE GUID=? and djsbh=?";
 
 								conn.setAutoCommit(false);
 								ps = conn.prepareStatement(sqlfy);
 								ps.setString(1, shguid);
+								ps.setString(1, dwbh);
 								try {
 									flag = ps.executeUpdate();
 									conn.commit();
@@ -1605,11 +1613,12 @@ public class GzryController {
 					String tn = "bgxx_" + zhxxguid;
 					String desTn = "bgxx_des_" + zhxxguid;
 					String shmczt = shmc + "_ZT";
-					String sqlAudit = "UPDATE " + tn + " SET " + shmczt + "='未通过'  WHERE GUID=?";
+					String sqlAudit = "UPDATE " + tn + " SET " + shmczt + "='未通过'  WHERE GUID=? and djsbh=?";
 
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlAudit);
 					ps.setString(1, shguid);
+					ps.setString(2, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -1619,11 +1628,12 @@ public class GzryController {
 					}
 
 					// 只要有一个状态是不通过,就把大的状态修改成拒绝
-					String sqlAudits = "UPDATE " + tn + " SET ZT='拒绝'  WHERE GUID=?";
+					String sqlAudits = "UPDATE " + tn + " SET ZT='拒绝'  WHERE GUID=? and djsbh=?";
 
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlAudits);
 					ps.setString(1, shguid);
+					ps.setString(2, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -1632,10 +1642,11 @@ public class GzryController {
 						conn.rollback();
 					}
 					
-					String sqlFktzdzt = "UPDATE " + tn + " SET FKTZDZT='未提交'  WHERE GUID=?";
+					String sqlFktzdzt = "UPDATE " + tn + " SET FKTZDZT='未提交'  WHERE GUID=?  and djsbh=?";
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlFktzdzt);
 					ps.setString(1, shguid);
+					ps.setString(2, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -1645,10 +1656,11 @@ public class GzryController {
 					}
 
 					// 查找更新数据
-					String sqlSelect = "SELECT ZGH,ZWH FROM " + tn + " WHERE GUID=?";
+					String sqlSelect = "SELECT ZGH,ZWH FROM " + tn + " WHERE GUID=? and djsbh=?";
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlSelect);
 					ps.setString(1, shguid);
+					ps.setString(2, dwbh);
 					rs = ps.executeQuery();
 					rs.first();
 					String gh = rs.getString("ZGH").trim();
@@ -1659,7 +1671,7 @@ public class GzryController {
 					String shry = (String) session.getAttribute("NAME");
 					String shrybh = (String) session.getAttribute("guid");
 					String guid = UUIDUtil.getUUID();
-					String sql = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHDXBH,SHSJ,SHXM,ZHBH,GH,ZWH) VALUES(?,?,?,?,?,now(),?,?,?,?)";
+					String sql = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHDXBH,SHSJ,SHXM,ZHBH,GH,ZWH,DWBH) VALUES(?,?,?,?,?,now(),?,?,?,?,?)";
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sql);
 					ps.setString(1, guid);
@@ -1671,6 +1683,7 @@ public class GzryController {
 					ps.setString(7, zhxxguid);
 					ps.setString(8, gh);
 					ps.setString(9, zwh);
+					ps.setString(10, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2307,7 +2320,7 @@ public class GzryController {
 					String shry=(String)session.getAttribute("NAME");
 				    String shrybh=(String)session.getAttribute("guid");
 				    String guid=UUIDUtil.getUUID();
-				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH) VALUES(?,?,?,?,now(),?,?)";					
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH,DWBH) VALUES(?,?,?,?,now(),?,?,?)";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlinsert);				
 					ps.setString(1, guid);
@@ -2316,6 +2329,7 @@ public class GzryController {
 					ps.setString(4, shrybh);		
 					ps.setString(5, "ZZPZ");
 					ps.setString(6, zhxxguid);
+					ps.setString(7, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2447,10 +2461,11 @@ public class GzryController {
 					String tn = "kfpxx_" + zhxxguid;// 数据表表名，根据guid获取
 					String desTn = "kfpxx_des_" + zhxxguid;// 描述表表名
 					
-					String sql = "UPDATE KPTYJ SET KPZT='已通过'  WHERE ZHBH=?";					
+					String sql = "UPDATE KPTYJ SET KPZT='已通过'  WHERE ZHBH=? and DWBH=?";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sql);				
 					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2459,9 +2474,10 @@ public class GzryController {
 						conn.rollback();
 					}
 					
-					String sql1 = "UPDATE "+tn+" SET  ZT='已通过'";					
+					String sql1 = "UPDATE "+tn+" SET  ZT='已通过' where DWBH=?";					
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sql1);				
+					ps = conn.prepareStatement(sql1);
+					ps.setString(1, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2475,10 +2491,11 @@ public class GzryController {
 					String tn = "kfpxx_" + zhxxguid;// 数据表表名，根据guid获取
 					String desTn = "kfpxx_des_" + zhxxguid;// 描述表表名
 					
-					String sql = "UPDATE KPTYJ SET KPZT='未通过'  WHERE ZHBH=?";					
+					String sql = "UPDATE KPTYJ SET KPZT='未通过'  WHERE ZHBH=? and DWBH=?";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sql);				
 					ps.setString(1, zhxxguid);
+					ps.setString(2, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2487,9 +2504,10 @@ public class GzryController {
 						conn.rollback();
 					}
 					
-					String sql1 = "UPDATE "+tn+" SET  ZT='未通过'";					
+					String sql1 = "UPDATE "+tn+" SET  ZT='未通过'  where DWBH=?";					
 					conn.setAutoCommit(false);
-					ps = conn.prepareStatement(sql1);				
+					ps = conn.prepareStatement(sql1);
+					ps.setString(1, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2503,7 +2521,7 @@ public class GzryController {
 					String shry=(String)session.getAttribute("NAME");
 				    String shrybh=(String)session.getAttribute("guid");
 				    String guid=UUIDUtil.getUUID();
-				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH) VALUES(?,?,?,?,now(),?,?)";					
+				    String sqlinsert = "insert into bgshjl(guid,SHYJ,SHRY,SHRYBH,SHSJ,SHXM,ZHBH,DWBH) VALUES(?,?,?,?,now(),?,?,?)";					
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlinsert);				
 					ps.setString(1, guid);
@@ -2512,6 +2530,7 @@ public class GzryController {
 					ps.setString(4, shrybh);		
 					ps.setString(5, "KFPXX");
 					ps.setString(6, zhxxguid);
+					ps.setString(7, dwbh);
 					try {
 						flag = ps.executeUpdate();
 						conn.commit();
@@ -2547,7 +2566,7 @@ public class GzryController {
 					//修改报馆信息状态
 					String tn = "sgryxx_" + zhxxguid;
 					String desTn = "sgryxx_des_" + zhxxguid;
-					String sqlAudit = "UPDATE "+tn+" SET ZT='已提交'";
+					String sqlAudit = "UPDATE "+tn+" SET ZT='已提交' where dwbh='"+guiddwbh+"'";
 													
 					conn.setAutoCommit(false);
 					ps = conn.prepareStatement(sqlAudit);								
@@ -2561,7 +2580,7 @@ public class GzryController {
 					
 					
 					//根据展会编号查找展会名称
-					String str = "select id from rybdb where zhbh='"+zhxxguid+"'";
+					String str = "select id from rybdb where zhbh='"+zhxxguid+"' and dwbh='"+guiddwbh+"'";
 					ps = conn.prepareStatement(str);
 					rs = ps.executeQuery();
 					String flagcz="false";
@@ -2571,7 +2590,7 @@ public class GzryController {
 					
 					if(flagcz.equals("true")){//存在
 						//只要有一个状态是不通过,就把大的状态修改成拒绝
-						String sql = "UPDATE rybdb SET RYZT='已提交'  WHERE ZHBH=?";
+						String sql = "UPDATE rybdb SET RYZT='已提交'  WHERE ZHBH=? and dwbh='"+guiddwbh+"'";
 						
 						conn.setAutoCommit(false);
 						ps = conn.prepareStatement(sql);				

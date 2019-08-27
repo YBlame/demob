@@ -71,13 +71,26 @@ $(document).ready(function () {
 });
 
 // 打开查看按钮 href="zhxx/bgxxsh.jsp"
-function chakan(shmc, shguid) {
+function chakan(shmc, shguid,dwbh) {
     layer.open({
         type: 2,
         area: ["80%", "80%"],
         title: '审核',
         maxmin: true,
-        content: 'zhxx/bgxxsh.jsp?shmc=' + shmc+'&shguid='+shguid+'&zhxxguid='+zhxx //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+        content: 'zhxx/bgxxsh.jsp?shmc=' + shmc+'&shguid='+shguid+'&zhxxguid='+zhxx+'&dwbh='+dwbh //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+    });
+
+    /* window.location = "zhxx/bgxxsh.jsp?guid="
+             + guid;*/
+}
+
+function chakanfy(shmc, shguid) {
+    layer.open({
+        type: 2,
+        area: ["80%", "80%"],
+        title: '审核',
+        maxmin: true,
+        content: 'zhxx/fyhzsh.jsp?shmc=' + shmc+'&shguid='+shguid+'&zhxxguid='+zhxx //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
     });
 
     /* window.location = "zhxx/bgxxsh.jsp?guid="
